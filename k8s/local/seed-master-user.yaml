@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-master-user
+  namespace: cmc-local
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+      - name: wait-for-postgres
+        image: postgres:15
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PGHOST
+          value: postgres
+        - name: PGPORT
+          value: "5432"
+        - name: PGDATABASE
+          value: cmc_local
+        - name: PGUSER
+          value: cmc_user
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+        command: ["/bin/sh","-lc"]
+        args:
+        - |
+          set -euo pipefail
+          echo "⏳ Waiting for Postgres readiness..."
+          for i in $(seq 1 120); do
+            if PGPASSWORD="$PGPASSWORD" pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" >/dev/null 2>&1; then
+              echo "✅ DB is ready"; exit 0
+            fi
+            echo "… still waiting ($i/120)"; sleep 2
+          done
+          echo "❌ DB not ready in time"; exit 1
+      containers:
+      - name: seed
+        image: cmc-web:local
+        imagePullPolicy: IfNotPresent
+        terminationMessagePolicy: FallbackToLogsOnError
+        args: ["--seed"]
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: cmc-app-secret
+              key: connection
+        - name: MASTER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: master-user
+              key: email
+        - name: MASTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: master-user
+              key: password
+        - name: MASTER_ROLE
+          value: "super-admin"

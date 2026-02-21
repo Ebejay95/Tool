@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "CMC.Todos.Application/1.0.0": {
+        "dependencies": {
+          "CMC.Todos.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CMC.Todos.Application.dll": {}
+        }
+      },
+      "CMC.Todos.Domain/1.0.0": {
+        "runtime": {
+          "CMC.Todos.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CMC.Todos.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CMC.Todos.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

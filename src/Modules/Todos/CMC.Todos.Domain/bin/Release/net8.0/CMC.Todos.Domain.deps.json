@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "CMC.Todos.Domain/1.0.0": {
+        "runtime": {
+          "CMC.Todos.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CMC.Todos.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

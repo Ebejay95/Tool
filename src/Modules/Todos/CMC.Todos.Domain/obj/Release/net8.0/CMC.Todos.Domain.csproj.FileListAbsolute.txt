@@ -1,0 +1,11 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/bin/Release/net8.0/CMC.Todos.Domain.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/bin/Release/net8.0/CMC.Todos.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/bin/Release/net8.0/CMC.Todos.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/refint/CMC.Todos.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/CMC.Todos.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/CMC.Todos.Domain/obj/Release/net8.0/ref/CMC.Todos.Domain.dll

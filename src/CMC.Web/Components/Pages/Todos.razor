@@ -1,0 +1,100 @@
+@page "/todos"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+@using System.Security.Claims
+@using CMC.Todos.Application
+
+@inject ITodoService TodoService
+@inject AuthenticationStateProvider AuthState
+
+<PageTitle>Todos</PageTitle>
+
+<h1>Todos</h1>
+
+<div class="mb-3">
+    <input class="form-control" placeholder="New todo title" @bind="newTitle" />
+    <button class="btn btn-primary mt-2" @onclick="Create">Create</button>
+</div>
+
+@if (items is null)
+{
+    <p>Loading…</p>
+}
+else if (items.Count == 0)
+{
+    <p>No todos yet.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var item in items)
+        {
+            <li class="list-group-item d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <input type="checkbox" checked="@item.IsCompleted" @onchange="async e => await SetCompleted(item.Id, (bool)e.Value!)" />
+                    <input class="form-control" style="max-width: 520px" value="@item.Title" @onchange="async e => await UpdateTitle(item.Id, e.Value?.ToString() ?? string.Empty)" />
+                </div>
+                <button class="btn btn-outline-danger" @onclick="() => Delete(item.Id)">Delete</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private string newTitle = "";
+    private List<TodoDto>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Reload();
+    }
+
+    private async Task<string> GetUserIdAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        var userId = state.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new InvalidOperationException("User not authenticated.");
+        }
+
+        return userId;
+    }
+
+    private async Task Reload()
+    {
+        var userId = await GetUserIdAsync();
+        items = (await TodoService.GetForUserAsync(userId)).ToList();
+    }
+
+    private async Task Create()
+    {
+        if (string.IsNullOrWhiteSpace(newTitle)) return;
+        var userId = await GetUserIdAsync();
+        await TodoService.CreateAsync(userId, newTitle);
+        newTitle = "";
+        await Reload();
+    }
+
+    private async Task UpdateTitle(Guid id, string title)
+    {
+        if (string.IsNullOrWhiteSpace(title)) return;
+        var userId = await GetUserIdAsync();
+        await TodoService.UpdateTitleAsync(userId, id, title);
+        await Reload();
+    }
+
+    private async Task SetCompleted(Guid id, bool isCompleted)
+    {
+        var userId = await GetUserIdAsync();
+        await TodoService.SetCompletedAsync(userId, id, isCompleted);
+        await Reload();
+    }
+
+    private async Task Delete(Guid id)
+    {
+        var userId = await GetUserIdAsync();
+        await TodoService.DeleteAsync(userId, id);
+        await Reload();
+    }
+}
