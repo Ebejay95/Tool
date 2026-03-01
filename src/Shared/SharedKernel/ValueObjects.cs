@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace SharedKernel;
 
 public abstract record ValueObject;
 
+[JsonConverter(typeof(EmailJsonConverter))]
 public sealed record Email : ValueObject
 {
     private Email(string value) => Value = value;
@@ -22,6 +25,7 @@ public sealed record Email : ValueObject
     public static implicit operator string(Email email) => email.Value;
 }
 
+[JsonConverter(typeof(UserIdJsonConverter))]
 public sealed record UserId : ValueObject
 {
     private UserId(Guid value) => Value = value;
@@ -34,6 +38,7 @@ public sealed record UserId : ValueObject
     public static implicit operator Guid(UserId userId) => userId.Value;
 }
 
+[JsonConverter(typeof(TodoIdJsonConverter))]
 public sealed record TodoId : ValueObject
 {
     private TodoId(Guid value) => Value = value;

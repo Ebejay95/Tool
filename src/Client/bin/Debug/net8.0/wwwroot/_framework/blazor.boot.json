@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Client",
   "resources": {
-    "hash": "sha256-2RnLMm6G/kd9lq/9+zfLVCzkmP5nAAZ0e8BQiCUpoUI=",
+    "hash": "sha256-vtEBcDrYXqW8qaBXz0IeV2M8iR5Fq4J5F3ORn9rm5zg=",
     "jsModuleNative": {
       "dotnet.native.8.0.19.repxb6913k.js": "sha256-O/NCYcAN9uPocD7ns7AzF/cqx7f5vL1PTJCQs0vEXyk="
     },
@@ -231,24 +231,24 @@
       "mscorlib.wasm": "sha256-RLW/7NVuhoPfq151II3kX2kWHgBwQgpCw9aemQNg3to=",
       "netstandard.wasm": "sha256-lAg5WvTiA8wbsIwlr51xh0YWpXT9F5EX3Cnv+11O/mU=",
       "System.Private.CoreLib.wasm": "sha256-3O3muuRQwoLRecYRjfIFWUURvTjP4EmD2O8wYg2UDNY=",
-      "Identity.Application.wasm": "sha256-M7nyBN9mTbgmcljN0NUE06+0TqlehTN6fOBGb9zmstQ=",
-      "Identity.Domain.wasm": "sha256-WuD7WiUDJAs2WPlV01mSL95jFgegrJ4BCtEu2pPVs7M=",
-      "Notifications.Abstractions.wasm": "sha256-pqSG4URRh83Mz4qIYERx2HJ79WGwz9V6EaZjfF+Cgbs=",
-      "Notifications.Application.wasm": "sha256-miF07rImUpKEdEkGsHeEuzkqR6sIseUoC94cwb1R3zk=",
-      "SharedKernel.wasm": "sha256-MGKV/bNoUq4fr/N0j7mFR13bt5zg2bhlEZVkwDRSIaM=",
-      "Todos.Application.wasm": "sha256-rxuuFMi98g8F78sAYaN/Vm3LbG9OBtl5aQIdYaSlMzk=",
-      "Todos.Domain.wasm": "sha256-waG2TkoQfIbh/xr/nOExVDJdAd0SnhI/8144LbpXNRg=",
-      "Client.wasm": "sha256-I7p68gdnO0e+o1CtyDJI/8LkjXEtW5KSfMmaghKQ9p8="
+      "Identity.Application.wasm": "sha256-UWZZ9fRNmrMqnCPBs+a6IO0+Q3kb87Ck/jxQ6DnfT5I=",
+      "Identity.Domain.wasm": "sha256-3EQRS3h0V7+DCLZGwkykFagBAtAs9S8x7lT+REkoFvw=",
+      "Notifications.Abstractions.wasm": "sha256-VOz4MKnpg7wS/d8UvVDsDKQIxURJnEpB3zyBR/wOLIY=",
+      "Notifications.Application.wasm": "sha256-wx9ktCC/iIlXleZ/ATqwMQ5fmmdXqxag062wWfBPsTY=",
+      "SharedKernel.wasm": "sha256-9z/82cP19dA4UFsdDBXEWmxMqCbzEGJHZ1CreF98gaU=",
+      "Todos.Application.wasm": "sha256-2/3RChQIShCLmpeG3ZQaYAif9yAzSoowq5tPt7QOty8=",
+      "Todos.Domain.wasm": "sha256-aFKcKmW3o9f0b3F3KSDaf1YSasxLy3N5WAsrWEkbhjM=",
+      "Client.wasm": "sha256-uYMwD4Py2QEqYa6ibFawEfrjk+0e+6/LVBOgGDdRqwE="
     },
     "pdb": {
-      "SharedKernel.pdb": "sha256-bFlSPOrOv6ogx5kKEw9f5FvmZmeK+tVBa1FAJIqAKxs=",
-      "Notifications.Abstractions.pdb": "sha256-rQSAm5W5l7AUPoCf09VIr7kBiYqRnXEJjsa2hf3IUiw=",
-      "Identity.Application.pdb": "sha256-TnMqHnoBm3aVRHEkxr3AOkggA6W+iGc/Gj+1qrvPKtQ=",
-      "Notifications.Application.pdb": "sha256-xsJgl8v0PpK367dO/7BikZUfOvY2p+WJ9GdXvaMY1Ps=",
-      "Todos.Application.pdb": "sha256-7LZgNctZ2tnpOxWOMFR5PU0hFsWnpPcMqmlooQbpJFU=",
-      "Identity.Domain.pdb": "sha256-Gmy8muridqlIFKInzgBhf4IbZOa5VzequEIyhfzHbkU=",
-      "Todos.Domain.pdb": "sha256-es70RwAQAw988RB/Vl61V76/jaA+EKqudVeUuiRnKbw=",
-      "Client.pdb": "sha256-B7ypt6RB+gheTN/zIZfQFge3nTItuNsk1+Qk5Aj4MQI="
+      "SharedKernel.pdb": "sha256-77aMdZMQ0y3zcNIgcqxs8jawuvjDK8qDkMkjPJ3jf+g=",
+      "Notifications.Abstractions.pdb": "sha256-ra3kyVSh3VY46S9QKIzGfdGxyQakymAOL3eSG256tQg=",
+      "Identity.Application.pdb": "sha256-Mm2oMh/H+3dlj9Bd3SC33ZnyriXtsIDAaH4HyJvzHDw=",
+      "Notifications.Application.pdb": "sha256-9JVfC7VeRW86hMWtkn+cj+PvbHp7lVg2UkLcVtjMEHo=",
+      "Todos.Application.pdb": "sha256-em6pR/NIMvfvhf/MR6ODfb4T5VAp3TeimhPBL7dPDxA=",
+      "Identity.Domain.pdb": "sha256-FKlBlLuf8M0mPieFXbtirZOr+NNkByiWC+vSybkS1DI=",
+      "Todos.Domain.pdb": "sha256-7zt0u4DxM4ZJJPvFUG37X9h/EiNwGNhNFEfCMICfeQY=",
+      "Client.pdb": "sha256-g+lDOtZcpDhYW6kZfrChkqM3bZucHeKWzg5Ou5LhsuY="
     }
   },
   "cacheBootResources": true,

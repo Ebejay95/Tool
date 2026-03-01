@@ -36,7 +36,8 @@ builder.Host.UseSerilog((ctx, lc) =>
 
 // Add services to the container
 // Add API Controllers
-builder.Services.AddControllers(); // REST API controllers – ApplicationParts werden von Modulen selbst registriert
+builder.Services.AddControllers(opts =>
+    opts.Conventions.Add(new DevOnlyConvention(builder.Environment))); // REST API controllers – ApplicationParts werden von Modulen selbst registriert
 builder.Services.AddEndpointsApiExplorer(); // API Documentation
 builder.Services.AddSwaggerGen(); // Swagger UI for API Tests
 
