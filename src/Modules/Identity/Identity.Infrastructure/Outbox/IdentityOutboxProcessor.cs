@@ -62,7 +62,7 @@ internal sealed class IdentityOutboxProcessor : BackgroundService
 
         var messages = await context.OutboxMessages
             .FromSqlRaw("""
-                SELECT * FROM "OutboxMessages"
+                SELECT * FROM identity."OutboxMessages"
                 WHERE "ProcessedOn" IS NULL
                   AND "RetryCount" < {1}
                 ORDER BY "OccurredOn"

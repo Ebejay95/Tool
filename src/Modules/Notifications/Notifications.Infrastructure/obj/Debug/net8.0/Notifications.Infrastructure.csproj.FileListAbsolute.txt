@@ -1,4 +1,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Infrastructure.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Infrastructure.runtimeconfig.json
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Infrastructure.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Infrastructure.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Abstractions.dll
@@ -21,6 +22,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/Notifications.Infrastructure.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/refint/Notifications.Infrastructure.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/Notifications.Infrastructure.pdb
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/ref/Notifications.Infrastructure.dll
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/bin/Debug/net8.0/Notifications.Infrastructure.runtimeconfig.json
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/Notifications.Infrastructure.genruntimeconfig.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Infrastructure/obj/Debug/net8.0/ref/Notifications.Infrastructure.dll

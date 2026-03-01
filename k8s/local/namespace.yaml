@@ -1,3 +1,5 @@
+# Creates the K8s namespace cmc-local with the label environment: local.
+# All local resources reside here.
 apiVersion: v1
 kind: Namespace
 metadata:

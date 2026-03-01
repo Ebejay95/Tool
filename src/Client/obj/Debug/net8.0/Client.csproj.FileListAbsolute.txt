@@ -1,10 +1,3 @@
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.csproj.AssemblyReference.cache
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.GeneratedMSBuildEditorConfig.editorconfig
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.AssemblyInfoInputs.cache
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.AssemblyInfo.cs
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.csproj.CoreCompileInputs.cache
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.MvcApplicationPartsAssemblyInfo.cache
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.sourcelink.json
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/BCrypt.Net-Next.wasm
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/blazor.boot.json
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/blazor.webassembly.js
@@ -727,6 +720,13 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/Todos.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/Identity.Domain.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/Todos.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.MvcApplicationPartsAssemblyInfo.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/Client.sourcelink.json
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/webcil/BCrypt.Net-Next.wasm
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/webcil/MediatR.wasm
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/webcil/MediatR.Contracts.wasm

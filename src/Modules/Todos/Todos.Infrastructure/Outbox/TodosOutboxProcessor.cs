@@ -74,7 +74,7 @@ internal sealed class TodosOutboxProcessor : BackgroundService
 
         var messages = await context.OutboxMessages
             .FromSqlRaw("""
-                SELECT * FROM "OutboxMessages"
+                SELECT * FROM todos."OutboxMessages"
                 WHERE "ProcessedOn" IS NULL
                   AND "RetryCount" < {1}
                 ORDER BY "OccurredOn"
