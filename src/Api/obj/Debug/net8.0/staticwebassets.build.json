@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "phQt+J8rHGVye+tPVN49vC/gLI1dZLJeFu9PaaqdFHU=",
+  "Hash": "z+rFFYaqYqsbQt345A5VGnc10R2nDKUoTY+IIAYUvXo=",
   "Source": "Api",
   "BasePath": "_content/Api",
   "Mode": "Default",
@@ -41,13 +41,6 @@
     }
   ],
   "DiscoveryPatterns": [
-    {
-      "Name": "Api/wwwroot",
-      "Source": "Api",
-      "ContentRoot": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/",
-      "BasePath": "_content/Api",
-      "Pattern": "**"
-    },
     {
       "Name": "Client/wwwroot",
       "Source": "Client",
@@ -94,63 +87,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "/Users/jonathaneberle/.nuget/packages/mudblazor/6.19.1/staticwebassets/MudBlazor.min.js"
-    },
-    {
-      "Identity": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/css/site.css",
-      "SourceId": "Api",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/",
-      "BasePath": "_content/Api",
-      "RelativePath": "css/site.css",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/css/site.css"
-    },
-    {
-      "Identity": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/js/site.js",
-      "SourceId": "Api",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/",
-      "BasePath": "_content/Api",
-      "RelativePath": "js/site.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/site.js"
-    },
-    {
-      "Identity": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/js/theme-init.js",
-      "SourceId": "Api",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Api/wwwroot/",
-      "BasePath": "_content/Api",
-      "RelativePath": "js/theme-init.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/js/theme-init.js"
     },
     {
       "Identity": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/BCrypt.Net-Next.wasm",

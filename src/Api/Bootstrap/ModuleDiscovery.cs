@@ -3,6 +3,7 @@ using ServerKernel;
 using SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using System.IO;
 
 namespace Api.Bootstrap;
 
@@ -79,18 +80,24 @@ public static class ModuleDiscovery
 
     private static void EnsureDirectReferencesLoaded()
     {
+        // GetReferencedAssemblies() liefert nur Assemblies die im IL-Code der Entry-Assembly
+        // tatsächlich verwendet werden. Module-Assemblies (*.Api) werden dort nicht gelistet,
+        // wenn Program.cs keine ihrer Typen direkt nutzt.
+        // Lösung: alle DLLs im Ausgabeverzeichnis laden → garantiert dass alle Module gefunden werden.
         var alreadyLoaded = AppDomain.CurrentDomain
             .GetAssemblies()
-            .Select(a => a.FullName)
+            .Select(a => a.GetName().Name)
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        var entryAssembly = Assembly.GetEntryAssembly();
-        if (entryAssembly is null) return;
-
-        foreach (var refName in entryAssembly.GetReferencedAssemblies())
+        foreach (var dll in Directory.EnumerateFiles(AppContext.BaseDirectory, "*.dll"))
         {
-            if (alreadyLoaded.Contains(refName.FullName)) continue;
-            try { Assembly.Load(refName); }
+            try
+            {
+                var name = AssemblyName.GetAssemblyName(dll);
+                if (name.Name is null || alreadyLoaded.Contains(name.Name)) continue;
+                Assembly.Load(name);
+                alreadyLoaded.Add(name.Name);
+            }
             catch { /* System-/nicht-ladbare Assemblies überspringen */ }
         }
     }
