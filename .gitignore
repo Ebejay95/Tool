@@ -1,0 +1,7 @@
+# Secrets should never be committed
+k8s/prod/secrets.prod.yaml
+k8s/local/secrets.local.yaml
+
+# OS / tooling
+.DS_Store
+*.pid

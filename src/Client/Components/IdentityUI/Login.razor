@@ -1,0 +1,121 @@
+@page "/login"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Login - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 64px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudText Typo="Typo.h4" GutterBottom="true">Anmelden</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Melden Sie sich mit Ihren Credentials an
+            </MudText>
+        </div>
+
+        <EditForm Model="@_loginDto" OnValidSubmit="@HandleLogin">
+            <DataAnnotationsValidator />
+
+            <MudTextField @bind-Value="_loginDto.Email"
+                          Label="E-Mail"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Email"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Email"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          For="@(() => _loginDto.Email)" />
+
+            <MudTextField @bind-Value="_loginDto.Password"
+                          Label="Passwort"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          For="@(() => _loginDto.Password)" />
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <MudCheckBox @bind-Value="_rememberMe" Label="Angemeldet bleiben" Color="Color.Primary" />
+                <MudLink Href="/forgot-password" Color="Color.Primary">
+                    Passwort vergessen?
+                </MudLink>
+            </div>
+
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Class="mb-4"
+                       Disabled="@_isLoading">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Wird angemeldet...</span>
+                }
+                else
+                {
+                    <span>Anmelden</span>
+                }
+            </MudButton>
+
+        </EditForm>
+
+        <MudDivider Style="margin: 24px 0;" />
+
+        <div style="text-align: center;">
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Noch kein Account?
+                <MudLink Href="/register" Color="Color.Primary">
+                    Jetzt registrieren
+                </MudLink>
+            </MudText>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private readonly LoginDto _loginDto = new();
+    private bool _rememberMe = false;
+    private bool _isLoading = false;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            _isLoading = true;
+            var result = await AuthService.LoginAsync(_loginDto);
+
+            if (result.IsSuccess)
+            {
+                Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
+                Navigation.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else
+            {
+                Snackbar.Add($"Anmeldung fehlgeschlagen: {result.Error}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ein Fehler ist aufgetreten: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+}

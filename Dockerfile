@@ -1,24 +1,34 @@
-# Build + runtime image for CMC.Web (.NET 8)
+# Build + runtime image for Api (.NET 8)
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution + projects first for better layer caching
-COPY src/CMC.sln ./src/CMC.sln
-COPY src/CMC.Web/CMC.Web.csproj ./src/CMC.Web/CMC.Web.csproj
-COPY src/CMC.Persistence/CMC.Persistence.csproj ./src/CMC.Persistence/CMC.Persistence.csproj
-COPY src/CMC.Notifications.Abstractions/CMC.Notifications.Abstractions.csproj ./src/CMC.Notifications.Abstractions/CMC.Notifications.Abstractions.csproj
-COPY src/CMC.Notifications.Socket/CMC.Notifications.Socket.csproj ./src/CMC.Notifications.Socket/CMC.Notifications.Socket.csproj
-COPY src/Modules/Todos/CMC.Todos.Domain/CMC.Todos.Domain.csproj ./src/Modules/Todos/CMC.Todos.Domain/CMC.Todos.Domain.csproj
-COPY src/Modules/Todos/CMC.Todos.Application/CMC.Todos.Application.csproj ./src/Modules/Todos/CMC.Todos.Application/CMC.Todos.Application.csproj
-COPY src/Modules/Todos/CMC.Todos.Infrastructure/CMC.Todos.Infrastructure.csproj ./src/Modules/Todos/CMC.Todos.Infrastructure/CMC.Todos.Infrastructure.csproj
+# Copy project files for dependency resolution
+COPY ["src/Api/Api.csproj", "src/Api/"]
+COPY ["src/Client/Client.csproj", "src/Client/"]
+COPY ["src/Shared/SharedKernel/SharedKernel.csproj", "src/Shared/SharedKernel/"]
+COPY ["src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj", "src/Shared/Notifications.Abstractions/"]
+COPY ["src/Modules/Notifications/Notifications.Domain/Notifications.Domain.csproj", "src/Modules/Notifications/Notifications.Domain/"]
+COPY ["src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj", "src/Modules/Notifications/Notifications.Application/"]
+COPY ["src/Modules/Notifications/Notifications.Infrastructure/Notifications.Infrastructure.csproj", "src/Modules/Notifications/Notifications.Infrastructure/"]
+COPY ["src/Modules/Notifications/Notifications.Api/Notifications.Api.csproj", "src/Modules/Notifications/Notifications.Api/"]
+COPY ["src/Modules/Identity/Identity.Domain/Identity.Domain.csproj", "src/Modules/Identity/Identity.Domain/"]
+COPY ["src/Modules/Identity/Identity.Application/Identity.Application.csproj", "src/Modules/Identity/Identity.Application/"]
+COPY ["src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj", "src/Modules/Identity/Identity.Infrastructure/"]
+COPY ["src/Modules/Identity/Identity.Api/Identity.Api.csproj", "src/Modules/Identity/Identity.Api/"]
+COPY ["src/Modules/Todos/Todos.Domain/Todos.Domain.csproj", "src/Modules/Todos/Todos.Domain/"]
+COPY ["src/Modules/Todos/Todos.Application/Todos.Application.csproj", "src/Modules/Todos/Todos.Application/"]
+COPY ["src/Modules/Todos/Todos.Infrastructure/Todos.Infrastructure.csproj", "src/Modules/Todos/Todos.Infrastructure/"]
+COPY ["src/Modules/Todos/Todos.Api/Todos.Api.csproj", "src/Modules/Todos/Todos.Api/"]
 
-RUN dotnet restore ./src/CMC.sln
+# Restore dependencies
+RUN dotnet restore "src/Api/Api.csproj"
 
 # Copy the rest of the source
 COPY src ./src
 
-RUN dotnet publish ./src/CMC.Web/CMC.Web.csproj -c Release -o /out /p:UseAppHost=false
+# Build and publish the application
+RUN dotnet publish "./src/Api/Api.csproj" -c Release -o /out /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
@@ -30,4 +40,4 @@ EXPOSE 8080
 
 COPY --from=build /out ./
 
-ENTRYPOINT ["dotnet", "CMC.Web.dll"]
+ENTRYPOINT ["dotnet", "Api.dll"]

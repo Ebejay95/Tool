@@ -1,0 +1,65 @@
+# Seq – strukturiertes Log-Viewer + OTel-Traces für lokale Entwicklung.
+# UI:    http://localhost:5341
+# OTLP:  http://localhost:5341/ingest/otlp/v1/traces
+#
+# Zugriff: kubectl port-forward -n cmc-local service/seq 5341:5341
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seq
+  namespace: cmc-local
+  labels:
+    app: seq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: seq
+    spec:
+      containers:
+        - name: seq
+          image: datalust/seq:2024.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5341
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+          readinessProbe:
+            tcpSocket:
+              port: 5341
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 20
+          livenessProbe:
+            tcpSocket:
+              port: 5341
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          volumeMounts:
+            - name: seq-data
+              mountPath: /data
+      volumes:
+        - name: seq-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seq
+  namespace: cmc-local
+spec:
+  selector:
+    app: seq
+  ports:
+    - name: http
+      port: 5341
+      targetPort: 5341
+  type: ClusterIP

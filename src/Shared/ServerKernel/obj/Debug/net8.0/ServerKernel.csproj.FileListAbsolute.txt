@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/bin/Debug/net8.0/ServerKernel.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/bin/Debug/net8.0/ServerKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/bin/Debug/net8.0/ServerKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/refint/ServerKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ServerKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/ServerKernel/obj/Debug/net8.0/ref/ServerKernel.dll

@@ -1,0 +1,13 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/bin/Debug/net8.0/CMC.SharedKernel.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/bin/Debug/net8.0/CMC.SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/bin/Debug/net8.0/CMC.SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/refint/CMC.SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/CMC.SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/CMC.SharedKernel/obj/Debug/net8.0/ref/CMC.SharedKernel.dll

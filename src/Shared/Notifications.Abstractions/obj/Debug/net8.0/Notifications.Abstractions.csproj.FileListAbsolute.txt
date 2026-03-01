@@ -1,0 +1,16 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/bin/Debug/net8.0/Notifications.Abstractions.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/bin/Debug/net8.0/Notifications.Abstractions.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/bin/Debug/net8.0/Notifications.Abstractions.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/bin/Debug/net8.0/SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifica.92E1A9B2.Up2Date
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/refint/Notifications.Abstractions.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/Notifications.Abstractions.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/obj/Debug/net8.0/ref/Notifications.Abstractions.dll

@@ -1,12 +1,34 @@
+# Build outputs
 **/bin/
 **/obj/
+**/publish/
+**/TestResults/
+**/test-results/
+
+# IDE files
 **/.vs/
 **/.vscode/
 **/.idea/
-**/TestResults/
-**/test-results/
+*.user
+*.suo
+
+# Git and docs
 .git/
 .gitignore
+*.md
+
+# Kubernetes and deployment files
 k8s/
 docker/
-*.md
+Makefile
+
+# Development files
+tailwind.pid
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+logs/
+**/tmp/
+**/temp/

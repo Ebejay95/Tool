@@ -1,0 +1,205 @@
+@page "/dev/notifications"
+@using System.Net.Http.Json
+@inject ISnackbar Snackbar
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject NotificationHubService NotifHubService
+@inject HttpClient Http
+@inject App.Services.TokenService TokenService
+
+<PageTitle>Notification Testcenter</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h5" GutterBottom="true" Class="mb-4">
+        <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Class="mr-2" />
+        Notification Testcenter
+    </MudText>
+
+    <MudPaper Elevation="2" Style="padding: 24px;">
+        <MudGrid Spacing="2">
+            @* Titel *@
+            <MudItem xs="12" md="6">
+                <MudTextField @bind-Value="_title"
+                              Label="Titel"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              FullWidth="true" />
+            </MudItem>
+
+            @* Severity *@
+            <MudItem xs="12" md="3">
+                <MudSelect @bind-Value="_severity"
+                           Label="Severity"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           FullWidth="true">
+                    <MudSelectItem Value="@("info")">Info</MudSelectItem>
+                    <MudSelectItem Value="@("success")">Erfolg</MudSelectItem>
+                    <MudSelectItem Value="@("warning")">Warnung</MudSelectItem>
+                    <MudSelectItem Value="@("error")">Fehler</MudSelectItem>
+                    <MudSelectItem Value="@("notice")">Hinweis</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            @* An aktuellen User *@
+            <MudItem xs="12" md="3" Style="display: flex; align-items: center;">
+                <MudCheckBox @bind-Value="_toCurrentUser"
+                             Label="An aktuellen User"
+                             Color="Color.Primary" />
+            </MudItem>
+
+            @* Body *@
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_body"
+                              Label="Nachricht"
+                              Variant="Variant.Outlined"
+                              Lines="2"
+                              Margin="Margin.Dense"
+                              FullWidth="true" />
+            </MudItem>
+
+            @* Channels *@
+            <MudItem xs="12">
+                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-1">Channels</MudText>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <MudChip T="string"
+                             Color="@(_channels.Contains("client-snackbar") ? Color.Primary : Color.Default)"
+                             Variant="@(_channels.Contains("client-snackbar") ? Variant.Filled : Variant.Outlined)"
+                             OnClick="@(() => ToggleChannel("client-snackbar"))">
+                        Client-Snackbar
+                    </MudChip>
+                    <MudChip T="string"
+                             Color="@(_channels.Contains("signalr") ? Color.Primary : Color.Default)"
+                             Variant="@(_channels.Contains("signalr") ? Variant.Filled : Variant.Outlined)"
+                             OnClick="@(() => ToggleChannel("signalr"))">
+                        Snackbar (Server)
+                    </MudChip>
+                    <MudChip T="string"
+                             Color="@(_channels.Contains("persistent") ? Color.Primary : Color.Default)"
+                             Variant="@(_channels.Contains("persistent") ? Variant.Filled : Variant.Outlined)"
+                             OnClick="@(() => ToggleChannel("persistent"))">
+                        Glocke / DB
+                    </MudChip>
+                    <MudChip T="string"
+                             Color="@(_channels.Contains("email") ? Color.Primary : Color.Default)"
+                             Variant="@(_channels.Contains("email") ? Variant.Filled : Variant.Outlined)"
+                             OnClick="@(() => ToggleChannel("email"))">
+                        E-Mail
+                    </MudChip>
+                </div>
+            </MudItem>
+
+            @* Weitere Empfänger *@
+            <MudItem xs="12">
+                <MudTextField @bind-Value="_extraRecipients"
+                              Label="Weitere Empfänger (User-IDs, kommagetrennt)"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              FullWidth="true"
+                              Placeholder="z.B. guid1, guid2" />
+            </MudItem>
+
+            @* Aktionen *@
+            <MudItem xs="12">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Send"
+                           Disabled="@(!_channels.Any() || string.IsNullOrWhiteSpace(_title))"
+                           OnClick="SendAsync">
+                    Senden
+                </MudButton>
+                <MudButton Variant="Variant.Text"
+                           Color="Color.Default"
+                           Class="ml-2"
+                           OnClick="Reset">
+                    Zurücksetzen
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string          _title           = "Test-Notification";
+    private string          _body            = "Das ist eine Test-Nachricht.";
+    private string          _severity        = "info";
+    private bool            _toCurrentUser   = true;
+    private string          _extraRecipients = string.Empty;
+    private HashSet<string> _channels        = ["signalr"];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        var isAuth = await AuthService.IsAuthenticatedAsync();
+        if (!isAuth) Navigation.NavigateTo("/login");
+    }
+
+    private void ToggleChannel(string channel)
+    {
+        if (!_channels.Remove(channel))
+            _channels.Add(channel);
+    }
+
+    private async Task SendAsync()
+    {
+        // Client-Snackbar ist rein lokal
+        if (_channels.Contains("client-snackbar"))
+        {
+            var sev = _severity switch
+            {
+                "success" => Severity.Success,
+                "warning" => Severity.Warning,
+                "error"   => Severity.Error,
+                _         => Severity.Info
+            };
+            Snackbar.Add(_body, sev, opts => opts.SnackbarVariant = Variant.Filled);
+        }
+
+        var serverChannels = _channels
+            .Where(c => c != "client-snackbar")
+            .ToArray();
+
+        if (serverChannels.Length > 0)
+        {
+            var extra = _extraRecipients
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToList();
+
+            var token = await TokenService.GetTokenAsync();
+            if (!string.IsNullOrEmpty(token))
+                Http.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            // Dev-Endpunkt: POST /api/v1/dev/send-notification
+            var response = await Http.PostAsJsonAsync("api/v1/dev/send-notification", new
+            {
+                Title                = _title,
+                Body                 = _body,
+                Severity             = _severity,
+                ToCurrentUser        = _toCurrentUser,
+                AdditionalRecipients = extra.Count > 0 ? extra : null,
+                Channels             = serverChannels
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                await NotifHubService.NotifyAsync();
+            }
+            else
+            {
+                Snackbar.Add($"Server-Fehler beim Senden: HTTP {(int)response.StatusCode}", Severity.Warning);
+            }
+        }
+    }
+
+    private void Reset()
+    {
+        _title           = "Test-Notification";
+        _body            = "Das ist eine Test-Nachricht.";
+        _severity        = "info";
+        _toCurrentUser   = true;
+        _extraRecipients = string.Empty;
+        _channels        = ["signalr"];
+    }
+}

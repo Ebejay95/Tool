@@ -1,0 +1,79 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = App
+build_property.RootNamespace = App
+build_property.ProjectDir = /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/IdentityUI/ForgotPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9JZGVudGl0eVVJL0ZvcmdvdFBhc3N3b3JkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/IdentityUI/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9JZGVudGl0eVVJL0xvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/IdentityUI/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9JZGVudGl0eVVJL1JlZ2lzdGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/IdentityUI/ResetPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9JZGVudGl0eVVJL1Jlc2V0UGFzc3dvcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/NotificationsUI/NotificationBell.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ob3RpZmljYXRpb25zVUkvTm90aWZpY2F0aW9uQmVsbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9EYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Dev/NotificationTestCenter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9EZXYvTm90aWZpY2F0aW9uVGVzdENlbnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TodosUI/TodoCreateForm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ub2Rvc1VJL1RvZG9DcmVhdGVGb3JtLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TodosUI/TodoDataTable.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ub2Rvc1VJL1RvZG9EYXRhVGFibGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Root.razor]
+build_metadata.AdditionalFiles.TargetPath = Um9vdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 

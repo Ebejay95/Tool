@@ -1,62 +1,182 @@
-# Minimal local-only workflow (Docker Desktop Kubernetes)
+# Api – Makefile
+# ===================
+# dev       → lokale DB in K8s + Migrations + Hot-Reload
+# clean     → Dev-Prozesse stoppen (DB bleibt persistent)
+# db-clean  → DB-Daten komplett löschen (PVC weg)
+# prod      → Docker bauen, pushen, prod deployen
 
-KUBECTL      ?= kubectl
-K8S_CONTEXT  ?= docker-desktop
-NAMESPACE    ?= cmc-local
-IMAGE        ?= cmc-web:local
-KUBECTL_CMD  := $(KUBECTL) $(if $(K8S_CONTEXT),--context $(K8S_CONTEXT),)
+.PHONY: dev clean db-clean prod status logs seq-logs redis-logs help \
+        _db-apply _db-wait _db-forward _migrate \
+        _seq-apply _seq-wait _seq-forward \
+        _redis-apply _redis-wait _redis-forward
 
-all: help
+.DEFAULT_GOAL := help
+
+# ---------------------------------------------------------------------------
+# Konfiguration
+# ---------------------------------------------------------------------------
+NAMESPACE     := cmc-local
+PROD_NS       := cmc-prod
+IMAGE_NAME    := cmc-web
+IMAGE_TAG     := local
+REGISTRY      := ghcr.io/ebejay95/tool
+DEV_PORT      := 8080
+DB_PORT       := 5432
+SEQ_PORT      := 5341
+REDIS_PORT    := 6379
+REDIS_PASS    := local_redis_password
+PROJECT       := src/Api
+DB_CONN       := "Host=localhost;Port=$(DB_PORT);Database=cmc_local;Username=cmc_user;Password=local_dev_password_change_me;SslMode=Disable"
+REDIS_CONN    := "localhost:$(REDIS_PORT),password=$(REDIS_PASS)"
+
+# ---------------------------------------------------------------------------
+# dev: DB hochfahren (falls nötig), migrieren, Hot-Reload starten
+# ---------------------------------------------------------------------------
+dev: _db-apply _seq-apply _redis-apply _db-wait _seq-wait _redis-wait _db-forward _seq-forward _redis-forward _migrate
+	@echo "🚀 Hot-Reload auf http://localhost:$(DEV_PORT) ..."
+	@echo "📊 Seq (Logs/Traces): http://localhost:$(SEQ_PORT)"
+	@lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
+	@cd $(PROJECT) && \
+		ASPNETCORE_ENVIRONMENT=Development \
+		ConnectionStrings__DefaultConnection=$(DB_CONN) \
+		Redis__ConnectionString=$(REDIS_CONN) \
+		dotnet watch run --urls "http://localhost:$(DEV_PORT)"
+
+# ---------------------------------------------------------------------------
+# clean: Dev-Prozesse stoppen – DB bleibt erhalten
+# ---------------------------------------------------------------------------
+clean:
+	@echo "🛑 Stoppe Dev-Prozesse (DB + Seq + Redis bleiben)..."
+	@pkill -f "dotnet watch" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(DB_PORT)" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(SEQ_PORT)" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(REDIS_PORT)" 2>/dev/null || true
+	@lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
+	@echo "✅ Gestoppt"
+
+# ---------------------------------------------------------------------------
+# db-clean: DB-Daten löschen → nächstes 'make dev' baut sie neu auf
+# ---------------------------------------------------------------------------
+db-clean: clean
+	@echo "🗑️  Lösche DB-Daten (PVC + Deployment)..."
+	@kubectl delete deployment postgres  -n $(NAMESPACE) --ignore-not-found=true
+	@kubectl delete service   postgres   -n $(NAMESPACE) --ignore-not-found=true
+	@kubectl delete pvc       postgres-data -n $(NAMESPACE) --ignore-not-found=true
+	@echo "✅ DB gelöscht – 'make dev' baut sie neu auf"
+
+# ---------------------------------------------------------------------------
+# prod: Image bauen, pushen, prod-Namespace deployen
+# ---------------------------------------------------------------------------
+prod:
+	@echo "🔨 Baue Docker Image $(REGISTRY)/$(IMAGE_NAME):latest ..."
+	@docker build -t $(IMAGE_NAME):$(IMAGE_TAG) -t $(REGISTRY)/$(IMAGE_NAME):latest .
+	@echo "📦 Pushe nach $(REGISTRY) ..."
+	@docker push $(REGISTRY)/$(IMAGE_NAME):latest
+	@echo "☸️  Deploye in Namespace $(PROD_NS) ..."
+	@kubectl apply -f k8s/prod/
+	@echo "✅ Prod-Deployment abgeschlossen"
+
+# ---------------------------------------------------------------------------
+# Hilfsbefehle
+# ---------------------------------------------------------------------------
+status:
+	@kubectl get pods -n $(NAMESPACE)
+
+logs:
+	@kubectl logs -n $(NAMESPACE) -l app=postgres -f
+
+seq-logs:
+	@kubectl logs -n $(NAMESPACE) -l app=seq -f
+
+redis-logs:
+	@kubectl logs -n $(NAMESPACE) -l app=redis -f
 
 help:
-	@echo "Local dev (Docker Desktop Kubernetes)"
 	@echo ""
-	@echo "  make k8s-up           # build image + deploy (namespace/secrets/postgres/app)"
-	@echo "  make k8s-seed         # seed master user"
-	@echo "  make k8s-status       # show resources"
-	@echo "  make k8s-logs         # follow app logs"
-	@echo "  make k8s-port-forward # http://localhost:8080"
-	@echo "  make k8s-down         # delete app + db"
+	@echo "Api – Befehle:"
 	@echo ""
-	@echo "Vars: K8S_CONTEXT=docker-desktop (override if needed), IMAGE=cmc-web:local"
+	@echo "  dev        🚀 DB + Seq + Redis starten + migrieren + Hot-Reload"
+	@echo "  clean      🛑 Dev-Prozesse stoppen  (DB/Seq/Redis bleiben persistent)"
+	@echo "  db-clean   🗑️  DB-Daten löschen     (PVC weg, nächstes 'dev' baut neu)"
+	@echo "  prod       🚀 Docker bauen + pushen + prod deployen"
+	@echo "  status     📊 K8s Pod-Status (local)"
+	@echo "  logs       📜 Postgres-Logs folgen"
+	@echo "  seq-logs   📜 Seq-Logs folgen"
+	@echo "  redis-logs 📜 Redis-Logs folgen"
+	@echo ""
+	@echo "  App:   http://localhost:$(DEV_PORT)"
+	@echo "  Seq:   http://localhost:$(SEQ_PORT)"
+	@echo "  Redis: localhost:$(REDIS_PORT)"
+	@echo "  REGISTRY=$(REGISTRY)  (überschreibbar: make prod REGISTRY=...)"
+	@echo ""
 
-k8s-check:
-	@CTX=$$($(KUBECTL) config current-context 2>/dev/null || true); \
-	if [ -z "$$CTX" ]; then \
-		echo "❌ Kein kubectl context konfiguriert."; \
-		echo "   In Docker Desktop: Kubernetes aktivieren und dann: kubectl config use-context docker-desktop"; \
-		exit 2; \
-	fi
+# ---------------------------------------------------------------------------
+# Interne Targets (nicht direkt aufrufen)
+# ---------------------------------------------------------------------------
+_db-apply:
+	@echo "☸️  Wende lokale DB-Ressourcen an..."
+	@kubectl apply -f k8s/local/namespace.yaml
+	@kubectl apply -f k8s/local/secrets.local.yaml
+	@kubectl apply -f k8s/local/postgres.yaml
 
-image-build:
-	@echo "🐋 Building image $(IMAGE)…"
-	docker build -t $(IMAGE) .
+_seq-apply:
+	@echo "☸️  Starte Seq (Logs/Traces)..."
+	@kubectl apply -f k8s/local/seq.yaml
 
-k8s-up: k8s-check image-build
-	@$(KUBECTL_CMD) apply -f k8s/local/namespace.yaml
-	@$(KUBECTL_CMD) apply -f k8s/local/secrets.local.yaml
-	@$(KUBECTL_CMD) apply -f k8s/local/postgres.yaml
-	@$(KUBECTL_CMD) apply -f k8s/local/app.yaml
-	@$(KUBECTL_CMD) rollout status -n $(NAMESPACE) deploy/cmc-app --timeout=180s
+_seq-wait:
+	@echo "⏳ Warte auf Seq-Pod..."
+	@kubectl rollout status deployment/seq -n $(NAMESPACE) --timeout=300s
 
-k8s-down: k8s-check
-	@-$(KUBECTL_CMD) delete -f k8s/local/app.yaml --ignore-not-found
-	@-$(KUBECTL_CMD) delete -f k8s/local/postgres.yaml --ignore-not-found
+_seq-forward:
+	@echo "📡 Port-Forward Seq → localhost:$(SEQ_PORT) ..."
+	@pkill -f "kubectl.*port-forward.*$(SEQ_PORT)" 2>/dev/null || true
+	@lsof -ti:$(SEQ_PORT) | xargs kill -9 2>/dev/null || true
+	@kubectl port-forward -n $(NAMESPACE) service/seq $(SEQ_PORT):$(SEQ_PORT) &
+	@sleep 2
 
-k8s-status: k8s-check
-	@$(KUBECTL_CMD) get all -n $(NAMESPACE)
+_redis-apply:
+	@echo "☸️  Starte Redis (SignalR-Backplane)..."
+	@kubectl apply -f k8s/local/redis.yaml
 
-k8s-logs: k8s-check
-	@$(KUBECTL_CMD) logs -n $(NAMESPACE) -f deploy/cmc-app --tail=200
+_redis-wait:
+	@echo "⏳ Warte auf Redis-Pod..."
+	@kubectl rollout status deployment/redis -n $(NAMESPACE) --timeout=60s
 
-k8s-port-forward: k8s-check
-	@echo "http://localhost:8080"
-	@$(KUBECTL_CMD) port-forward -n $(NAMESPACE) service/cmc-app 8080:80
+_redis-forward:
+	@echo "📡 Port-Forward Redis → localhost:$(REDIS_PORT) ..."
+	@pkill -f "kubectl.*port-forward.*$(REDIS_PORT)" 2>/dev/null || true
+	@lsof -ti:$(REDIS_PORT) | xargs kill -9 2>/dev/null || true
+	@kubectl port-forward -n $(NAMESPACE) service/redis $(REDIS_PORT):$(REDIS_PORT) &
+	@sleep 2
 
-k8s-seed: k8s-check
-	@-$(KUBECTL_CMD) delete job -n $(NAMESPACE) seed-master-user --ignore-not-found
-	@$(KUBECTL_CMD) apply -f k8s/local/seed-master-user.yaml
-	@$(KUBECTL_CMD) wait -n $(NAMESPACE) --for=condition=complete job/seed-master-user --timeout=600s
-	@$(KUBECTL_CMD) logs -n $(NAMESPACE) job/seed-master-user --tail=200
+_db-wait:
+	@echo "⏳ Warte auf Postgres-Pod..."
+	@kubectl rollout status deployment/postgres -n $(NAMESPACE) --timeout=120s
 
-.PHONY: all help k8s-check image-build k8s-up k8s-down k8s-status k8s-logs k8s-port-forward k8s-seed
+_db-forward:
+	@echo "📡 Port-Forward DB → localhost:$(DB_PORT) ..."
+	@pkill -f "kubectl.*port-forward.*$(DB_PORT)" 2>/dev/null || true
+	@lsof -ti:$(DB_PORT) | xargs kill -9 2>/dev/null || true
+	@sleep 1
+	@kubectl port-forward -n $(NAMESPACE) service/postgres $(DB_PORT):$(DB_PORT) &
+	@sleep 3
+
+_migrate:
+	@echo "🔄 Führe EF-Migrationen aus..."
+	@cd $(PROJECT) && \
+		dotnet ef database update \
+			--project ../Modules/Identity/Identity.Infrastructure \
+			--startup-project . \
+			--context IdentityDbContext \
+			--connection $(DB_CONN) && \
+		dotnet ef database update \
+			--project ../Modules/Todos/Todos.Infrastructure \
+			--startup-project . \
+			--context TodosDbContext \
+			--connection $(DB_CONN) && \
+		dotnet ef database update \
+			--project ../Modules/Notifications/Notifications.Infrastructure \
+			--startup-project . \
+			--context NotificationsDbContext \
+			--connection $(DB_CONN)
+	@echo "✅ Migrationen abgeschlossen"

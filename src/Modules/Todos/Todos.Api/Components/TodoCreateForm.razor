@@ -1,0 +1,76 @@
+@* Formular zum Erstellen einer neuen Aufgabe.
+   Komplett zustandslos – alle Daten kommen als Parameter rein. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <MudText Typo="Typo.h6" GutterBottom="true">
+        Neue Aufgabe erstellen
+    </MudText>
+
+    <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+
+        <MudGrid>
+            <MudItem xs="12" md="8">
+                <MudTextField @bind-Value="Model.Title"
+                              Label="Aufgaben-Titel"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Placeholder="z.B. Projekt dokumentieren..."
+                              For="@(() => Model.Title)" />
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudSelect @bind-Value="Model.Priority"
+                           Label="Priorität"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense">
+                    <MudSelectItem Value="@TodoPriority.Low">Niedrig</MudSelectItem>
+                    <MudSelectItem Value="@TodoPriority.Medium">Mittel</MudSelectItem>
+                    <MudSelectItem Value="@TodoPriority.High">Hoch</MudSelectItem>
+                    <MudSelectItem Value="@TodoPriority.Critical">Kritisch</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           Disabled="@(Loading || string.IsNullOrWhiteSpace(Model.Title))">
+                    @if (Loading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    }
+                    Erstellen
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+
+        <MudTextField @bind-Value="Model.Description"
+                      Label="Beschreibung (optional)"
+                      Variant="Variant.Outlined"
+                      Lines="2"
+                      FullWidth="true"
+                      Margin="Margin.Dense"
+                      Class="mt-3"
+                      For="@(() => Model.Description)" />
+    </EditForm>
+</MudPaper>
+
+@code {
+    /// <summary>Das gebundene ViewModel – wird vom Parent verwaltet.</summary>
+    [Parameter, EditorRequired]
+    public CreateTodoViewModel Model { get; set; } = default!;
+
+    /// <summary>Wird nach validem Submit aufgerufen.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnSubmit { get; set; }
+
+    /// <summary>Zeigt einen Ladeindikator auf dem Button.</summary>
+    [Parameter]
+    public bool Loading { get; set; }
+
+    private async Task HandleSubmit() => await OnSubmit.InvokeAsync();
+}

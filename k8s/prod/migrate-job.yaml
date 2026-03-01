@@ -1,0 +1,70 @@
+# Läuft einmalig vor dem Deployment, um alle EF Core Migrations sicher auszuführen.
+# Kein Race Condition mit mehreren App-Pods, da nur ein Job-Pod läuft.
+# Verwendung: kubectl apply -f k8s/prod/migrate-job.yaml
+#             kubectl wait --for=condition=complete job/cmc-migrate --timeout=120s
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cmc-migrate
+  namespace: cmc-prod
+  labels:
+    app: cmc-migrate
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PGHOST
+              value: postgres
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              value: cmc_prod
+            - name: PGUSER
+              value: cmc_user
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -euo pipefail
+              echo "⏳ Waiting for Postgres readiness..."
+              for i in $(seq 1 120); do
+                if PGPASSWORD="$PGPASSWORD" pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" >/dev/null 2>&1; then
+                  echo "✅ DB is ready"; exit 0
+                fi
+                echo "… still waiting ($i/120)"; sleep 2
+              done
+              echo "❌ DB not ready in time"; exit 1
+      containers:
+        - name: cmc-migrate
+          image: ghcr.io/ebejay95/tool/cmc-web:latest
+          imagePullPolicy: Always
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8080
+            - name: MIGRATE_ON_STARTUP
+              value: "true"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: cmc-app-secret
+                  key: connection
+            - name: Jwt__SecretKey
+              valueFrom:
+                secretKeyRef:
+                  name: cmc-app-secret
+                  key: jwt-secret
+            - name: APP_PUBLIC_BASE_URL
+              value: "https://cmc.example.com"
+          # Nur migrieren, dann beenden – kein HTTP-Traffic
+          command: ["dotnet", "Api.dll", "--migrate-only"]

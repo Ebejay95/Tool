@@ -1,0 +1,53 @@
+@page "/"
+@page "/home"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Home - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (_isAuthenticated)
+    {
+        <!-- Redirect authenticated users to dashboard -->
+        <MudText>Redirecting to dashboard...</MudText>
+    }
+    else
+    {
+        <!-- Landing page for non-authenticated users -->
+        <div style="text-align: center; margin-top: 48px;">
+            <MudText Typo="Typo.h2" GutterBottom="true" Color="Color.Primary">
+                CMC
+            </MudText>
+
+            <div style="margin: 48px 0;">
+                <MudButton Variant="Variant.Filled"
+                            Color="Color.Primary"
+                            Size="Size.Large"
+                            Href="/register">
+                    Kostenfrei registrieren
+                </MudButton>
+
+                <MudButton Variant="Variant.Outlined"
+                            Color="Color.Primary"
+                            Size="Size.Large"
+                            Href="/login">
+                    Anmelden
+                </MudButton>
+            </div>
+        </div>
+    }
+</MudContainer>
+
+@code {
+    private bool _isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isAuthenticated = await AuthService.IsAuthenticatedAsync();
+
+        if (_isAuthenticated)
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+}

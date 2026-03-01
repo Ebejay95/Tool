@@ -1,0 +1,82 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.SignalR.Client
+@using MudBlazor
+@inject ThemeService ThemeService
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject NotificationHubService NotifHubService
+@implements IAsyncDisposable
+
+<MudThemeProvider Theme="@ThemeService.Theme" IsDarkMode="@ThemeService.IsDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <NavMenu />
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-4 pt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    protected override void OnInitialized()
+    {
+        ThemeService.OnThemeChanged += StateHasChanged;
+
+        // Auf SignalR-Notifications subscriben → Snackbar anzeigen + Bell-Refresh
+        NotifHubService.OnNotificationReceived += HandleNotificationReceived;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        // Theme aus Cookie wiederherstellen (muss vor StateHasChanged stehen)
+        await ThemeService.InitializeAsync();
+        StateHasChanged();
+
+        // JWT aus localStorage laden und Auth-Zustand initialisieren
+        await AuthService.InitializeAsync();
+        var token = await AuthService.GetTokenAsync();
+
+        // Badge der Glocke initialisieren
+        await NotifHubService.NotifyAsync();
+
+        if (string.IsNullOrEmpty(token)) return;
+
+        // SignalR-Hub starten (Token wird intern von NotificationHubService gesetzt)
+        await NotifHubService.StartAsync();
+    }
+
+    private void HandleNotificationReceived(string title, string body, string severity)
+    {
+        var mudSeverity = severity.ToLowerInvariant() switch
+        {
+            "success" => Severity.Success,
+            "error"   => Severity.Error,
+            "warning" => Severity.Warning,
+            _         => Severity.Info
+        };
+
+        InvokeAsync(() =>
+        {
+            Snackbar.Add(body, mudSeverity, options =>
+            {
+                options.ShowCloseIcon = true;
+                if (!string.IsNullOrEmpty(title))
+                    options.VisibleStateDuration = 5000;
+            });
+            StateHasChanged();
+        });
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        ThemeService.OnThemeChanged -= StateHasChanged;
+        NotifHubService.OnNotificationReceived -= HandleNotificationReceived;
+        await NotifHubService.StopAsync();
+    }
+}

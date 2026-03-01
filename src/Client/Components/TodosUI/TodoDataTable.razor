@@ -1,0 +1,119 @@
+@using MudBlazor
+@* Tabellen-Ansicht aller Aufgaben.
+   Komplett zustandslos – Daten und Callbacks kommen als Parameter. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <MudText Typo="Typo.h6">Meine Aufgaben</MudText>
+        <MudButton OnClick="@OnRefresh"
+                   Variant="Variant.Text"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Refresh"
+                   Disabled="@Loading">
+            Aktualisieren
+        </MudButton>
+    </div>
+
+    @if (Loading)
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudProgressCircular Indeterminate="true" />
+            <MudText Typo="Typo.body2" Class="mt-4">Lade Aufgaben...</MudText>
+        </div>
+    }
+    else if (!Items.Any())
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Large" Color="Color.Secondary" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-4">Keine Aufgaben vorhanden</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Erstellen Sie Ihre erste Aufgabe mit dem Formular oben.
+            </MudText>
+        </div>
+    }
+    else
+    {
+        <MudDataGrid Items="@Items" Filterable="true" SortMode="SortMode.Single">
+            <Columns>
+                <PropertyColumn Property="x => x.Title" Title="Titel" />
+
+                <PropertyColumn Property="x => x.Status" Title="Status">
+                    <CellTemplate>
+                        <MudChip Color="@GetStatusColor(context.Item.Status)"
+                                 Size="Size.Small"
+                                 T="string">
+                            @context.Item.StatusLabel
+                        </MudChip>
+                    </CellTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Priority" Title="Priorität">
+                    <CellTemplate>
+                        <MudChip Color="@GetPriorityColor(context.Item.Priority)"
+                                 Size="Size.Small"
+                                 T="string">
+                            @context.Item.PriorityLabel
+                        </MudChip>
+                    </CellTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.CreatedAt" Title="Erstellt" Format="dd.MM.yyyy HH:mm" />
+
+                <TemplateColumn Title="Aktionen" Sortable="false">
+                    <CellTemplate>
+                        <MudButton Size="Size.Small"
+                                   Color="Color.Primary"
+                                   Variant="Variant.Text"
+                                   OnClick="@(() => OnToggleStatus.InvokeAsync(context.Item))">
+                            @(context.Item.IsCompleted ? "Wiedereröffnen" : "Abschließen")
+                        </MudButton>
+                        <MudButton Size="Size.Small"
+                                   Color="Color.Error"
+                                   Variant="Variant.Text"
+                                   OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))">
+                            Löschen
+                        </MudButton>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+    }
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TodoListItemViewModel> Items { get; set; } = [];
+
+    [Parameter]
+    public bool Loading { get; set; }
+
+    /// <summary>Aufgerufen wenn der User "Abschließen/Wiedereröffnen" klickt.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback<TodoListItemViewModel> OnToggleStatus { get; set; }
+
+    /// <summary>Aufgerufen wenn der User "Löschen" klickt – übergibt die Id.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    /// <summary>Aufgerufen beim Klick auf "Aktualisieren".</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnRefresh { get; set; }
+
+    private static Color GetStatusColor(TodoStatus status) => status switch
+    {
+        TodoStatus.Pending    => Color.Warning,
+        TodoStatus.InProgress => Color.Info,
+        TodoStatus.Completed  => Color.Success,
+        TodoStatus.Cancelled  => Color.Error,
+        _                                                => Color.Default
+    };
+
+    private static Color GetPriorityColor(TodoPriority priority) => priority switch
+    {
+        TodoPriority.Low      => Color.Default,
+        TodoPriority.Medium   => Color.Info,
+        TodoPriority.High     => Color.Warning,
+        TodoPriority.Critical => Color.Error,
+        _                                                => Color.Default
+    };
+}

@@ -1,0 +1,108 @@
+@page "/dashboard"
+@using App.Components.TodosUI
+@inject IAuthService AuthService
+@inject TodoApiService TodoApiService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid>
+        <MudItem xs="12">
+            <TodoCreateForm Model="@_newTodo"
+                            OnSubmit="@HandleCreateAsync"
+                            Loading="@_isCreating" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <TodoDataTable Items="@_todos"
+                           Loading="@_isLoadingTodos"
+                           OnToggleStatus="@HandleToggleStatusAsync"
+                           OnDelete="@HandleDeleteAsync"
+                           OnRefresh="@LoadTodosAsync" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private List<TodoListItemViewModel> _todos          = [];
+    private CreateTodoViewModel         _newTodo        = new();
+    private bool                        _isLoadingTodos = false;
+    private bool                        _isCreating     = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var isAuth = await AuthService.IsAuthenticatedAsync();
+        if (!isAuth) { Navigation.NavigateTo("/login"); return; }
+
+        await AuthService.InitializeAsync();
+        await LoadTodosAsync();
+        StateHasChanged();
+    }
+
+    private async Task LoadTodosAsync()
+    {
+        _isLoadingTodos = true;
+        StateHasChanged();
+
+        var result = await TodoApiService.GetUserTodosAsync();
+        _todos = result.IsSuccess
+            ? result.Value.ToViewModels()
+            : [];
+
+        if (!result.IsSuccess)
+            Snackbar.Add($"Fehler beim Laden der Aufgaben: {result.Error}", Severity.Error);
+
+        _isLoadingTodos = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleCreateAsync()
+    {
+        _isCreating = true;
+        var result = await TodoApiService.CreateTodoAsync(_newTodo.ToDto());
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Aufgabe erfolgreich erstellt!", Severity.Success);
+            _newTodo = new CreateTodoViewModel();
+            await LoadTodosAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Fehler beim Erstellen: {result.Error}", Severity.Error);
+        }
+
+        _isCreating = false;
+    }
+
+    private async Task HandleToggleStatusAsync(TodoListItemViewModel todo)
+    {
+        var newStatus = todo.IsCompleted ? TodoStatus.Pending : TodoStatus.Completed;
+        var result    = await TodoApiService.UpdateTodoStatusAsync(todo.Id.ToString(), newStatus);
+
+        if (result.IsSuccess)
+        {
+            await LoadTodosAsync();
+            Snackbar.Add("Status aktualisiert!", Severity.Success);
+        }
+        else
+            Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+
+    private async Task HandleDeleteAsync(Guid id)
+    {
+        var result = await TodoApiService.DeleteTodoAsync(id.ToString());
+
+        if (result.IsSuccess)
+        {
+            await LoadTodosAsync();
+            Snackbar.Add("Aufgabe gelöscht!", Severity.Success);
+        }
+        else
+            Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+}

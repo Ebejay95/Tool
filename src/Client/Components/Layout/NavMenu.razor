@@ -1,0 +1,160 @@
+@using MudBlazor
+@using App.Components.NotificationsUI
+@inject IAuthService AuthService
+@inject ThemeService ThemeService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@implements IDisposable
+
+@if (_isAuthenticated)
+{
+    <MudDrawer @bind-Open="drawerOpen"
+            Elevation="1"
+            Variant="@DrawerVariant.Responsive"
+            Width="280px">
+        <MudNavMenu>
+                <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">
+                    Dashboard
+                </MudNavLink>
+
+                <MudNavLink Href="/todos" Icon="@Icons.Material.Filled.Assignment">
+                    Aufgaben
+                </MudNavLink>
+
+                <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.AccountCircle">
+                    Profil
+                </MudNavLink>
+
+                <MudDivider Class="my-4" />
+
+                <MudNavLink Href="/dev/notifications" Icon="@Icons.Material.Filled.BugReport">
+                    Notification Dev
+                </MudNavLink>
+
+                <MudDivider Class="my-4" />
+
+                <div style="padding: 0 16px; margin-bottom: 8px;">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                        Angemeldet als: @(_currentUser?.FirstName ?? "")
+                    </MudText>
+                </div>
+
+                <MudNavLink OnClick="@HandleLogout" Icon="@Icons.Material.Filled.Logout" Style="color: var(--mud-palette-error);">
+                    Abmelden
+                </MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+}
+
+<MudAppBar Elevation="1">
+    @if (_isAuthenticated)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                    Color="Color.Inherit"
+                    Edge="Edge.Start"
+                    OnClick="ToggleDrawer" />
+        <MudSpacer />
+    }
+
+    @if (_isAuthenticated)
+    {
+        <MudText Typo="Typo.h6">Willkommen, @(_currentUser?.FirstName ?? "User")!</MudText>
+    }
+    else
+    {
+        <MudText Typo="Typo.h6">CMC Todo App</MudText>
+    }
+
+    <MudSpacer />
+
+    @if (_isAuthenticated)
+    {
+        <MudMenu Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight">
+            <MudMenuItem>
+                <div style="padding: 8px;">
+                    <MudText Typo="Typo.body2"><strong>@_currentUser?.FullName</strong></MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@_currentUser?.Email</MudText>
+                </div>
+            </MudMenuItem>
+            <MudDivider />
+            <MudMenuItem Icon="@Icons.Material.Filled.Settings">Einstellungen</MudMenuItem>
+            <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="@HandleLogout">Abmelden</MudMenuItem>
+        </MudMenu>
+    }
+    else
+    {
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Inherit"
+                   Href="/login"
+                   StartIcon="@Icons.Material.Filled.Login">
+            Anmelden
+        </MudButton>
+    }
+
+    @if (_isAuthenticated)
+    {
+        <NotificationBell />
+    }
+
+    <MudIconButton Icon="@(ThemeService.IsDarkMode ? Icons.Material.Filled.Brightness7 : Icons.Material.Filled.Brightness4)"
+                   Color="Color.Inherit"
+                   OnClick="ToggleTheme" />
+</MudAppBar>
+
+@code {
+    private bool drawerOpen = false;
+    private bool _isAuthenticated = false;
+    private Identity.Application.DTOs.UserInfo? _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckAuthenticationStatus();
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        await CheckAuthenticationStatus();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CheckAuthenticationStatus()
+    {
+        _isAuthenticated = await AuthService.IsAuthenticatedAsync();
+        if (_isAuthenticated)
+        {
+            _currentUser = await AuthService.GetCurrentUserAsync();
+        }
+        else
+        {
+            _currentUser = null;
+        }
+    }
+
+    private void ToggleDrawer()
+    {
+        drawerOpen = !drawerOpen;
+    }
+
+    private async Task ToggleTheme()
+    {
+        await ThemeService.ToggleAsync();
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        _isAuthenticated = false;
+        _currentUser = null;
+
+        Snackbar.Add("Erfolgreich abgemeldet", Severity.Success);
+        Navigation.NavigateTo("/");
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}

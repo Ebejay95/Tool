@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Notifications.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- AggregateRoot, IResourceOwner, IRepository, UserId, Result -->
+    <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
+    <!-- NotificationSeverity, NotificationInteraction, NotificationId -->
+    <ProjectReference Include="../../../Shared/Notifications.Abstractions/Notifications.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

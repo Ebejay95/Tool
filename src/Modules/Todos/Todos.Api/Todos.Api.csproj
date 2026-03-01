@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Todos.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.19" />
+    <PackageReference Include="MudBlazor" Version="6.19.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- IMapModule interface (server-only, kein WASM) -->
+    <ProjectReference Include="../../../Shared/ServerKernel/ServerKernel.csproj" />
+    <ProjectReference Include="../Todos.Application/Todos.Application.csproj" />
+    <ProjectReference Include="../Todos.Infrastructure/Todos.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

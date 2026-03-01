@@ -1,0 +1,311 @@
+@using Notifications.Application.DTOs
+@using MudBlazor
+@inject NotificationHubService NotifService
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+@implements IDisposable
+
+@* Glocken-Icon mit Ungelesen-Badge in der AppBar *@
+<MudBadge Content="@(_unreadCount > 9 ? "9+" : _unreadCount.ToString())"
+          Color="Color.Error"
+          Visible="@(_unreadCount > 0)"
+          Overlap="true"
+          Class="mx-1">
+    <MudIconButton Icon="@Icons.Material.Filled.Notifications"
+                   Color="Color.Inherit"
+                   OnClick="TogglePanel"
+                   aria-label="Notifications" />
+</MudBadge>
+
+@* Notification-Panel als Popover *@
+<MudPopover Open="@_panelOpen"
+            AnchorOrigin="Origin.BottomRight"
+            TransformOrigin="Origin.TopRight"
+            Fixed="true">
+    <MudPaper Elevation="8"
+              Style="width: 380px; max-height: 520px; overflow: hidden; display: flex; flex-direction: column;">
+
+        @* Header *@
+        <MudToolBar Dense="true" Style="padding: 8px 16px; border-bottom: 1px solid var(--mud-palette-divider);">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">Benachrichtigungen</MudText>
+            <MudSpacer />
+            @if (_notifications.Any(n => !n.IsRead))
+            {
+                <MudButton Size="Size.Small"
+                           Variant="Variant.Text"
+                           Color="Color.Primary"
+                           OnClick="MarkAllAsReadAsync"
+                           Disabled="@_loading">
+                    Alle lesen
+                </MudButton>
+            }
+            <MudIconButton Icon="@Icons.Material.Filled.Close"
+                           Size="Size.Small"
+                           Color="Color.Default"
+                           OnClick="ClosePanel" />
+        </MudToolBar>
+
+        @* Liste *@
+        <div style="overflow-y: auto; flex: 1;">
+            @if (_loading)
+            {
+                <div style="padding: 32px; display: flex; justify-content: center;">
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                </div>
+            }
+            else if (_notifications.Count == 0)
+            {
+                <div style="padding: 32px; text-align: center;">
+                    <MudIcon Icon="@Icons.Material.Outlined.NotificationsNone"
+                             Style="font-size: 48px; color: var(--mud-palette-action-disabled);" />
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
+                        Keine Benachrichtigungen
+                    </MudText>
+                </div>
+            }
+            else
+            {
+                @foreach (var n in _notifications)
+                {
+                    <div @key="n.Id"
+                         style="@GetItemStyle(n)"
+                         class="notification-item">
+                        <div style="padding: 12px 16px;">
+                            @* Erster Zeile: Severity-Chip + Timestamp + Löschen *@
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <MudChip Size="Size.Small"
+                                         Color="@GetSeverityColor(n.Severity)"
+                                         Variant="Variant.Filled"
+                                         Style="height: 20px; font-size: 10px; padding: 0 6px;">
+                                    @GetSeverityLabel(n.Severity)
+                                </MudChip>
+                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="flex: 1;">
+                                    @FormatRelativeTime(n.CreatedAt)
+                                </MudText>
+                                @if (!n.IsRead)
+                                {
+                                    <div style="width: 8px; height: 8px; border-radius: 50%;
+                                                background: var(--mud-palette-primary); flex-shrink: 0;" />
+                                }
+                                <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                               Size="Size.Small"
+                                               Color="Color.Default"
+                                               Style="padding: 2px; height: 20px; width: 20px;"
+                                               OnClick="() => DeleteAsync(n.Id)" />
+                            </div>
+
+                            @* Titel + Body *@
+                            <MudText Typo="Typo.body2" Style="@GetTitleStyle(n)">
+                                @n.Title
+                            </MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mt-1"
+                                     Style="white-space: pre-line; line-height: 1.4;">
+                                @n.Body
+                            </MudText>
+
+                            @* Interaktionen *@
+                            @if (n.Interactions.Count > 0)
+                            {
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                                    @foreach (var interaction in n.Interactions)
+                                    {
+                                        if (interaction.Type == "link" && interaction.Href is not null)
+                                        {
+                                            <MudButton Size="Size.Small"
+                                                       Variant="Variant.Outlined"
+                                                       Color="Color.Primary"
+                                                       Href="@interaction.Href"
+                                                       OnClick="() => HandleInteractionClickAsync(n)">
+                                                @interaction.Label
+                                            </MudButton>
+                                        }
+                                        else if (interaction.Type == "serveraction")
+                                        {
+                                            <MudButton Size="Size.Small"
+                                                       Variant="Variant.Outlined"
+                                                       Color="Color.Secondary"
+                                                       OnClick="() => HandleServerActionAsync(n, interaction.ActionName)">
+                                                @interaction.Label
+                                            </MudButton>
+                                        }
+                                    }
+                                </div>
+                            }
+
+                            @* Als gelesen markieren – nur wenn ungelesen *@
+                            @if (!n.IsRead)
+                            {
+                                <div style="margin-top: 6px;">
+                                    <MudButton Size="Size.Small"
+                                               Variant="Variant.Text"
+                                               Color="Color.Primary"
+                                               Style="padding: 0; font-size: 11px;"
+                                               OnClick="() => MarkAsReadAsync(n.Id)">
+                                        Als gelesen markieren
+                                    </MudButton>
+                                </div>
+                            }
+                        </div>
+                        <MudDivider />
+                    </div>
+                }
+            }
+        </div>
+    </MudPaper>
+</MudPopover>
+
+@code {
+    private bool        _panelOpen   = false;
+    private bool        _loading     = false;
+    private int         _unreadCount = 0;
+    private List<NotificationDto> _notifications = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        NotifService.Subscribe(OnNotificationReceivedAsync);
+        Navigation.LocationChanged += OnLocationChangedAsync;
+        await RefreshUnreadCountAsync();
+    }
+
+    private async void OnLocationChangedAsync(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        _panelOpen = false;
+        await RefreshUnreadCountAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnNotificationReceivedAsync()
+    {
+        await RefreshUnreadCountAsync();
+        if (_panelOpen)
+            await LoadNotificationsAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task TogglePanel()
+    {
+        _panelOpen = !_panelOpen;
+        if (_panelOpen)
+            await LoadNotificationsAsync();
+    }
+
+    private void ClosePanel() => _panelOpen = false;
+
+    private async Task LoadNotificationsAsync()
+    {
+        _loading = true;
+        StateHasChanged();
+
+        var result = await NotifService.GetNotificationsAsync(includeRead: true);
+        if (result.IsSuccess)
+            _notifications = result.Value;
+
+        _loading = false;
+        await RefreshUnreadCountAsync();
+        StateHasChanged();
+    }
+
+    private async Task RefreshUnreadCountAsync()
+    {
+        var result = await NotifService.GetUnreadCountAsync();
+        if (result.IsSuccess)
+            _unreadCount = result.Value;
+    }
+
+    private async Task MarkAsReadAsync(Guid id)
+    {
+        await NotifService.MarkAsReadAsync(id);
+        var n = _notifications.FirstOrDefault(x => x.Id == id);
+        if (n is not null)
+        {
+            var idx = _notifications.IndexOf(n);
+            _notifications[idx] = n with { IsRead = true };
+        }
+        await RefreshUnreadCountAsync();
+        StateHasChanged();
+    }
+
+    private async Task MarkAllAsReadAsync()
+    {
+        await NotifService.MarkAllAsReadAsync();
+        _notifications = _notifications
+            .Select(n => n with { IsRead = true })
+            .ToList();
+        _unreadCount = 0;
+        StateHasChanged();
+    }
+
+    private async Task DeleteAsync(Guid id)
+    {
+        await NotifService.DeleteAsync(id);
+        _notifications.RemoveAll(n => n.Id == id);
+        await RefreshUnreadCountAsync();
+        StateHasChanged();
+    }
+
+    private async Task HandleInteractionClickAsync(NotificationDto n)
+    {
+        if (!n.IsRead)
+            await MarkAsReadAsync(n.Id);
+        ClosePanel();
+    }
+
+    private async Task HandleServerActionAsync(NotificationDto n, string? actionName)
+    {
+        if (!n.IsRead)
+            await MarkAsReadAsync(n.Id);
+        if (actionName is not null)
+            Navigation.NavigateTo($"/notifications/action?name={Uri.EscapeDataString(actionName)}&notificationId={n.Id}");
+        ClosePanel();
+    }
+
+    // ── Hilfsmethoden ─────────────────────────────────────────────────────────
+
+    private static Color GetSeverityColor(string severity) => severity switch
+    {
+        "success" => Color.Success,
+        "warning" => Color.Warning,
+        "error"   => Color.Error,
+        "notice"  => Color.Info,
+        _         => Color.Default
+    };
+
+    private static string GetSeverityLabel(string severity) => severity switch
+    {
+        "success" => "Erfolg",
+        "warning" => "Hinweis",
+        "error"   => "Fehler",
+        "notice"  => "Info",
+        _         => "Info"
+    };
+
+    private static string GetItemStyle(NotificationDto n)
+        => n.IsRead
+            ? string.Empty
+            : "background: var(--mud-palette-action-hover);";
+
+    private static string GetTitleStyle(NotificationDto n)
+        => n.IsRead ? "font-weight: 400;" : "font-weight: 600;";
+
+    private static string FormatRelativeTime(DateTime createdAt)
+    {
+        var diff = DateTime.UtcNow - createdAt;
+        return diff.TotalMinutes < 1    ? "Gerade eben"
+             : diff.TotalHours   < 1    ? $"vor {(int)diff.TotalMinutes} Min."
+             : diff.TotalDays    < 1    ? $"vor {(int)diff.TotalHours} Std."
+             : diff.TotalDays    < 7    ? $"vor {(int)diff.TotalDays} Tagen"
+             : createdAt.ToString("dd.MM.yyyy");
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChangedAsync;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        NotifService.Unsubscribe(OnNotificationReceivedAsync);
+        Navigation.LocationChanged -= OnLocationChangedAsync;
+        await Task.CompletedTask;
+    }
+}

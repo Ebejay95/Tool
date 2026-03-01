@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Notifications.Api</RootNamespace>
+  </PropertyGroup>
+
+  <!-- ASP.NET Core (IActionResult, ControllerBase, Authorize, ...) -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- IMapModule interface (server-only, kein WASM) -->
+    <ProjectReference Include="../../../Shared/ServerKernel/ServerKernel.csproj" />
+    <!-- ICurrentUser, UserId, Result -->
+    <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
+    <!-- Notification entity, INotificationRepository -->
+    <ProjectReference Include="../Notifications.Domain/Notifications.Domain.csproj" />
+    <!-- INotificationAppService -->
+    <ProjectReference Include="../Notifications.Application/Notifications.Application.csproj" />
+    <!-- NotificationsDbContext (für SaveChangesAsync im Controller) -->
+    <ProjectReference Include="../Notifications.Infrastructure/Notifications.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

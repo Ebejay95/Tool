@@ -1,0 +1,166 @@
+@page "/register"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Registrierung - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 64px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudText Typo="Typo.h4" GutterBottom="true">Account erstellen</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Erstellen Sie Ihren kostenlosen Account
+            </MudText>
+        </div>
+
+        <EditForm Model="@_registerDto" OnValidSubmit="@HandleRegister">
+            <DataAnnotationsValidator />
+
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="_registerDto.FirstName"
+                                  Label="Vorname"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Dense"
+                                  Class="mb-4"
+                                  For="@(() => _registerDto.FirstName)" />
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="_registerDto.LastName"
+                                  Label="Nachname"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Margin="Margin.Dense"
+                                  Class="mb-4"
+                                  For="@(() => _registerDto.LastName)" />
+                </MudItem>
+            </MudGrid>
+
+            <MudTextField @bind-Value="_registerDto.Email"
+                          Label="E-Mail"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Email"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Email"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          For="@(() => _registerDto.Email)" />
+
+            <MudTextField @bind-Value="_registerDto.Password"
+                          Label="Passwort"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          For="@(() => _registerDto.Password)"
+                          HelperText="Mindestens 8 Zeichen" />
+
+            <MudTextField @bind-Value="_confirmPassword"
+                          Label="Passwort bestätigen"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          Error="@(_confirmPassword != _registerDto.Password && !string.IsNullOrEmpty(_confirmPassword))"
+                          ErrorText="Passwörter stimmen nicht überein" />
+
+            <MudCheckBox @bind-Value="_acceptTerms"
+                         Label="Ich akzeptiere die Nutzungsbedingungen und Datenschutzerklärung"
+                         Color="Color.Primary"
+                         Class="mb-4" />
+
+            <MudButton ButtonType="ButtonType.Submit"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Class="mb-4"
+                       Disabled="@(_isLoading || !_acceptTerms || _confirmPassword != _registerDto.Password)">
+                @if (_isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Account wird erstellt...</span>
+                }
+                else
+                {
+                    <span>Account erstellen</span>
+                }
+            </MudButton>
+
+        </EditForm>
+
+        <MudDivider Style="margin: 24px 0;" />
+
+        <div style="text-align: center;">
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Haben Sie bereits einen Account?
+                <MudLink Href="/login" Color="Color.Primary">
+                    Hier anmelden
+                </MudLink>
+            </MudText>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private readonly RegisterUserDto _registerDto = new();
+    private string _confirmPassword = "";
+    private bool _acceptTerms = false;
+    private bool _isLoading = false;
+
+    private async Task HandleRegister()
+    {
+        if (_confirmPassword != _registerDto.Password)
+        {
+            Snackbar.Add("Passwörter stimmen nicht überein", Severity.Error);
+            return;
+        }
+
+        if (!_acceptTerms)
+        {
+            Snackbar.Add("Bitte akzeptieren Sie die Nutzungsbedingungen", Severity.Error);
+            return;
+        }
+
+        try
+        {
+            _isLoading = true;
+            var result = await AuthService.RegisterAsync(_registerDto);
+
+            if (result.IsSuccess)
+            {
+                Snackbar.Add("Account erfolgreich erstellt! Sie können sich nun anmelden.", Severity.Success);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                Snackbar.Add($"Registrierung fehlgeschlagen: {result.Error}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ein Fehler ist aufgetreten: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+    }
+}

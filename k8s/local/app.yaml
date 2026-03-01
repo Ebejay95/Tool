@@ -68,6 +68,11 @@ spec:
                   key: connection
             - name: APP_PUBLIC_BASE_URL
               value: "http://localhost:8080"
+            - name: Redis__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: connection
           readinessProbe:
             httpGet:
               path: /health

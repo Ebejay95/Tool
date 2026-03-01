@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Notifications.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
+    <ProjectReference Include="../../../Shared/Notifications.Abstractions/Notifications.Abstractions.csproj" />
+    <!-- Todos-Domain-Events abonnieren (einwegige Abhängigkeit: Notifications reagiert auf Todos) -->
+    <ProjectReference Include="../../../Modules/Todos/Todos.Domain/Todos.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
