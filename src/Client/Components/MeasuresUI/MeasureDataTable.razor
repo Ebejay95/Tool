@@ -1,0 +1,139 @@
+@using MudBlazor
+@* Tabellen-Ansicht aller Maßnahmen.
+   Komplett zustandslos – Daten und Callbacks kommen als Parameter. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <MudText Typo="Typo.h6">Meine Maßnahmen</MudText>
+        <MudButton OnClick="@OnRefresh"
+                   Variant="Variant.Text"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Refresh"
+                   Disabled="@Loading">
+            Aktualisieren
+        </MudButton>
+    </div>
+
+    @if (Loading)
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudProgressCircular Indeterminate="true" />
+            <MudText Typo="Typo.body2" Class="mt-4">Lade Maßnahmen...</MudText>
+        </div>
+    }
+    else if (!Items.Any())
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Secondary" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-4">Keine Maßnahmen vorhanden</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Erstellen Sie Ihre erste Maßnahme mit dem Formular oben.
+            </MudText>
+        </div>
+    }
+    else
+    {
+        <MudDataGrid Items="@Items" Filterable="true" SortMode="SortMode.Single">
+            <Columns>
+                <PropertyColumn Property="x => x.IsoId" Title="ISO-ID" />
+                <PropertyColumn Property="x => x.Category" Title="Kategorie" />
+                <PropertyColumn Property="x => x.Name" Title="Name" />
+
+                <PropertyColumn Property="x => x.CostEur" Title="Kosten">
+                    <CellTemplate>
+                        <MudText Typo="Typo.body2">@context.Item.CostLabel</MudText>
+                    </CellTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.ImpactRisk" Title="Risikowirkung">
+                    <CellTemplate>
+                        <MudChip Color="@GetImpactColor(context.Item.ImpactRisk)"
+                                 Size="Size.Small"
+                                 T="string">
+                            @context.Item.ImpactRiskLabel
+                        </MudChip>
+                    </CellTemplate>
+                </PropertyColumn>
+
+                <PropertyColumn Property="x => x.Confidence" Title="Konfidenz">
+                    <CellTemplate>
+                        <MudChip Color="@GetConfidenceColor(context.Item.Confidence)"
+                                 Size="Size.Small"
+                                 T="string">
+                            @context.Item.ConfidenceLabel
+                        </MudChip>
+                    </CellTemplate>
+                </PropertyColumn>
+
+                <TemplateColumn Title="Taxonomie" Sortable="false">
+                    <CellTemplate>
+                        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                            @foreach (var id in context.Item.CategoryIds)
+                            {
+                                var cat = AvailableCategories?.FirstOrDefault(c => c.Id == id);
+                                if (cat is not null)
+                                {
+                                    <div style="padding:2px 8px;border-radius:12px;background:@cat.Color;color:#fff;font-size:0.75rem;">@cat.Label</div>
+                                }
+                            }
+                            @foreach (var id in context.Item.TagIds)
+                            {
+                                var tag = AvailableTags?.FirstOrDefault(t => t.Id == id);
+                                if (tag is not null)
+                                {
+                                    <div style="padding:2px 8px;border-radius:12px;background:@tag.Color;color:#fff;font-size:0.75rem;">@tag.Label</div>
+                                }
+                            }
+                        </div>
+                    </CellTemplate>
+                </TemplateColumn>
+
+                <TemplateColumn Title="Aktionen" Sortable="false">
+                    <CellTemplate>
+                        <MudButton Size="Size.Small"
+                                   Color="Color.Error"
+                                   Variant="Variant.Text"
+                                   OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))">
+                            Löschen
+                        </MudButton>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+    }
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<MeasureListItemViewModel> Items { get; set; } = [];
+
+    [Parameter]
+    public bool Loading { get; set; }
+
+    /// <summary>Aufgerufen wenn der User "Löschen" klickt – übergibt die Id.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback<Guid> OnDelete { get; set; }
+
+    /// <summary>Aufgerufen beim Klick auf "Aktualisieren".</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnRefresh { get; set; }
+
+    [Parameter] public IReadOnlyList<CategoryViewModel>? AvailableCategories { get; set; }
+    [Parameter] public IReadOnlyList<TagViewModel>?      AvailableTags       { get; set; }
+
+    private static Color GetImpactColor(int risk) => risk switch
+    {
+        1 or 2 => Color.Success,
+        3      => Color.Warning,
+        4 or 5 => Color.Error,
+        _      => Color.Default
+    };
+
+    private static Color GetConfidenceColor(int conf) => conf switch
+    {
+        1 => Color.Warning,
+        2 => Color.Info,
+        3 => Color.Success,
+        _ => Color.Default
+    };
+}

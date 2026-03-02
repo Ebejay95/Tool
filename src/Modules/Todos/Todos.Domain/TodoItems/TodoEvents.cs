@@ -1,6 +1,6 @@
 using SharedKernel;
 
-namespace Todos.Domain.TodoItems;
+namespace Todos.Domain.Todos;
 
 public sealed record TodoCreatedEvent(TodoId TodoId, UserId UserId, string Title) : DomainEvent;
 

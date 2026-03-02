@@ -1,7 +1,7 @@
 using SharedKernel;
 using Todos.Application.DTOs;
 using Todos.Application.Ports;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using MediatR;
 
 namespace Todos.Application.UseCases.Commands;
@@ -21,7 +21,7 @@ public sealed class CreateTodoHandler : IRequestHandler<CreateTodoCommand, Resul
 
     public async Task<Result<TodoDto>> Handle(CreateTodoCommand request, CancellationToken cancellationToken)
     {
-        var todoResult = TodoItem.Create(
+        var todoResult = Todo.Create(
             request.UserId,
             request.Data.Title,
             request.Data.Description,
@@ -32,6 +32,8 @@ public sealed class CreateTodoHandler : IRequestHandler<CreateTodoCommand, Resul
             return Result.Failure<TodoDto>(todoResult.Error);
 
         var todo = todoResult.Value;
+        todo.SetCategories(request.Data.CategoryIds);
+        todo.SetTags(request.Data.TagIds);
         _todoRepository.Add(todo);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -47,7 +49,9 @@ public sealed class CreateTodoHandler : IRequestHandler<CreateTodoCommand, Resul
             todo.CreatedAt,
             todo.UpdatedAt,
             todo.CompletedAt,
-            todo.IsOverdue);
+            todo.IsOverdue,
+            todo.CategoryIds,
+            todo.TagIds);
 
         return Result.Success(todoDto);
     }

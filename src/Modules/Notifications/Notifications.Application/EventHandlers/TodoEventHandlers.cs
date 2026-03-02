@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Notifications.Abstractions;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using INotificationPublisher = Notifications.Abstractions.INotificationPublisher;
 
 namespace Notifications.Application.EventHandlers;

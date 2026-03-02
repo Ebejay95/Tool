@@ -1,6 +1,6 @@
 using SharedKernel;
 
-namespace Todos.Domain.TodoItems;
+namespace Todos.Domain.Todos;
 
 public static class TodoErrors
 {

@@ -1,0 +1,16 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/bin/Debug/net8.0/Measures.Domain.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/bin/Debug/net8.0/Measures.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/bin/Debug/net8.0/Measures.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/refint/Measures.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/ref/Measures.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/bin/Debug/net8.0/SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.Domain.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/Debug/net8.0/Measures.A27EFE88.Up2Date

@@ -1,0 +1,177 @@
+@* Formular zum Erstellen einer neuen Maßnahme.
+   Komplett zustandslos – alle Daten kommen als Parameter rein. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <MudText Typo="Typo.h6" GutterBottom="true">
+        Neue Maßnahme erstellen
+    </MudText>
+
+    <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+
+        <MudGrid>
+            <MudItem xs="12" md="3">
+                <MudTextField @bind-Value="Model.IsoId"
+                              Label="ISO-ID"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Placeholder="z.B. A.8.1.1"
+                              For="@(() => Model.IsoId)" />
+            </MudItem>
+
+            <MudItem xs="12" md="3">
+                <MudTextField @bind-Value="Model.Category"
+                              Label="Kategorie"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Placeholder="z.B. Zugangskontrolle"
+                              For="@(() => Model.Category)" />
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudTextField @bind-Value="Model.Name"
+                              Label="Name der Maßnahme"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Placeholder="z.B. Passwortrichtlinie einführen"
+                              For="@(() => Model.Name)" />
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudNumericField @bind-Value="Model.CostEur"
+                                 Label="Kosten (EUR)"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Min="0"
+                                 For="@(() => Model.CostEur)" />
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudNumericField @bind-Value="Model.EffortHours"
+                                 Label="Aufwand (h)"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Min="0"
+                                 For="@(() => Model.EffortHours)" />
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudSelect @bind-Value="Model.ImpactRisk"
+                           Label="Risikowirkung (1–5)"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           For="@(() => Model.ImpactRisk)">
+                    <MudSelectItem Value="1">1 – Sehr gering</MudSelectItem>
+                    <MudSelectItem Value="2">2 – Gering</MudSelectItem>
+                    <MudSelectItem Value="3">3 – Mittel</MudSelectItem>
+                    <MudSelectItem Value="4">4 – Hoch</MudSelectItem>
+                    <MudSelectItem Value="5">5 – Sehr hoch</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="2">
+                <MudSelect @bind-Value="Model.Confidence"
+                           Label="Konfidenz (1–3)"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           For="@(() => Model.Confidence)">
+                    <MudSelectItem Value="1">1 – Niedrig</MudSelectItem>
+                    <MudSelectItem Value="2">2 – Mittel</MudSelectItem>
+                    <MudSelectItem Value="3">3 – Hoch</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="4">
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           Disabled="@(Loading || string.IsNullOrWhiteSpace(Model.Name) || string.IsNullOrWhiteSpace(Model.IsoId))">
+                    @if (Loading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    }
+                    Erstellen
+                </MudButton>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudTextField @bind-Value="Model.Justification"
+                              Label="Begründung (optional)"
+                              Variant="Variant.Outlined"
+                              Lines="2"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              For="@(() => Model.Justification)" />
+            </MudItem>
+
+            @if ((AvailableCategories?.Count ?? 0) > 0 || (AvailableTags?.Count ?? 0) > 0)
+            {
+                @if ((AvailableCategories?.Count ?? 0) > 0)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.caption" Class="mb-1">Kategorien</MudText>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            @foreach (var cat in AvailableCategories!)
+                            {
+                                var catId = cat.Id;
+                                var catSelected = Model.SelectedCategoryIds.Contains(catId);
+                                <div style="@ChipStyle(catSelected, cat.Color)" @onclick="@(() => ToggleCategory(catId))">
+                                    @cat.Label
+                                </div>
+                            }
+                        </div>
+                    </MudItem>
+                }
+                @if ((AvailableTags?.Count ?? 0) > 0)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.caption" Class="mb-1">Tags</MudText>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            @foreach (var tag in AvailableTags!)
+                            {
+                                var tagId = tag.Id;
+                                var tagSelected = Model.SelectedTagIds.Contains(tagId);
+                                <div style="@ChipStyle(tagSelected, tag.Color)" @onclick="@(() => ToggleTag(tagId))">
+                                    @tag.Label
+                                </div>
+                            }
+                        </div>
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+    </EditForm>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public CreateMeasureViewModel         Model              { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback                  OnSubmit           { get; set; }
+    [Parameter]                 public bool                           Loading            { get; set; }
+    [Parameter]                 public IReadOnlyList<CategoryViewModel>? AvailableCategories { get; set; }
+    [Parameter]                 public IReadOnlyList<TagViewModel>?      AvailableTags       { get; set; }
+
+    private static string ChipStyle(bool selected, string color) =>
+        $"padding:3px 10px;border-radius:16px;cursor:pointer;border:2px solid {color};" +
+        "background:" + (selected ? color : "transparent") + ";" +
+        "color:" + (selected ? "#fff" : "inherit") + ";font-size:0.8rem;";
+
+    private void ToggleCategory(Guid id)
+    {
+        var set = new HashSet<Guid>(Model.SelectedCategoryIds);
+        if (!set.Add(id)) set.Remove(id);
+        Model.SelectedCategoryIds = set;
+    }
+    private void ToggleTag(Guid id)
+    {
+        var set = new HashSet<Guid>(Model.SelectedTagIds);
+        if (!set.Add(id)) set.Remove(id);
+        Model.SelectedTagIds = set;
+    }
+
+    private async Task HandleSubmit() => await OnSubmit.InvokeAsync();
+}

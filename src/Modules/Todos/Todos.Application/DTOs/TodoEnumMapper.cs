@@ -1,4 +1,4 @@
-using DomTodoItems = Todos.Domain.TodoItems;
+using DomTodos = Todos.Domain.Todos;
 
 namespace Todos.Application.DTOs;
 
@@ -11,32 +11,32 @@ namespace Todos.Application.DTOs;
 /// </summary>
 public static class TodoEnumMapper
 {
-    public static TodoStatus MapToDto(DomTodoItems.TodoStatus status) => status switch
+    public static TodoStatus MapToDto(DomTodos.TodoStatus status) => status switch
     {
-        DomTodoItems.TodoStatus.Pending    => TodoStatus.Pending,
-        DomTodoItems.TodoStatus.InProgress => TodoStatus.InProgress,
-        DomTodoItems.TodoStatus.Completed  => TodoStatus.Completed,
-        DomTodoItems.TodoStatus.Cancelled  => TodoStatus.Cancelled,
+        DomTodos.TodoStatus.Pending    => TodoStatus.Pending,
+        DomTodos.TodoStatus.InProgress => TodoStatus.InProgress,
+        DomTodos.TodoStatus.Completed  => TodoStatus.Completed,
+        DomTodos.TodoStatus.Cancelled  => TodoStatus.Cancelled,
         _ => throw new ArgumentOutOfRangeException(nameof(status), status,
                  $"Unbekannter TodoStatus-Wert: {status}. DTO-Enum muss aktualisiert werden.")
     };
 
-    public static TodoPriority MapToDto(DomTodoItems.TodoPriority priority) => priority switch
+    public static TodoPriority MapToDto(DomTodos.TodoPriority priority) => priority switch
     {
-        DomTodoItems.TodoPriority.Low      => TodoPriority.Low,
-        DomTodoItems.TodoPriority.Medium   => TodoPriority.Medium,
-        DomTodoItems.TodoPriority.High     => TodoPriority.High,
-        DomTodoItems.TodoPriority.Critical => TodoPriority.Critical,
+        DomTodos.TodoPriority.Low      => TodoPriority.Low,
+        DomTodos.TodoPriority.Medium   => TodoPriority.Medium,
+        DomTodos.TodoPriority.High     => TodoPriority.High,
+        DomTodos.TodoPriority.Critical => TodoPriority.Critical,
         _ => throw new ArgumentOutOfRangeException(nameof(priority), priority,
                  $"Unbekannter TodoPriority-Wert: {priority}. DTO-Enum muss aktualisiert werden.")
     };
 
-    public static DomTodoItems.TodoPriority MapToDomain(TodoPriority priority) => priority switch
+    public static DomTodos.TodoPriority MapToDomain(TodoPriority priority) => priority switch
     {
-        TodoPriority.Low      => DomTodoItems.TodoPriority.Low,
-        TodoPriority.Medium   => DomTodoItems.TodoPriority.Medium,
-        TodoPriority.High     => DomTodoItems.TodoPriority.High,
-        TodoPriority.Critical => DomTodoItems.TodoPriority.Critical,
+        TodoPriority.Low      => DomTodos.TodoPriority.Low,
+        TodoPriority.Medium   => DomTodos.TodoPriority.Medium,
+        TodoPriority.High     => DomTodos.TodoPriority.High,
+        TodoPriority.Critical => DomTodos.TodoPriority.Critical,
         _ => throw new ArgumentOutOfRangeException(nameof(priority), priority,
                  $"Unbekannter TodoPriority-Wert: {priority}. Domain-Enum muss aktualisiert werden.")
     };

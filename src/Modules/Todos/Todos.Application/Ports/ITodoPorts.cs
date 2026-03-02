@@ -1,14 +1,14 @@
 using SharedKernel;
 using Todos.Application.DTOs;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 
 namespace Todos.Application.Ports;
 
-public interface ITodoRepository : IRepository<TodoItem>
+public interface ITodoRepository : IRepository<Todo>
 {
-    Task<IReadOnlyList<TodoItem>> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);
-    Task<TodoItem?> GetByIdAndUserIdAsync(TodoId todoId, UserId userId, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<TodoItem>> GetOverdueByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Todo>> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);
+    Task<Todo?> GetByIdAndUserIdAsync(TodoId todoId, UserId userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Todo>> GetOverdueByUserIdAsync(UserId userId, CancellationToken cancellationToken = default);
 }
 
 public interface ITodoQueryService

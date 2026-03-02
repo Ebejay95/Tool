@@ -14,7 +14,9 @@ public sealed record TodoListItemViewModel(
     TodoPriority Priority,
     DateTime CreatedAt,
     DateTime? DueDate,
-    bool IsOverdue)
+    bool IsOverdue,
+    List<Guid> CategoryIds,
+    List<Guid> TagIds)
 {
     // ── UI-Helpers (kein Razor-Code nötig, testbar) ──────────────────────────
 

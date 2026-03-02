@@ -20,6 +20,8 @@ builder.Services.AddScoped<IAuthService, AuthApiService>();
 
 // ── Fach-Services (HTTP-basiert, ersetzen die MediatR-Direct-Calls) ────────
 builder.Services.AddScoped<TodoApiService>();
+builder.Services.AddScoped<MeasureApiService>();
+builder.Services.AddScoped<TaxonomyApiService>();
 builder.Services.AddScoped<NotificationHubService>();
 builder.Services.AddScoped<ThemeService>();
 

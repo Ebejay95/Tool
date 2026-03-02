@@ -1,7 +1,7 @@
 using SharedKernel;
 using Todos.Application.DTOs;
 using Todos.Application.Ports;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using MediatR;
 
 namespace Todos.Application.UseCases.Commands;
@@ -34,6 +34,9 @@ public sealed class UpdateTodoHandler : IRequestHandler<UpdateTodoCommand, Resul
         if (updateResult.IsFailure)
             return Result.Failure<TodoDto>(updateResult.Error);
 
+        todo.SetCategories(request.Data.CategoryIds);
+        todo.SetTags(request.Data.TagIds);
+
         _todoRepository.Update(todo);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -48,7 +51,9 @@ public sealed class UpdateTodoHandler : IRequestHandler<UpdateTodoCommand, Resul
             todo.CreatedAt,
             todo.UpdatedAt,
             todo.CompletedAt,
-            todo.IsOverdue);
+            todo.IsOverdue,
+            todo.CategoryIds,
+            todo.TagIds);
 
         return Result.Success(todoDto);
     }

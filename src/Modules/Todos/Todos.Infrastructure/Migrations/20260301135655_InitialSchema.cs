@@ -33,7 +33,7 @@ namespace Todos.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TodoItems",
+                name: "Todos",
                 schema: "todos",
                 columns: table => new
                 {
@@ -50,7 +50,7 @@ namespace Todos.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TodoItems", x => x.Id);
+                    table.PrimaryKey("PK_Todos", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -61,9 +61,9 @@ namespace Todos.Infrastructure.Migrations
                 filter: "\"ProcessedOn\" IS NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TodoItems_UserId",
+                name: "IX_Todos_UserId",
                 schema: "todos",
-                table: "TodoItems",
+                table: "Todos",
                 column: "UserId");
         }
 
@@ -75,7 +75,7 @@ namespace Todos.Infrastructure.Migrations
                 schema: "todos");
 
             migrationBuilder.DropTable(
-                name: "TodoItems",
+                name: "Todos",
                 schema: "todos");
         }
     }

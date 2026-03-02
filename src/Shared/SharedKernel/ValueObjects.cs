@@ -50,3 +50,42 @@ public sealed record TodoId : ValueObject
 
     public static implicit operator Guid(TodoId todoId) => todoId.Value;
 }
+
+[JsonConverter(typeof(MeasureIdJsonConverter))]
+public sealed record MeasureId : ValueObject
+{
+    private MeasureId(Guid value) => Value = value;
+
+    public Guid Value { get; }
+
+    public static MeasureId New() => new(Guid.NewGuid());
+    public static MeasureId From(Guid value) => new(value);
+
+    public static implicit operator Guid(MeasureId measureId) => measureId.Value;
+}
+
+[JsonConverter(typeof(CategoryIdJsonConverter))]
+public sealed record CategoryId : ValueObject
+{
+    private CategoryId(Guid value) => Value = value;
+
+    public Guid Value { get; }
+
+    public static CategoryId New() => new(Guid.NewGuid());
+    public static CategoryId From(Guid value) => new(value);
+
+    public static implicit operator Guid(CategoryId id) => id.Value;
+}
+
+[JsonConverter(typeof(TagIdJsonConverter))]
+public sealed record TagId : ValueObject
+{
+    private TagId(Guid value) => Value = value;
+
+    public Guid Value { get; }
+
+    public static TagId New() => new(Guid.NewGuid());
+    public static TagId From(Guid value) => new(value);
+
+    public static implicit operator Guid(TagId id) => id.Value;
+}

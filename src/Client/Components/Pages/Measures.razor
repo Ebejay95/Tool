@@ -1,0 +1,110 @@
+@page "/measures"
+@using App.Components.MeasuresUI
+@inject IAuthService AuthService
+@inject MeasureApiService MeasureApiService
+@inject TaxonomyApiService TaxonomyApiService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<PageTitle>Maßnahmen - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid>
+        <MudItem xs="12">
+            <MeasureCreateForm Model="@_newMeasure"
+                               OnSubmit="@HandleCreateAsync"
+                               Loading="@_isCreating"
+                               AvailableCategories="@_categories"
+                               AvailableTags="@_tags" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <MeasureDataTable Items="@_measures"
+                              Loading="@_isLoading"
+                              OnDelete="@HandleDeleteAsync"
+                              OnRefresh="@LoadMeasuresAsync"
+                              AvailableCategories="@_categories"
+                              AvailableTags="@_tags" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private List<MeasureListItemViewModel> _measures   = [];
+    private CreateMeasureViewModel         _newMeasure = new();
+    private bool                           _isLoading  = false;
+    private bool                           _isCreating = false;
+    private List<CategoryViewModel>        _categories = [];
+    private List<TagViewModel>             _tags       = [];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var isAuth = await AuthService.IsAuthenticatedAsync();
+        if (!isAuth) { Navigation.NavigateTo("/login"); return; }
+
+        await Task.WhenAll(LoadMeasuresAsync(), LoadTaxonomyAsync());
+        StateHasChanged();
+    }
+
+    private async Task LoadTaxonomyAsync()
+    {
+        var catResult = await TaxonomyApiService.GetCategoriesAsync();
+        var tagResult = await TaxonomyApiService.GetTagsAsync();
+        _categories = catResult.IsSuccess ? catResult.Value.ToViewModels() : [];
+        _tags       = tagResult.IsSuccess ? tagResult.Value.ToViewModels() : [];
+    }
+
+    private async Task LoadMeasuresAsync()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        var result = await MeasureApiService.GetMeasuresAsync();
+        _measures = result.IsSuccess
+            ? result.Value.ToViewModels()
+            : [];
+
+        if (!result.IsSuccess)
+            Snackbar.Add($"Fehler beim Laden der Maßnahmen: {result.Error}", Severity.Error);
+
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleCreateAsync()
+    {
+        _isCreating = true;
+
+        var result = await MeasureApiService.CreateMeasureAsync(_newMeasure.ToDto());
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Maßnahme erfolgreich erstellt!", Severity.Success);
+            _newMeasure = new CreateMeasureViewModel();
+            await LoadMeasuresAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Fehler beim Erstellen: {result.Error}", Severity.Error);
+        }
+
+        _isCreating = false;
+    }
+
+    private async Task HandleDeleteAsync(Guid id)
+    {
+        var result = await MeasureApiService.DeleteMeasureAsync(id);
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Maßnahme gelöscht.", Severity.Success);
+            await LoadMeasuresAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Fehler beim Löschen: {result.Error}", Severity.Error);
+        }
+    }
+}

@@ -1,0 +1,121 @@
+@page "/taxonomy"
+@using App.Components.TaxonomyUI
+@inject IAuthService AuthService
+@inject TaxonomyApiService TaxonomyApiService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+<PageTitle>Taxonomie - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudGrid>
+        <MudItem xs="12">
+            <TaxonomyCreateForm CategoryModel="@_newCategory"
+                                TagModel="@_newTag"
+                                OnCategorySubmit="@HandleCreateCategoryAsync"
+                                OnTagSubmit="@HandleCreateTagAsync"
+                                CategoryLoading="@_isCreatingCategory"
+                                TagLoading="@_isCreatingTag" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <CategoryTable Items="@_categories"
+                           Loading="@_isLoadingCategories"
+                           OnDelete="@HandleDeleteCategoryAsync"
+                           OnRefresh="@LoadCategoriesAsync" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <TagTable Items="@_tags"
+                      Loading="@_isLoadingTags"
+                      OnDelete="@HandleDeleteTagAsync"
+                      OnRefresh="@LoadTagsAsync" />
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private List<CategoryViewModel>    _categories         = [];
+    private List<TagViewModel>         _tags               = [];
+    private CreateCategoryViewModel    _newCategory        = new();
+    private CreateTagViewModel         _newTag             = new();
+    private bool                       _isLoadingCategories = false;
+    private bool                       _isLoadingTags       = false;
+    private bool                       _isCreatingCategory  = false;
+    private bool                       _isCreatingTag       = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        var isAuth = await AuthService.IsAuthenticatedAsync();
+        if (!isAuth) { Navigation.NavigateTo("/login"); return; }
+
+        await Task.WhenAll(LoadCategoriesAsync(), LoadTagsAsync());
+        StateHasChanged();
+    }
+
+    private async Task LoadCategoriesAsync()
+    {
+        _isLoadingCategories = true;
+        StateHasChanged();
+        var result = await TaxonomyApiService.GetCategoriesAsync();
+        _categories = result.IsSuccess ? result.Value.ToViewModels() : [];
+        if (!result.IsSuccess) Snackbar.Add($"Fehler beim Laden der Kategorien: {result.Error}", Severity.Error);
+        _isLoadingCategories = false;
+        StateHasChanged();
+    }
+
+    private async Task LoadTagsAsync()
+    {
+        _isLoadingTags = true;
+        StateHasChanged();
+        var result = await TaxonomyApiService.GetTagsAsync();
+        _tags = result.IsSuccess ? result.Value.ToViewModels() : [];
+        if (!result.IsSuccess) Snackbar.Add($"Fehler beim Laden der Tags: {result.Error}", Severity.Error);
+        _isLoadingTags = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleCreateCategoryAsync()
+    {
+        _isCreatingCategory = true;
+        var result = await TaxonomyApiService.CreateCategoryAsync(_newCategory.ToDto());
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Kategorie erfolgreich erstellt!", Severity.Success);
+            _newCategory = new CreateCategoryViewModel();
+            await LoadCategoriesAsync();
+        }
+        else Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+        _isCreatingCategory = false;
+    }
+
+    private async Task HandleCreateTagAsync()
+    {
+        _isCreatingTag = true;
+        var result = await TaxonomyApiService.CreateTagAsync(_newTag.ToDto());
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Tag erfolgreich erstellt!", Severity.Success);
+            _newTag = new CreateTagViewModel();
+            await LoadTagsAsync();
+        }
+        else Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+        _isCreatingTag = false;
+    }
+
+    private async Task HandleDeleteCategoryAsync(Guid id)
+    {
+        var result = await TaxonomyApiService.DeleteCategoryAsync(id);
+        if (result.IsSuccess) { Snackbar.Add("Kategorie gelöscht.", Severity.Success); await LoadCategoriesAsync(); }
+        else Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+
+    private async Task HandleDeleteTagAsync(Guid id)
+    {
+        var result = await TaxonomyApiService.DeleteTagAsync(id);
+        if (result.IsSuccess) { Snackbar.Add("Tag gelöscht.", Severity.Success); await LoadTagsAsync(); }
+        else Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+}

@@ -59,6 +59,29 @@
 
                 <PropertyColumn Property="x => x.CreatedAt" Title="Erstellt" Format="dd.MM.yyyy HH:mm" />
 
+                <TemplateColumn Title="Taxonomie" Sortable="false">
+                    <CellTemplate>
+                        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                            @foreach (var id in context.Item.CategoryIds)
+                            {
+                                var cat = AvailableCategories?.FirstOrDefault(c => c.Id == id);
+                                if (cat is not null)
+                                {
+                                    <div style="padding:2px 8px;border-radius:12px;background:@cat.Color;color:#fff;font-size:0.75rem;">@cat.Label</div>
+                                }
+                            }
+                            @foreach (var id in context.Item.TagIds)
+                            {
+                                var tag = AvailableTags?.FirstOrDefault(t => t.Id == id);
+                                if (tag is not null)
+                                {
+                                    <div style="padding:2px 8px;border-radius:12px;background:@tag.Color;color:#fff;font-size:0.75rem;">@tag.Label</div>
+                                }
+                            }
+                        </div>
+                    </CellTemplate>
+                </TemplateColumn>
+
                 <TemplateColumn Title="Aktionen" Sortable="false">
                     <CellTemplate>
                         <MudButton Size="Size.Small"
@@ -98,6 +121,9 @@
     /// <summary>Aufgerufen beim Klick auf "Aktualisieren".</summary>
     [Parameter, EditorRequired]
     public EventCallback OnRefresh { get; set; }
+
+    [Parameter] public IReadOnlyList<CategoryViewModel>? AvailableCategories { get; set; }
+    [Parameter] public IReadOnlyList<TagViewModel>?      AvailableTags       { get; set; }
 
     private static Color GetStatusColor(TodoStatus status) => status switch
     {

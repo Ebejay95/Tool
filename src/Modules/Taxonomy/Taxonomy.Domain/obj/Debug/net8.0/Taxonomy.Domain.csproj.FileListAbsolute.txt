@@ -1,0 +1,16 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/bin/Debug/net8.0/Taxonomy.Domain.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/bin/Debug/net8.0/Taxonomy.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/bin/Debug/net8.0/Taxonomy.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/bin/Debug/net8.0/SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.B5506EDF.Up2Date
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/refint/Taxonomy.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/Taxonomy.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/Debug/net8.0/ref/Taxonomy.Domain.dll

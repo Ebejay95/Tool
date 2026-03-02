@@ -1,15 +1,16 @@
 using SharedKernel;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Todos.Infrastructure.Persistence.Configurations;
 
-public sealed class TodoItemConfiguration : IEntityTypeConfiguration<TodoItem>
+public sealed class TodoConfiguration : IEntityTypeConfiguration<Todo>
 {
-    public void Configure(EntityTypeBuilder<TodoItem> builder)
+    public void Configure(EntityTypeBuilder<Todo> builder)
     {
-        builder.ToTable("TodoItems");
+        builder.ToTable("Todos");
 
         builder.HasKey(t => t.Id);
 
@@ -52,6 +53,26 @@ public sealed class TodoItemConfiguration : IEntityTypeConfiguration<TodoItem>
             .IsRequired();
 
         builder.Property(t => t.CompletedAt);
+
+        builder.Property(t => t.CategoryIds)
+            .HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                v => System.Text.Json.JsonSerializer.Deserialize<List<Guid>>(v, (System.Text.Json.JsonSerializerOptions?)null)!)
+            .HasColumnType("jsonb")
+            .Metadata.SetValueComparer(new ValueComparer<List<Guid>>(
+                (a, b) => a != null && b != null && a.SequenceEqual(b),
+                v => v.Aggregate(0, (hash, g) => HashCode.Combine(hash, g.GetHashCode())),
+                v => v.ToList()));
+
+        builder.Property(t => t.TagIds)
+            .HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                v => System.Text.Json.JsonSerializer.Deserialize<List<Guid>>(v, (System.Text.Json.JsonSerializerOptions?)null)!)
+            .HasColumnType("jsonb")
+            .Metadata.SetValueComparer(new ValueComparer<List<Guid>>(
+                (a, b) => a != null && b != null && a.SequenceEqual(b),
+                v => v.Aggregate(0, (hash, g) => HashCode.Combine(hash, g.GetHashCode())),
+                v => v.ToList()));
 
         // Ignore domain events (not persisted)
         builder.Ignore(t => t.DomainEvents);

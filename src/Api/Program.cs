@@ -1,6 +1,8 @@
 using Identity.Infrastructure;
+using Measures.Infrastructure;
 using Notifications.Infrastructure;
 using SharedKernel;
+using Taxonomy.Infrastructure;
 using Todos.Infrastructure;
 using Api.Bootstrap;
 using Api.Authorization;
@@ -177,6 +179,8 @@ if (args.Contains("--migrate-only"))
 {
     await app.Services.MigrateIdentityDatabaseAsync();
     await app.Services.MigrateTodosDatabaseAsync();
+    await app.Services.MigrateMeasuresDatabaseAsync();
+    await app.Services.MigrateTaxonomyDatabaseAsync();
     await app.Services.MigrateNotificationsDatabaseAsync();
     Console.WriteLine("Migrations completed. Exiting (--migrate-only mode).");
     return;

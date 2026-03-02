@@ -62,7 +62,7 @@ namespace Todos.Infrastructure.Migrations
                     b.ToTable("OutboxMessages", "todos");
                 });
 
-            modelBuilder.Entity("Todos.Domain.TodoItems.TodoItem", b =>
+            modelBuilder.Entity("Todos.Domain.Todos.Todo", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -102,7 +102,7 @@ namespace Todos.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TodoItems", "todos");
+                    b.ToTable("Todos", "todos");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,98 @@
+@using MudBlazor
+@* Formular zum Erstellen einer neuen Kategorie oder eines Tags. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <MudText Typo="Typo.h6" GutterBottom="true">Neue Kategorie / Tag erstellen</MudText>
+
+    <MudTabs Elevation="0" Rounded="false" ApplyEffectsToContainer="false" PanelClass="pt-4">
+
+        <MudTabPanel Text="Kategorie" Icon="@Icons.Material.Filled.Category">
+            <EditForm Model="@CategoryModel" OnValidSubmit="@HandleCategorySubmit">
+                <DataAnnotationsValidator />
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="CategoryModel.Label"
+                                      Label="Name"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true"
+                                      Placeholder="z.B. Zugangskontrolle"
+                                      For="@(() => CategoryModel.Label)" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField @bind-Value="CategoryModel.Color"
+                                      Label="Farbe (Hex)"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true"
+                                      Placeholder="#6366F1"
+                                      InputType="InputType.Color"
+                                      For="@(() => CategoryModel.Color)" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Size="Size.Large"
+                                   FullWidth="true"
+                                   Disabled="@(CategoryLoading || string.IsNullOrWhiteSpace(CategoryModel.Label))">
+                            @if (CategoryLoading) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+                            Erstellen
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Tag" Icon="@Icons.Material.Filled.Label">
+            <EditForm Model="@TagModel" OnValidSubmit="@HandleTagSubmit">
+                <DataAnnotationsValidator />
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="TagModel.Label"
+                                      Label="Name"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true"
+                                      Placeholder="z.B. Kritisch"
+                                      For="@(() => TagModel.Label)" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField @bind-Value="TagModel.Color"
+                                      Label="Farbe (Hex)"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      FullWidth="true"
+                                      Placeholder="#10B981"
+                                      InputType="InputType.Color"
+                                      For="@(() => TagModel.Color)" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Secondary"
+                                   Size="Size.Large"
+                                   FullWidth="true"
+                                   Disabled="@(TagLoading || string.IsNullOrWhiteSpace(TagModel.Label))">
+                            @if (TagLoading) { <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" /> }
+                            Erstellen
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+        </MudTabPanel>
+
+    </MudTabs>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public CreateCategoryViewModel CategoryModel   { get; set; } = default!;
+    [Parameter, EditorRequired] public CreateTagViewModel      TagModel        { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback           OnCategorySubmit { get; set; }
+    [Parameter, EditorRequired] public EventCallback           OnTagSubmit      { get; set; }
+    [Parameter]                 public bool                    CategoryLoading  { get; set; }
+    [Parameter]                 public bool                    TagLoading       { get; set; }
+
+    private async Task HandleCategorySubmit() => await OnCategorySubmit.InvokeAsync();
+    private async Task HandleTagSubmit()      => await OnTagSubmit.InvokeAsync();
+}

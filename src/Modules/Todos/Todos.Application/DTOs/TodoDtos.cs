@@ -6,6 +6,8 @@ public sealed class CreateTodoDto
     public string Description { get; set; } = string.Empty;
     public TodoPriority Priority { get; set; }
     public DateTime? DueDate { get; set; }
+    public List<Guid> CategoryIds { get; set; } = [];
+    public List<Guid> TagIds { get; set; } = [];
 }
 
 public sealed class UpdateTodoDto
@@ -14,6 +16,8 @@ public sealed class UpdateTodoDto
     public string Description { get; set; } = string.Empty;
     public TodoPriority Priority { get; set; }
     public DateTime? DueDate { get; set; }
+    public List<Guid> CategoryIds { get; set; } = [];
+    public List<Guid> TagIds { get; set; } = [];
 }
 
 public sealed class UpdateTodoStatusDto
@@ -32,7 +36,9 @@ public sealed record TodoDto(
     DateTime CreatedAt,
     DateTime UpdatedAt,
     DateTime? CompletedAt,
-    bool IsOverdue);
+    bool IsOverdue,
+    List<Guid> CategoryIds,
+    List<Guid> TagIds);
 
 public sealed record TodoSummaryDto(
     string Id,

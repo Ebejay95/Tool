@@ -56,21 +56,71 @@
                       Margin="Margin.Dense"
                       Class="mt-3"
                       For="@(() => Model.Description)" />
+
+        @if ((AvailableCategories?.Count ?? 0) > 0 || (AvailableTags?.Count ?? 0) > 0)
+        {
+            <MudGrid Class="mt-3">
+                @if ((AvailableCategories?.Count ?? 0) > 0)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.caption" Class="mb-1">Kategorien</MudText>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            @foreach (var cat in AvailableCategories!)
+                            {
+                                var catId = cat.Id;
+                                var catSelected = Model.SelectedCategoryIds.Contains(catId);
+                                <div style="@ChipStyle(catSelected, cat.Color)" @onclick="@(() => ToggleCategory(catId))">
+                                    @cat.Label
+                                </div>
+                            }
+                        </div>
+                    </MudItem>
+                }
+                @if ((AvailableTags?.Count ?? 0) > 0)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.caption" Class="mb-1">Tags</MudText>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            @foreach (var tag in AvailableTags!)
+                            {
+                                var tagId = tag.Id;
+                                var tagSelected = Model.SelectedTagIds.Contains(tagId);
+                                <div style="@ChipStyle(tagSelected, tag.Color)" @onclick="@(() => ToggleTag(tagId))">
+                                    @tag.Label
+                                </div>
+                            }
+                        </div>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
     </EditForm>
 </MudPaper>
 
 @code {
-    /// <summary>Das gebundene ViewModel – wird vom Parent verwaltet.</summary>
-    [Parameter, EditorRequired]
-    public CreateTodoViewModel Model { get; set; } = default!;
+    [Parameter, EditorRequired] public CreateTodoViewModel            Model              { get; set; } = default!;
+    [Parameter, EditorRequired] public EventCallback                  OnSubmit           { get; set; }
+    [Parameter]                 public bool                           Loading            { get; set; }
+    [Parameter]                 public IReadOnlyList<CategoryViewModel>? AvailableCategories { get; set; }
+    [Parameter]                 public IReadOnlyList<TagViewModel>?      AvailableTags       { get; set; }
 
-    /// <summary>Wird nach validem Submit aufgerufen.</summary>
-    [Parameter, EditorRequired]
-    public EventCallback OnSubmit { get; set; }
+    private static string ChipStyle(bool selected, string color) =>
+        $"padding:3px 10px;border-radius:16px;cursor:pointer;border:2px solid {color};" +
+        "background:" + (selected ? color : "transparent") + ";" +
+        "color:" + (selected ? "#fff" : "inherit") + ";font-size:0.8rem;";
 
-    /// <summary>Zeigt einen Ladeindikator auf dem Button.</summary>
-    [Parameter]
-    public bool Loading { get; set; }
+    private void ToggleCategory(Guid id)
+    {
+        var set = new HashSet<Guid>(Model.SelectedCategoryIds);
+        if (!set.Add(id)) set.Remove(id);
+        Model.SelectedCategoryIds = set;
+    }
+    private void ToggleTag(Guid id)
+    {
+        var set = new HashSet<Guid>(Model.SelectedTagIds);
+        if (!set.Add(id)) set.Remove(id);
+        Model.SelectedTagIds = set;
+    }
 
     private async Task HandleSubmit() => await OnSubmit.InvokeAsync();
 }

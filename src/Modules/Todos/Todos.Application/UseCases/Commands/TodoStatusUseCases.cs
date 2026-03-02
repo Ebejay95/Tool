@@ -1,6 +1,6 @@
 using SharedKernel;
 using Todos.Application.Ports;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using MediatR;
 
 namespace Todos.Application.UseCases.Commands;

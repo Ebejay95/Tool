@@ -19,4 +19,7 @@ public sealed class CreateTodoViewModel
     public TodoPriority Priority { get; set; } = TodoPriority.Medium;
 
     public DateTime? DueDate { get; set; }
+
+    public HashSet<Guid> SelectedCategoryIds { get; set; } = [];
+    public HashSet<Guid> SelectedTagIds       { get; set; } = [];
 }

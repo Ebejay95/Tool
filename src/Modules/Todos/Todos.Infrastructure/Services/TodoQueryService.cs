@@ -3,7 +3,7 @@ using Todos.Application.DTOs;
 using Todos.Application.Ports;
 using Todos.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using DomStatus = Todos.Domain.TodoItems.TodoStatus;
+using DomStatus = Todos.Domain.Todos.TodoStatus;
 
 namespace Todos.Infrastructure.Services;
 
@@ -35,7 +35,9 @@ public sealed class TodoQueryService : ITodoQueryService
                 t.CreatedAt,
                 t.UpdatedAt,
                 t.CompletedAt,
-                t.DueDate.HasValue && t.DueDate < DateTimeOffset.UtcNow && t.Status != DomStatus.Completed))
+                t.DueDate.HasValue && t.DueDate < DateTimeOffset.UtcNow && t.Status != DomStatus.Completed,
+                t.CategoryIds,
+                t.TagIds))
             .ToList();
     }
 
@@ -76,7 +78,9 @@ public sealed class TodoQueryService : ITodoQueryService
             entity.CreatedAt,
             entity.UpdatedAt,
             entity.CompletedAt,
-            entity.DueDate.HasValue && entity.DueDate < DateTimeOffset.UtcNow && entity.Status != DomStatus.Completed);
+            entity.DueDate.HasValue && entity.DueDate < DateTimeOffset.UtcNow && entity.Status != DomStatus.Completed,
+            entity.CategoryIds,
+            entity.TagIds);
     }
 
     public async Task<IReadOnlyList<TodoDto>> GetOverdueUserTodosAsync(UserId userId, CancellationToken cancellationToken = default)
@@ -102,7 +106,9 @@ public sealed class TodoQueryService : ITodoQueryService
                 t.CreatedAt,
                 t.UpdatedAt,
                 t.CompletedAt,
-                true)) // IsOverdue is always true for this query
+                true,
+                t.CategoryIds,
+                t.TagIds)) // IsOverdue is always true for this query
             .ToList();
     }
 }

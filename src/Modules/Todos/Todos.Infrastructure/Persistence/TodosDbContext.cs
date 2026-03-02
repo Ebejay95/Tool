@@ -1,6 +1,6 @@
 using SharedKernel;
 using Todos.Application.Ports;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using Todos.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,13 +12,13 @@ public sealed class TodosDbContext : DbContext, ITodosUnitOfWork
     public TodosDbContext(DbContextOptions<TodosDbContext> options)
         : base(options) { }
 
-    public DbSet<TodoItem>     Todos         => Set<TodoItem>();
+    public DbSet<Todo>     Todos         => Set<Todo>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("todos");
-        modelBuilder.ApplyConfiguration(new TodoItemConfiguration());
+        modelBuilder.ApplyConfiguration(new TodoConfiguration());
         modelBuilder.ApplyConfiguration(new TodosOutboxMessageConfiguration());
 
         base.OnModelCreating(modelBuilder);

@@ -1,6 +1,6 @@
 using SharedKernel;
 
-namespace Todos.Domain.TodoItems;
+namespace Todos.Domain.Todos;
 
 public enum TodoStatus
 {
@@ -18,14 +18,14 @@ public enum TodoPriority
     Critical = 3
 }
 
-public sealed class TodoItem : AggregateRoot, IResourceOwner
+public sealed class Todo : AggregateRoot, IResourceOwner
 {
     // IResourceOwner: erlaubt generischen OwnershipHandler ohne Todo-spezifischen Code in Api
     string IResourceOwner.OwnerId => UserId.Value.ToString();
 
-    private TodoItem() { } // For EF
+    private Todo() { } // For EF
 
-    private TodoItem(
+    private Todo(
         TodoId todoId,
         UserId userId,
         string title,
@@ -57,9 +57,15 @@ public sealed class TodoItem : AggregateRoot, IResourceOwner
     public DateTime UpdatedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
 
+    public List<Guid> CategoryIds { get; private set; } = [];
+    public List<Guid> TagIds { get; private set; } = [];
+
     public bool IsOverdue => DueDate.HasValue && DueDate < DateTime.UtcNow && Status != TodoStatus.Completed;
 
-    public static Result<TodoItem> Create(
+    public void SetCategories(IEnumerable<Guid> ids) { CategoryIds = ids.ToList(); UpdatedAt = DateTime.UtcNow; }
+    public void SetTags(IEnumerable<Guid> ids)       { TagIds       = ids.ToList(); UpdatedAt = DateTime.UtcNow; }
+
+    public static Result<Todo> Create(
         UserId userId,
         string title,
         string description,
@@ -67,19 +73,19 @@ public sealed class TodoItem : AggregateRoot, IResourceOwner
         DateTime? dueDate = null)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return Result.Failure<TodoItem>(TodoErrors.TitleRequired);
+            return Result.Failure<Todo>(TodoErrors.TitleRequired);
 
         if (title.Length > 200)
-            return Result.Failure<TodoItem>(TodoErrors.TitleTooLong);
+            return Result.Failure<Todo>(TodoErrors.TitleTooLong);
 
         if (description.Length > 2000)
-            return Result.Failure<TodoItem>(TodoErrors.DescriptionTooLong);
+            return Result.Failure<Todo>(TodoErrors.DescriptionTooLong);
 
         if (dueDate.HasValue && dueDate < DateTime.UtcNow.Date)
-            return Result.Failure<TodoItem>(TodoErrors.DueDateInPast);
+            return Result.Failure<Todo>(TodoErrors.DueDateInPast);
 
         var todoId = TodoId.New();
-        var todo = new TodoItem(todoId, userId, title.Trim(), description.Trim(), priority, dueDate);
+        var todo = new Todo(todoId, userId, title.Trim(), description.Trim(), priority, dueDate);
 
         return Result.Success(todo);
     }

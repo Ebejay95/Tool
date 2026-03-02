@@ -2,7 +2,7 @@ using SharedKernel;
 using Todos.Application.DTOs;
 using Todos.Application.UseCases.Commands;
 using Todos.Application.UseCases.Queries;
-using Todos.Domain.TodoItems;
+using Todos.Domain.Todos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

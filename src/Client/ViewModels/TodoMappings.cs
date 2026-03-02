@@ -19,7 +19,9 @@ public static class TodoMappings
             Priority:    dto.Priority,
             CreatedAt:   dto.CreatedAt,
             DueDate:     dto.DueDate,
-            IsOverdue:   dto.IsOverdue
+            IsOverdue:   dto.IsOverdue,
+            CategoryIds: dto.CategoryIds,
+            TagIds:      dto.TagIds
         );
 
     public static List<TodoListItemViewModel> ToViewModels(this IEnumerable<TodoDto> dtos) =>
@@ -33,6 +35,8 @@ public static class TodoMappings
             Title       = vm.Title,
             Description = vm.Description,
             Priority    = vm.Priority,
-            DueDate     = vm.DueDate
+            DueDate     = vm.DueDate,
+            CategoryIds = vm.SelectedCategoryIds.ToList(),
+            TagIds      = vm.SelectedTagIds.ToList()
         };
 }

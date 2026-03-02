@@ -50,15 +50,15 @@ public sealed class ThemeService
         Palette = new Palette
         {
             // Markenfarben
-            Primary           = "#0009BA",
-            PrimaryDarken     = "#00078A",
-            PrimaryLighten    = "#3D44CC",
+            Primary           = "#ffffff",
+            PrimaryDarken     = "#EBEBEB",
+            PrimaryLighten    = "#6d9bff",
             PrimaryContrastText = "#FFFFFF",
             Secondary         = "#313131",
             SecondaryContrastText = "#FFFFFF",
 
             // AppBar
-            AppbarBackground  = "#0009BA",
+            AppbarBackground  = "#6d9bff",
             AppbarText        = "#FFFFFF",
 
             // Hintergründe
@@ -67,7 +67,7 @@ public sealed class ThemeService
             Surface           = "#FFFFFF",
             DrawerBackground  = "#FFFFFF",
             DrawerText        = "#313131",
-            DrawerIcon        = "#0009BA",
+            DrawerIcon        = "#6d9bff",
 
             // Text
             TextPrimary       = "#1A1A1A",
@@ -91,7 +91,7 @@ public sealed class ThemeService
             WarningContrastText = "#FFFFFF",
             Error             = "#C62828",
             ErrorContrastText  = "#FFFFFF",
-            Info              = "#0277BD",
+            Info              = "#6d9bff",
             InfoContrastText  = "#FFFFFF",
 
             // Schatten / Overlay
@@ -109,9 +109,9 @@ public sealed class ThemeService
         PaletteDark = new PaletteDark
         {
             // Markenfarben
-            Primary           = "#5C62D6",
-            PrimaryDarken     = "#3D44CC",
-            PrimaryLighten    = "#7B80E0",
+            Primary           = "#6d9bff",
+            PrimaryDarken     = "#4c85ff",
+            PrimaryLighten    = "#6d9bff",
             PrimaryContrastText = "#FFFFFF",
             Secondary         = "#E3E3E3",
             SecondaryContrastText = "#1A1A1A",
@@ -150,7 +150,7 @@ public sealed class ThemeService
             WarningContrastText = "#1A1A1A",
             Error             = "#EF5350",
             ErrorContrastText  = "#FFFFFF",
-            Info              = "#29B6F6",
+            Info              = "#4c85ff",
             InfoContrastText  = "#1A1A1A",
 
             // Schatten / Overlay

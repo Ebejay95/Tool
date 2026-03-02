@@ -178,5 +178,15 @@ _migrate:
 			--project ../Modules/Notifications/Notifications.Infrastructure \
 			--startup-project . \
 			--context NotificationsDbContext \
+			--connection $(DB_CONN) && \
+		dotnet ef database update \
+			--project ../Modules/Measures/Measures.Infrastructure \
+			--startup-project . \
+			--context MeasuresDbContext \
+			--connection $(DB_CONN) && \
+		dotnet ef database update \
+			--project ../Modules/Taxonomy/Taxonomy.Infrastructure \
+			--startup-project . \
+			--context TaxonomyDbContext \
 			--connection $(DB_CONN)
 	@echo "✅ Migrationen abgeschlossen"

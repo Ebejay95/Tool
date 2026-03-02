@@ -59,10 +59,14 @@ namespace Todos.Infrastructure.Migrations
                     b.ToTable("OutboxMessages", "todos");
                 });
 
-            modelBuilder.Entity("Todos.Domain.TodoItems.TodoItem", b =>
+            modelBuilder.Entity("Todos.Domain.Todos.Todo", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("CategoryIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -84,6 +88,10 @@ namespace Todos.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<string>("TagIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -99,7 +107,7 @@ namespace Todos.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TodoItems", "todos");
+                    b.ToTable("Todos", "todos");
                 });
 #pragma warning restore 612, 618
         }

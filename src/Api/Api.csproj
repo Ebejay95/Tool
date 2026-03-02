@@ -18,6 +18,10 @@
     <ProjectReference Include="../Modules/Todos/Todos.Api/Todos.Api.csproj" />
     <!-- Blazor WASM Client – wird als Static Web Asset ausgeliefert (Hosted WASM) -->
     <ProjectReference Include="../Client/Client.csproj" />
+    <ProjectReference Include="..\Modules\Measures\Measures.Api\Measures.Api.csproj" />
+    <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Application\Taxonomy.Application.csproj" />
+    <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Infrastructure\Taxonomy.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Api\Taxonomy.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

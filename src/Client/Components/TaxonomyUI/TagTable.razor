@@ -1,0 +1,58 @@
+@using MudBlazor
+@* Tabelle der Tags – global + persönlich. Global-Einträge können nicht gelöscht werden. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <MudText Typo="Typo.h6">Tags</MudText>
+        <MudButton OnClick="@OnRefresh"
+                   Variant="Variant.Text"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Refresh"
+                   Disabled="@Loading">
+            Aktualisieren
+        </MudButton>
+    </div>
+
+    @if (Loading)
+    {
+        <div style="text-align: center; padding: 24px;">
+            <MudProgressCircular Indeterminate="true" />
+        </div>
+    }
+    else if (!Items.Any())
+    {
+        <div style="text-align: center; padding: 24px;">
+            <MudIcon Icon="@Icons.Material.Filled.Label" Size="Size.Large" Color="Color.Secondary" />
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">Keine Tags vorhanden.</MudText>
+        </div>
+    }
+    else
+    {
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0;">
+            @foreach (var tag in Items)
+            {
+                <div style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;background-color:@tag.Color;color:#fff;font-size:0.85rem;">
+                    <span>@tag.Label</span>
+                    @if (tag.IsGlobal)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" Style="opacity:0.7;" />
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                       Size="Size.Small"
+                                       Style="color:#fff;padding:2px;"
+                                       OnClick="@(() => OnDelete.InvokeAsync(tag.Id))" />
+                    }
+                </div>
+            }
+        </div>
+    }
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<TagViewModel> Items    { get; set; } = [];
+    [Parameter]                 public bool                        Loading  { get; set; }
+    [Parameter, EditorRequired] public EventCallback<Guid>        OnDelete  { get; set; }
+    [Parameter, EditorRequired] public EventCallback              OnRefresh { get; set; }
+}

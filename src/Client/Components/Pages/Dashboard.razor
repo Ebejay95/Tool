@@ -1,7 +1,9 @@
 @page "/dashboard"
+@page "/todos"
 @using App.Components.TodosUI
 @inject IAuthService AuthService
 @inject TodoApiService TodoApiService
+@inject TaxonomyApiService TaxonomyApiService
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
 
@@ -12,7 +14,9 @@
         <MudItem xs="12">
             <TodoCreateForm Model="@_newTodo"
                             OnSubmit="@HandleCreateAsync"
-                            Loading="@_isCreating" />
+                            Loading="@_isCreating"
+                            AvailableCategories="@_categories"
+                            AvailableTags="@_tags" />
         </MudItem>
 
         <MudItem xs="12">
@@ -20,7 +24,9 @@
                            Loading="@_isLoadingTodos"
                            OnToggleStatus="@HandleToggleStatusAsync"
                            OnDelete="@HandleDeleteAsync"
-                           OnRefresh="@LoadTodosAsync" />
+                           OnRefresh="@LoadTodosAsync"
+                           AvailableCategories="@_categories"
+                           AvailableTags="@_tags" />
         </MudItem>
     </MudGrid>
 </MudContainer>
@@ -30,6 +36,8 @@
     private CreateTodoViewModel         _newTodo        = new();
     private bool                        _isLoadingTodos = false;
     private bool                        _isCreating     = false;
+    private List<CategoryViewModel>     _categories     = [];
+    private List<TagViewModel>          _tags           = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -39,8 +47,16 @@
         if (!isAuth) { Navigation.NavigateTo("/login"); return; }
 
         await AuthService.InitializeAsync();
-        await LoadTodosAsync();
+        await Task.WhenAll(LoadTodosAsync(), LoadTaxonomyAsync());
         StateHasChanged();
+    }
+
+    private async Task LoadTaxonomyAsync()
+    {
+        var catResult = await TaxonomyApiService.GetCategoriesAsync();
+        var tagResult = await TaxonomyApiService.GetTagsAsync();
+        _categories = catResult.IsSuccess ? catResult.Value.ToViewModels() : [];
+        _tags       = tagResult.IsSuccess ? tagResult.Value.ToViewModels() : [];
     }
 
     private async Task LoadTodosAsync()

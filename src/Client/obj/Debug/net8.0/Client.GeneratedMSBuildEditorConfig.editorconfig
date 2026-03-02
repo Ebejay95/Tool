@@ -46,6 +46,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/MeasuresUI/MeasureCreateForm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9NZWFzdXJlc1VJL01lYXN1cmVDcmVhdGVGb3JtLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/MeasuresUI/MeasureDataTable.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9NZWFzdXJlc1VJL01lYXN1cmVEYXRhVGFibGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/NotificationsUI/NotificationBell.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ob3RpZmljYXRpb25zVUkvTm90aWZpY2F0aW9uQmVsbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -60,6 +68,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Measures.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9NZWFzdXJlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/Pages/Taxonomy.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9UYXhvbm9teS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TaxonomyUI/CategoryTable.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYXhvbm9teVVJL0NhdGVnb3J5VGFibGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TaxonomyUI/TagTable.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYXhvbm9teVVJL1RhZ1RhYmxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TaxonomyUI/TaxonomyCreateForm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYXhvbm9teVVJL1RheG9ub215Q3JlYXRlRm9ybS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Components/TodosUI/TodoCreateForm.razor]

@@ -10,6 +10,7 @@
         "dependencies": {
           "Client": "1.0.0",
           "Identity.Api": "1.0.0",
+          "Measures.Api": "1.0.0",
           "MediatR": "12.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.1",
           "Microsoft.AspNetCore.Components.WebAssembly.Server": "8.0.8",
@@ -28,6 +29,9 @@
           "ServerKernel": "1.0.0",
           "SharedKernel": "1.0.0",
           "Swashbuckle.AspNetCore": "6.5.0",
+          "Taxonomy.Api": "1.0.0",
+          "Taxonomy.Application": "1.0.0",
+          "Taxonomy.Infrastructure": "1.0.0",
           "Todos.Api": "1.0.0"
         },
         "runtime": {
@@ -1370,6 +1374,7 @@
       "Client/1.0.0": {
         "dependencies": {
           "Identity.Application": "1.0.0",
+          "Measures.Application": "1.0.0",
           "Microsoft.AspNetCore.Components.WebAssembly": "8.0.8",
           "Microsoft.AspNetCore.SignalR.Client": "8.0.14",
           "Microsoft.AspNetCore.WebUtilities": "8.0.1",
@@ -1378,6 +1383,7 @@
           "Notifications.Application": "1.0.0",
           "SharedKernel": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "7.5.2",
+          "Taxonomy.Application": "1.0.0",
           "Todos.Application": "1.0.0"
         },
         "runtime": {
@@ -1441,6 +1447,57 @@
         },
         "runtime": {
           "Identity.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Measures.Api/1.0.0": {
+        "dependencies": {
+          "Measures.Application": "1.0.0",
+          "Measures.Infrastructure": "1.0.0"
+        },
+        "runtime": {
+          "Measures.Api.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Measures.Application/1.0.0": {
+        "dependencies": {
+          "Measures.Domain": "1.0.0",
+          "MediatR": "12.2.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3"
+        },
+        "runtime": {
+          "Measures.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Measures.Domain/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Measures.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Measures.Infrastructure/1.0.0": {
+        "dependencies": {
+          "Measures.Application": "1.0.0",
+          "Measures.Domain": "1.0.0",
+          "MediatR": "12.2.0",
+          "Microsoft.EntityFrameworkCore": "8.0.1",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0"
+        },
+        "runtime": {
+          "Measures.Infrastructure.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1541,6 +1598,57 @@
         },
         "runtime": {
           "SharedKernel.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Taxonomy.Api/1.0.0": {
+        "dependencies": {
+          "Taxonomy.Application": "1.0.0",
+          "Taxonomy.Infrastructure": "1.0.0"
+        },
+        "runtime": {
+          "Taxonomy.Api.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Taxonomy.Application/1.0.0": {
+        "dependencies": {
+          "MediatR": "12.2.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
+          "Taxonomy.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Taxonomy.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Taxonomy.Domain/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Taxonomy.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Taxonomy.Infrastructure/1.0.0": {
+        "dependencies": {
+          "MediatR": "12.2.0",
+          "Microsoft.EntityFrameworkCore": "8.0.1",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
+          "Taxonomy.Application": "1.0.0",
+          "Taxonomy.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Taxonomy.Infrastructure.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -2480,6 +2588,26 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Measures.Api/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Measures.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Measures.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Measures.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Notifications.Abstractions/1.0.0": {
       "type": "project",
       "serviceable": false,
@@ -2511,6 +2639,26 @@
       "sha512": ""
     },
     "SharedKernel/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Api/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

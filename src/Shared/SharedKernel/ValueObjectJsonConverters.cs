@@ -4,8 +4,7 @@ using System.Text.Json.Serialization;
 namespace SharedKernel;
 
 /// <summary>
-/// Generische Basisklasse für Guid-basierte Value Objects.
-/// Neues VO: eine Zeile ableiten, fertig.
+/// generic base class for JSON converters of Guid-based Value Objects.
 /// </summary>
 public abstract class GuidValueObjectConverter<T>(Func<Guid, T> factory, Func<T, Guid> getter)
     : JsonConverter<T> where T : ValueObject
@@ -17,13 +16,22 @@ public abstract class GuidValueObjectConverter<T>(Func<Guid, T> factory, Func<T,
         => writer.WriteStringValue(getter(value));
 }
 
-// --- Konkrete Converter ---
+// --- Converters ---
 
 public sealed class UserIdJsonConverter()
     : GuidValueObjectConverter<UserId>(UserId.From, id => id.Value);
 
 public sealed class TodoIdJsonConverter()
     : GuidValueObjectConverter<TodoId>(TodoId.From, id => id.Value);
+
+public sealed class MeasureIdJsonConverter()
+    : GuidValueObjectConverter<MeasureId>(MeasureId.From, id => id.Value);
+
+public sealed class CategoryIdJsonConverter()
+    : GuidValueObjectConverter<CategoryId>(CategoryId.From, id => id.Value);
+
+public sealed class TagIdJsonConverter()
+    : GuidValueObjectConverter<TagId>(TagId.From, id => id.Value);
 
 public sealed class EmailJsonConverter : JsonConverter<Email>
 {

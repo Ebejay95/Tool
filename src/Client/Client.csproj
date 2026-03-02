@@ -25,6 +25,8 @@
     <ProjectReference Include="../Modules/Identity/Identity.Application/Identity.Application.csproj" />
     <ProjectReference Include="../Modules/Notifications/Notifications.Application/Notifications.Application.csproj" />
     <ProjectReference Include="../Modules/Todos/Todos.Application/Todos.Application.csproj" />
+    <ProjectReference Include="../Modules/Measures/Measures.Application/Measures.Application.csproj" />
+    <ProjectReference Include="../Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj" />
   </ItemGroup>
 
 </Project>
