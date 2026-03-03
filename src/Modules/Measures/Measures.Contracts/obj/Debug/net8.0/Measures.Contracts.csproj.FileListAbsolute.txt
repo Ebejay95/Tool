@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/bin/Debug/net8.0/Measures.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/bin/Debug/net8.0/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/bin/Debug/net8.0/Measures.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/refint/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/Measures.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/Debug/net8.0/ref/Measures.Contracts.dll

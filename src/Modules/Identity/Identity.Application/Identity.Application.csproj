@@ -9,6 +9,8 @@
     <ProjectReference Include="../Identity.Domain/Identity.Domain.csproj" />
     <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
     <ProjectReference Include="../../../Shared/Notifications.Abstractions/Notifications.Abstractions.csproj" />
+    <!-- DTOs für Client + Application-Handler -->
+    <ProjectReference Include="../Identity.Contracts/Identity.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

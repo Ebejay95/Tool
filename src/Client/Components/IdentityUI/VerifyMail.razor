@@ -1,0 +1,250 @@
+@page "/verify-mail"
+@using Microsoft.AspNetCore.WebUtilities
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject AuthStateService AuthState
+
+<PageTitle>E-Mail bestätigen - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 64px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudIcon Icon="Icons.Material.Filled.MarkEmailUnread"
+                     Style="font-size: 64px; color: var(--mud-palette-primary);"
+                     Class="mb-3" />
+            <MudText Typo="Typo.h5" GutterBottom="true">E-Mail-Adresse bestätigen</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Wir haben Ihnen einen Bestätigungscode an Ihre E-Mail-Adresse gesendet.
+                Bitte geben Sie ihn unten ein.
+            </MudText>
+        </div>
+
+        @if (_verified)
+        {
+            <!-- Erfolg -->
+            <MudAlert Severity="Severity.Success" Class="mb-4">
+                <strong>E-Mail bestätigt!</strong> Sie werden in Kürze zur Anmeldeseite weitergeleitet.
+            </MudAlert>
+        }
+        else
+        {
+            <!-- E-Mail-Adress-Feld -->
+            <MudTextField @bind-Value="_email"
+                          Label="E-Mail-Adresse"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Email"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Email"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          Placeholder="ihre@email.de" />
+
+            <!-- Token-Eingabe -->
+            <MudTextField @bind-Value="_token"
+                          Label="Bestätigungscode"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Text"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Key"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          Placeholder="16-stelliger Code aus der E-Mail"
+                          MaxLength="20" />
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+            }
+
+            <!-- Bestätigen-Button -->
+            <MudButton OnClick="@HandleVerify"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Class="mb-3"
+                       Disabled="@(_isVerifying || string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_token))">
+                @if (_isVerifying)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Wird bestätigt...</span>
+                }
+                else
+                {
+                    <MudIcon Icon="Icons.Material.Filled.CheckCircle" Class="mr-2" />
+                    <span>E-Mail bestätigen</span>
+                }
+            </MudButton>
+
+            <MudDivider Style="margin: 16px 0;" />
+
+            <!-- Erneut senden -->
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Align="Align.Center" Class="mb-2">
+                Keinen Code erhalten?
+            </MudText>
+
+            @if (!string.IsNullOrEmpty(_resendSuccessMessage))
+            {
+                <MudAlert Severity="Severity.Success" Class="mb-3">@_resendSuccessMessage</MudAlert>
+            }
+
+            <MudButton OnClick="@HandleResend"
+                       Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Disabled="@(_isResending || _resendCooldownSeconds > 0 || string.IsNullOrWhiteSpace(_email))">
+                @if (_isResending)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Wird gesendet...</span>
+                }
+                else if (_resendCooldownSeconds > 0)
+                {
+                    <MudIcon Icon="Icons.Material.Filled.Schedule" Class="mr-2" />
+                    <span>Code erneut senden (noch @_resendCooldownSeconds s)</span>
+                }
+                else
+                {
+                    <MudIcon Icon="Icons.Material.Filled.Send" Class="mr-2" />
+                    <span>Code erneut senden</span>
+                }
+            </MudButton>
+        }
+
+        <MudDivider Style="margin: 24px 0;" />
+
+        <div style="text-align: center;">
+            <MudLink Href="/login" Color="Color.Secondary">
+                Zurück zur Anmeldung
+            </MudLink>
+        </div>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string _email = string.Empty;
+    private string _token = string.Empty;
+    private string _errorMessage = string.Empty;
+    private string _resendSuccessMessage = string.Empty;
+    private bool _isVerifying = false;
+    private bool _isResending = false;
+    private bool _verified = false;
+    private int _resendCooldownSeconds = 0;
+    private System.Timers.Timer? _cooldownTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // E-Mail aus AuthState oder Query-Parameter
+        _email = AuthState.PendingEmail ?? string.Empty;
+
+        var uri    = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query  = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("email", out var emailParam) && !string.IsNullOrEmpty(emailParam))
+            _email = emailParam!;
+
+        if (query.TryGetValue("token", out var tokenParam) && !string.IsNullOrEmpty(tokenParam))
+        {
+            _token = tokenParam!;
+            // Automatisch verifizieren wenn Token in URL
+            await HandleVerify();
+        }
+    }
+
+    private async Task HandleVerify()
+    {
+        if (string.IsNullOrWhiteSpace(_email) || string.IsNullOrWhiteSpace(_token)) return;
+
+        _isVerifying   = true;
+        _errorMessage  = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var result = await AuthService.VerifyEmailAsync(new VerifyEmailDto(_email.Trim(), _token.Trim()));
+
+            if (result.IsSuccess)
+            {
+                _verified = true;
+                AuthState.Clear();
+                Snackbar.Add("E-Mail-Adresse erfolgreich bestätigt!", Severity.Success);
+
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                _errorMessage = result.Error.Description;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Fehler: {ex.Message}";
+        }
+        finally
+        {
+            _isVerifying = false;
+        }
+    }
+
+    private async Task HandleResend()
+    {
+        if (string.IsNullOrWhiteSpace(_email)) return;
+
+        _isResending          = true;
+        _resendSuccessMessage = string.Empty;
+        _errorMessage         = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var result = await AuthService.ResendVerificationEmailAsync(
+                new ResendVerificationEmailDto(_email.Trim()));
+
+            if (result.IsFailure && result.Error.Code == "User.EmailVerificationTooSoon")
+            {
+                _errorMessage = "Bitte warten Sie mindestens eine Stunde zwischen den Anfragen.";
+            }
+            else
+            {
+                _resendSuccessMessage = "Code wurde erneut versandt – bitte prüfen Sie Ihren Posteingang.";
+                StartCooldown(60); // 60 Sekunden sichtbarer Cooldown im UI
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Fehler: {ex.Message}";
+        }
+        finally
+        {
+            _isResending = false;
+        }
+    }
+
+    private void StartCooldown(int seconds)
+    {
+        _resendCooldownSeconds = seconds;
+        _cooldownTimer?.Dispose();
+        _cooldownTimer = new System.Timers.Timer(1000);
+        _cooldownTimer.Elapsed += (_, _) =>
+        {
+            _resendCooldownSeconds--;
+            if (_resendCooldownSeconds <= 0)
+            {
+                _cooldownTimer?.Stop();
+                _cooldownTimer?.Dispose();
+            }
+            InvokeAsync(StateHasChanged);
+        };
+        _cooldownTimer.AutoReset = true;
+        _cooldownTimer.Start();
+    }
+
+    public void Dispose() => _cooldownTimer?.Dispose();
+}

@@ -10,6 +10,7 @@
         "dependencies": {
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Taxonomy.Contracts": "1.0.0",
           "Taxonomy.Domain": "1.0.0"
         },
         "runtime": {
@@ -140,6 +141,14 @@
           }
         }
       },
+      "Taxonomy.Contracts/1.0.0": {
+        "runtime": {
+          "Taxonomy.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Taxonomy.Domain/1.0.0": {
         "dependencies": {
           "SharedKernel": "1.0.0"
@@ -237,6 +246,11 @@
       "hashPath": "system.diagnostics.diagnosticsource.8.0.0.nupkg.sha512"
     },
     "SharedKernel/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharedKernel;
+using ServerKernel;
 using Taxonomy.Application;
 using Taxonomy.Infrastructure;
 
@@ -9,9 +9,8 @@ namespace Taxonomy.Api;
 
 /// <summary>
 /// Kapselt die vollständige Service-Registration des Taxonomy-Moduls.
-/// Aufruf erfolgt automatisch via ModuleDiscovery in Program.cs.
 /// </summary>
-public sealed class TaxonomyModule : IModule
+public sealed class TaxonomyModule : IModule, IMigrateModule
 {
     public static IServiceCollection AddModule(
         IServiceCollection services,
@@ -20,7 +19,9 @@ public sealed class TaxonomyModule : IModule
     {
         services.AddTaxonomyApplication();
         services.AddTaxonomyInfrastructure(configuration);
-
         return services;
     }
+
+    public static Task MigrateAsync(IServiceProvider serviceProvider)
+        => serviceProvider.MigrateTaxonomyDatabaseAsync();
 }

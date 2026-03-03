@@ -16,7 +16,9 @@
                             OnSubmit="@HandleCreateAsync"
                             Loading="@_isCreating"
                             AvailableCategories="@_categories"
-                            AvailableTags="@_tags" />
+                            AvailableTags="@_tags"
+                            OnCreateCategoryRequested="@HandleCreateCategoryAsync"
+                            OnCreateTagRequested="@HandleCreateTagAsync" />
         </MudItem>
 
         <MudItem xs="12">
@@ -120,5 +122,33 @@
         }
         else
             Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+
+    private async Task HandleCreateCategoryAsync(string label)
+    {
+        var result = await TaxonomyApiService.CreateCategoryAsync(label);
+        if (result.IsSuccess)
+        {
+            var vm = result.Value.ToViewModel();
+            _categories.Add(vm);
+            _newTodo.SelectedCategoryIds.Add(vm.Id);
+            StateHasChanged();
+        }
+        else
+            Snackbar.Add($"Kategorie konnte nicht erstellt werden: {result.Error}", Severity.Error);
+    }
+
+    private async Task HandleCreateTagAsync(string label)
+    {
+        var result = await TaxonomyApiService.CreateTagAsync(label);
+        if (result.IsSuccess)
+        {
+            var vm = result.Value.ToViewModel();
+            _tags.Add(vm);
+            _newTodo.SelectedTagIds.Add(vm.Id);
+            StateHasChanged();
+        }
+        else
+            Snackbar.Add($"Tag konnte nicht erstellt werden: {result.Error}", Severity.Error);
     }
 }

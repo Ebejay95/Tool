@@ -1,8 +1,9 @@
+using Identity.Application.Mailing;
 using Identity.Domain.Users;
-using Notifications.Abstractions;
-using SharedKernel;
-using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MediatR;
+using Notifications.Abstractions;
 
 namespace Identity.Application.EventHandlers;
 
@@ -24,38 +25,21 @@ public sealed class UserPasswordResetRequestedHandler : INotificationHandler<Use
         var message = new NotificationMessage(
             NotificationChannels.Email,
             notification.Email,
-            "Password Reset Request",
-            $"""
-            Hello,
-
-            You have requested a password reset for your account.
-
-            Your reset code is: {notification.ResetToken}
-
-            This code will expire in 1 hour.
-
-            If you did not request this reset, please ignore this email.
-
-            Best regards,
-            CMC Team
-            """,
+            "Passwort zurücksetzen",
+            EmailTemplates.PasswordReset(notification.ResetToken),
             metadata: new Dictionary<string, object>
             {
-                ["UserId"] = notification.UserId.Value,
-                ["ResetToken"] = notification.ResetToken
+                ["IsHtml"]     = true,
+                ["UserId"]     = notification.UserId.Value,
+                ["ResetToken"] = notification.ResetToken,
             });
 
         var result = await _notificationPublisher.PublishAsync(message, cancellationToken);
 
         if (result.IsFailure)
-        {
-            _logger.LogError("Failed to send password reset email to {Email}: {Error}",
-                notification.Email, result.Error);
-        }
+            _logger.LogError("Failed to send password reset email to {Email}: {Error}", notification.Email, result.Error);
         else
-        {
             _logger.LogInformation("Password reset email sent to {Email}", notification.Email);
-        }
     }
 }
 
@@ -77,32 +61,65 @@ public sealed class UserRegisteredHandler : INotificationHandler<UserRegisteredE
         var message = new NotificationMessage(
             NotificationChannels.Email,
             notification.Email,
-            "Welcome to CMC!",
-            $"""
-            Hello,
-
-            Welcome to CMC! Your account has been successfully created.
-
-            You can now log in and start using our services.
-
-            Best regards,
-            CMC Team
-            """,
+            "Willkommen bei CMC!",
+            EmailTemplates.Welcome(string.Empty),
             metadata: new Dictionary<string, object>
             {
-                ["UserId"] = notification.UserId.Value
+                ["IsHtml"]  = true,
+                ["UserId"]  = notification.UserId.Value,
             });
 
         var result = await _notificationPublisher.PublishAsync(message, cancellationToken);
 
         if (result.IsFailure)
-        {
-            _logger.LogError("Failed to send welcome email to {Email}: {Error}",
-                notification.Email, result.Error);
-        }
+            _logger.LogError("Failed to send welcome email to {Email}: {Error}", notification.Email, result.Error);
         else
-        {
             _logger.LogInformation("Welcome email sent to {Email}", notification.Email);
-        }
+    }
+}
+
+/// <summary>
+/// Versendet die E-Mail-Bestätigungs-E-Mail mit dem Verifizierungstoken.
+/// </summary>
+public sealed class UserEmailVerificationRequestedHandler : INotificationHandler<UserEmailVerificationRequestedEvent>
+{
+    private readonly Notifications.Abstractions.INotificationPublisher _notificationPublisher;
+    private readonly ILogger<UserEmailVerificationRequestedHandler> _logger;
+    private readonly string _baseUrl;
+
+    public UserEmailVerificationRequestedHandler(
+        Notifications.Abstractions.INotificationPublisher notificationPublisher,
+        ILogger<UserEmailVerificationRequestedHandler> logger,
+        IConfiguration configuration)
+    {
+        _notificationPublisher = notificationPublisher;
+        _logger = logger;
+        _baseUrl = configuration["ApiSettings:BaseUrl"]?.TrimEnd('/') ?? "https://app.yourdomain.com";
+    }
+
+    public async Task Handle(UserEmailVerificationRequestedEvent notification, CancellationToken cancellationToken)
+    {
+        var verifyUrl = $"{_baseUrl}/verify-mail"
+                      + $"?email={Uri.EscapeDataString(notification.Email)}"
+                      + $"&token={Uri.EscapeDataString(notification.VerificationToken)}";
+
+        var message = new NotificationMessage(
+            NotificationChannels.Email,
+            notification.Email,
+            "E-Mail-Adresse bestätigen",
+            EmailTemplates.EmailVerification(notification.VerificationToken, verifyUrl),
+            metadata: new Dictionary<string, object>
+            {
+                ["IsHtml"]            = true,
+                ["UserId"]            = notification.UserId.Value,
+                ["VerificationToken"] = notification.VerificationToken,
+            });
+
+        var result = await _notificationPublisher.PublishAsync(message, cancellationToken);
+
+        if (result.IsFailure)
+            _logger.LogError("Failed to send verification email to {Email}: {Error}", notification.Email, result.Error);
+        else
+            _logger.LogInformation("Email verification mail sent to {Email}", notification.Email);
     }
 }

@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Taxonomy.Domain\Taxonomy.Domain.csproj" />
+    <!-- DTOs für Client + Application-Handler -->
+    <ProjectReference Include="..\Taxonomy.Contracts\Taxonomy.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

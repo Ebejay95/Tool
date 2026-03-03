@@ -72,6 +72,9 @@ public sealed class TaxonomyApiService
         catch (Exception ex) { return Result.Failure(new Error("Category.DeleteFailed", ex.Message)); }
     }
 
+    public Task<Result<CategoryDto>> CreateCategoryAsync(string label, CancellationToken ct = default)
+        => CreateCategoryAsync(new CreateCategoryDto { Label = label }, ct);
+
     // ── Tags ──────────────────────────────────────────────────────────────────
 
     public async Task<Result<List<TagDto>>> GetTagsAsync(CancellationToken ct = default)
@@ -101,6 +104,9 @@ public sealed class TaxonomyApiService
         }
         catch (Exception ex) { return Result.Failure<TagDto>(new Error("Tag.CreateFailed", ex.Message)); }
     }
+
+    public Task<Result<TagDto>> CreateTagAsync(string label, CancellationToken ct = default)
+        => CreateTagAsync(new CreateTagDto { Label = label }, ct);
 
     public async Task<Result> DeleteTagAsync(Guid id, CancellationToken ct = default)
     {

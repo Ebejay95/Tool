@@ -16,3 +16,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/obj/Debug/net8.0/refint/Measures.Application.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/obj/Debug/net8.0/Measures.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/obj/Debug/net8.0/ref/Measures.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/bin/Debug/net8.0/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/bin/Debug/net8.0/Measures.Contracts.pdb

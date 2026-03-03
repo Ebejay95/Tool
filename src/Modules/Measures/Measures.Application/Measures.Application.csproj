@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Measures.Domain\Measures.Domain.csproj" />
+    <!-- DTOs für Client + Application-Handler -->
+    <ProjectReference Include="..\Measures.Contracts\Measures.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

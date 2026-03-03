@@ -1,0 +1,166 @@
+@page "/setup-2fa"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<PageTitle>Zwei-Faktor-Authentifizierung einrichten - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 48px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudIcon Icon="Icons.Material.Filled.LockPerson"
+                     Style="font-size: 64px; color: var(--mud-palette-primary);"
+                     Class="mb-3" />
+            <MudText Typo="Typo.h5" GutterBottom="true">Zwei-Faktor-Authentifizierung</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Erhöhen Sie die Sicherheit Ihres Kontos mit einem Authenticator-App-Code.
+            </MudText>
+        </div>
+
+        @if (_isLoading)
+        {
+            <div style="text-align: center; padding: 48px 0;">
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">QR-Code wird generiert...</MudText>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(_loadError))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_loadError</MudAlert>
+            <MudButton OnClick="@LoadSetup" Variant="Variant.Outlined" FullWidth="true">Erneut versuchen</MudButton>
+        }
+        else if (_setup is not null)
+        {
+            <MudText Typo="Typo.subtitle1" Class="mb-2"><strong>Schritt 1:</strong> QR-Code scannen</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+                Öffnen Sie Ihre Authenticator-App und scannen Sie den folgenden QR-Code.
+            </MudText>
+
+            <div style="text-align: center; margin-bottom: 24px;">
+                <img src="data:image/png;base64,@_setup.QrCodeBase64"
+                     alt="QR-Code"
+                     style="border: 8px solid white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.15); max-width: 200px;" />
+            </div>
+
+            <MudExpansionPanels Class="mb-4">
+                <MudExpansionPanel Text="Code manuell eingeben" Icon="Icons.Material.Filled.Key">
+                    <MudTextField Value="@_setup.SecretKey" ReadOnly="true" Variant="Variant.Outlined"
+                                  Margin="Margin.Dense" FullWidth="true" />
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+
+            <MudText Typo="Typo.subtitle1" Class="mb-2"><strong>Schritt 2:</strong> Code bestätigen</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+                Geben Sie den 6-stelligen Code aus Ihrer App ein, um die Einrichtung abzuschließen.
+            </MudText>
+
+            <MudTextField @bind-Value="_code"
+                          Label="6-stelliger Code"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Number"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Pin"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          MaxLength="6" />
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+            }
+
+            <MudButton OnClick="@HandleConfirm"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Disabled="@(_isConfirming || _code.Length != 6)">
+                @if (_isConfirming)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Wird überprüft...</span>
+                }
+                else
+                {
+                    <MudIcon Icon="Icons.Material.Filled.VerifiedUser" Class="mr-2" />
+                    <span>Einrichtung abschließen</span>
+                }
+            </MudButton>
+        }
+
+        <MudDivider Style="margin: 24px 0;" />
+        <div style="text-align: center;">
+            <MudLink Href="/login" Color="Color.Secondary">Abbrechen und zurück zur Anmeldung</MudLink>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private TwoFactorSetupDto? _setup;
+    private string _code = string.Empty;
+    private string _errorMessage = string.Empty;
+    private string _loadError = string.Empty;
+    private bool _isLoading = true;
+    private bool _isConfirming = false;
+    private string? _preAuthToken;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var stageStr = await JS.InvokeAsync<string>("sessionStorage.getItem", "pendingStage");
+        _preAuthToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "preAuthToken");
+
+        if (stageStr != ((int)LoginStage.RequiresTwoFactorSetup).ToString() || string.IsNullOrEmpty(_preAuthToken))
+        {
+            Navigation.NavigateTo("/login", replace: true);
+            return;
+        }
+
+        await LoadSetup();
+    }
+
+    private async Task LoadSetup()
+    {
+        _isLoading = true; _loadError = string.Empty; StateHasChanged();
+
+        try
+        {
+            var result = await AuthService.InitiateTwoFactorSetupAsync(_preAuthToken!);
+            if (result.IsSuccess) _setup = result.Value;
+            else _loadError = result.Error.Description;
+        }
+        catch (Exception ex) { _loadError = $"Fehler: {ex.Message}"; }
+        finally { _isLoading = false; }
+    }
+
+    private async Task HandleConfirm()
+    {
+        if (_code.Length != 6 || _setup is null) return;
+        _isConfirming = true; _errorMessage = string.Empty; StateHasChanged();
+
+        try
+        {
+            var dto    = new ConfirmTwoFactorDto(_preAuthToken!, _code);
+            var result = await AuthService.ConfirmTwoFactorSetupAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                await ClearSessionStorage();
+                Snackbar.Add("Zwei-Faktor-Authentifizierung erfolgreich eingerichtet!", Severity.Success);
+                Navigation.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else { _errorMessage = result.Error.Description; _code = string.Empty; }
+        }
+        catch (Exception ex) { _errorMessage = $"Fehler: {ex.Message}"; }
+        finally { _isConfirming = false; }
+    }
+
+    private async Task ClearSessionStorage()
+    {
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "preAuthToken");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "pendingEmail");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "pendingStage");
+    }
+}

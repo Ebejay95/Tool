@@ -3,13 +3,12 @@ using Identity.Application.Ports;
 using Identity.Domain.Users;
 using SharedKernel;
 using MediatR;
-using static SharedKernel.Debug;
 
 namespace Identity.Application.UseCases.Commands;
 
-public sealed record LoginCommand(LoginDto Data) : Command<AuthenticationResult>;
+public sealed record LoginCommand(LoginDto Data) : Command<LoginResponseDto>;
 
-public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<AuthenticationResult>>
+public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<LoginResponseDto>>
 {
     private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
@@ -25,69 +24,66 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<Authenti
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<AuthenticationResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        Debug.Log("=== LoginHandler Debug ===");
-        Debug.Log($"Looking for user with email: {request.Data.Email}");
-        Debug.Log($"Password length: {request.Data.Password?.Length ?? 0}");
-
         var emailResult = Email.Create(request.Data.Email);
         if (emailResult.IsFailure)
-        {
-            Debug.Log("Invalid email format!");
-            return Result.Failure<AuthenticationResult>(UserErrors.InvalidCredentials);
-        }
-        
-        Debug.Log($"Created Email object: {emailResult.Value}");
-        Debug.Log("Searching user in database...");
-        
-        var user = await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
-        Debug.Log($"Database query completed. User found: {user != null}");
-        
-        if (user == null)
-        {
-            Debug.Log("ERROR: User not found in database!");
-            return Result.Failure<AuthenticationResult>(UserErrors.InvalidCredentials);
-        }
+            return Result.Failure<LoginResponseDto>(UserErrors.InvalidCredentials);
 
-        Debug.Log($"User found: {user.Email}");
-        Debug.Log($"User ID: {user.Id}");
-        Debug.Log($"User is active: {user.IsActive}");
+        var user = await _userRepository.GetByEmailAsync(emailResult.Value, cancellationToken);
+        if (user == null)
+            return Result.Failure<LoginResponseDto>(UserErrors.InvalidCredentials);
 
         if (!user.IsActive)
-        {
-            Debug.Log("ERROR: User is inactive!");
-            return Result.Failure<AuthenticationResult>(UserErrors.UserInactive);
-        }
-
-        Debug.Log($"Stored password hash length: {user.PasswordHash.Value?.Length ?? 0}");
-        Debug.Log($"Provided password: '{request.Data.Password}'");
+            return Result.Failure<LoginResponseDto>(UserErrors.UserInactive);
 
         var passwordValid = user.VerifyPassword(request.Data.Password);
-        Debug.Log($"Password verification result: {passwordValid}");
-
         if (!passwordValid)
+            return Result.Failure<LoginResponseDto>(UserErrors.InvalidCredentials);
+
+        // ── Schritt 1: E-Mail-Verifizierung prüfen ───────────────────────────
+        if (!user.IsEmailVerified)
         {
-            Debug.Log("ERROR: Password verification failed!");
-            return Result.Failure<AuthenticationResult>(UserErrors.InvalidCredentials);
+            return Result.Success(new LoginResponseDto
+            {
+                Stage = LoginStage.RequiresEmailVerification,
+                Email = user.Email
+            });
         }
 
-        // Record login
-        user.RecordLogin();
-        _userRepository.Update(user);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        // ── Schritt 2: 2FA prüfen ────────────────────────────────────────────
+        if (!user.IsTwoFactorEnabled)
+        {
+            // 2FA noch nicht eingerichtet → Pre-Auth-Token für Setup ausstellen
+            var preAuth = _tokenService.GeneratePreAuthToken(user.Id, PreAuthStages.TwoFactorSetup);
+            return Result.Success(new LoginResponseDto
+            {
+                Stage        = LoginStage.RequiresTwoFactorSetup,
+                Email        = user.Email,
+                PreAuthToken = preAuth.Token
+            });
+        }
 
-        // Generate token
-        var token = _tokenService.GenerateToken(user);
-
-        var result = new AuthenticationResult(
-            user.Id,
-            user.Email,
-            user.FirstName,
-            user.LastName,
-            token,
-            DateTime.UtcNow.AddDays(7)); // Token expires in 7 days
-
-        return Result.Success(result);
+        // 2FA eingerichtet → Pre-Auth-Token für Validation ausstellen
+        var preAuthValidation = _tokenService.GeneratePreAuthToken(user.Id, PreAuthStages.TwoFactorValidation);
+        return Result.Success(new LoginResponseDto
+        {
+            Stage        = LoginStage.RequiresTwoFactorValidation,
+            Email        = user.Email,
+            PreAuthToken = preAuthValidation.Token
+        });
     }
+
+    /// <summary>Stellt nach erfolgreicher 2FA das vollständige JWT aus. Intern von 2FA-Handlern genutzt.</summary>
+    public static LoginResponseDto BuildCompleteResult(User user, GeneratedToken generated) =>
+        new()
+        {
+            Stage     = LoginStage.Complete,
+            UserId    = user.Id.Value.ToString(),
+            Email     = user.Email,
+            FirstName = user.FirstName,
+            LastName  = user.LastName,
+            Token     = generated.Token,
+            ExpiresAt = generated.ExpiresAt
+        };
 }

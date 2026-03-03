@@ -16,3 +16,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/obj/Debug/net8.0/refint/Taxonomy.Application.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/obj/Debug/net8.0/Taxonomy.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/obj/Debug/net8.0/ref/Taxonomy.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/bin/Debug/net8.0/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/bin/Debug/net8.0/Taxonomy.Contracts.pdb

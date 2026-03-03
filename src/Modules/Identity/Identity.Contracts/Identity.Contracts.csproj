@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Nur primitive Typen + BCL + SharedKernel (für Result<T> in IAuthService).
+         Kein MediatR, kein Domain, kein ASP.NET Core.
+         WASM-kompatibel: kann sicher vom Blazor-Client referenziert werden. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

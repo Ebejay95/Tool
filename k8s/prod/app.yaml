@@ -53,7 +53,7 @@ spec:
           envFrom:
             - secretRef:
                 name: cmc-mail
-                optional: true
+                optional: false
           env:
             - name: ASPNETCORE_URLS
               value: http://+:8080

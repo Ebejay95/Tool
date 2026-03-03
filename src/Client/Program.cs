@@ -17,6 +17,7 @@ builder.Services.AddScoped(sp =>
 // ── Auth + Token ───────────────────────────────────────────────────────────
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAuthService, AuthApiService>();
+builder.Services.AddSingleton<AuthStateService>(); // Flüchtiger 2FA-Ablauf-Zustand
 
 // ── Fach-Services (HTTP-basiert, ersetzen die MediatR-Direct-Calls) ────────
 builder.Services.AddScoped<TodoApiService>();

@@ -1,0 +1,82 @@
+@typeparam TItem
+@* Generischer Shell-Wrapper für alle Entity-Listen.
+   Übernimmt Boilerplate: Paper, Header (Titel + Refresh), Loading-Spinner und Empty-State.
+   MudDataGrid verbleibt im aufrufenden Component (TableContent-Slot), damit Blazors
+   Compile-Zeit-Typinferenz für PropertyColumn<T,TProperty> erhalten bleibt. *@
+
+<MudPaper Elevation="2" Style="padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <MudText Typo="Typo.h6">@Title</MudText>
+        <MudButton OnClick="@OnRefresh"
+                   Variant="Variant.Text"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Refresh"
+                   Disabled="@Loading">
+            Aktualisieren
+        </MudButton>
+    </div>
+
+    @if (Loading)
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudProgressCircular Indeterminate="true" />
+            <MudText Typo="Typo.body2" Class="mt-4">@LoadingText</MudText>
+        </div>
+    }
+    else if (!Items.Any())
+    {
+        <div style="text-align: center; padding: 40px;">
+            <MudIcon Icon="@EmptyIcon" Size="Size.Large" Color="Color.Secondary" />
+            <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-4">@EmptyTitle</MudText>
+            @if (!string.IsNullOrWhiteSpace(EmptySubText))
+            {
+                <MudText Typo="Typo.body2" Color="Color.Secondary">@EmptySubText</MudText>
+            }
+        </div>
+    }
+    else
+    {
+        @TableContent
+    }
+</MudPaper>
+
+@code {
+    /// <summary>Wird für den Empty-State-Check verwendet (Items.Any()).</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TItem> Items { get; set; } = [];
+
+    /// <summary>Zeigt den Lade-Spinner anstelle des Inhalts.</summary>
+    [Parameter]
+    public bool Loading { get; set; }
+
+    /// <summary>Überschrift links im Header.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    /// <summary>Text unter dem Spinner während des Ladens.</summary>
+    [Parameter]
+    public string LoadingText { get; set; } = "Lade Daten...";
+
+    /// <summary>MudBlazor-Icon-String für den Empty-State (z. B. Icons.Material.Filled.Security).</summary>
+    [Parameter, EditorRequired]
+    public string EmptyIcon { get; set; } = Icons.Material.Filled.TableRows;
+
+    /// <summary>Haupttext im Empty-State.</summary>
+    [Parameter, EditorRequired]
+    public string EmptyTitle { get; set; } = "Keine Einträge vorhanden";
+
+    /// <summary>Optionaler Subtext im Empty-State.</summary>
+    [Parameter]
+    public string EmptySubText { get; set; } = "";
+
+    /// <summary>Aufgerufen beim Klick auf „Aktualisieren".</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnRefresh { get; set; }
+
+    /// <summary>
+    /// Der eigentliche Tabelleninhalt (MudDataGrid mit Columns).
+    /// Wird nur gerendert wenn Items nicht leer und Loading false ist.
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment TableContent { get; set; } = default!;
+}

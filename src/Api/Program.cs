@@ -1,9 +1,3 @@
-using Identity.Infrastructure;
-using Measures.Infrastructure;
-using Notifications.Infrastructure;
-using SharedKernel;
-using Taxonomy.Infrastructure;
-using Todos.Infrastructure;
 using Api.Bootstrap;
 using Api.Authorization;
 using Api.Extensions;
@@ -43,21 +37,7 @@ builder.Services.AddControllers(opts =>
 builder.Services.AddEndpointsApiExplorer(); // API Documentation
 builder.Services.AddSwaggerGen(); // Swagger UI for API Tests
 
-// ── SignalR + Redis-Backplane ─────────────────────────────────────────────
-// Muss VOR AddAllModules() stehen, da NotificationsModule AddSignalRNotifications()
-// aufruft und SignalR bereits im Container erwartet.
-// Bleibt hier: AddSignalR() gibt ISignalRServerBuilder zurück, nicht IServiceCollection.
-{
-    var redisConn = builder.Configuration["Redis:ConnectionString"];
-    var signalR = builder.Services.AddSignalR();
-    if (!string.IsNullOrWhiteSpace(redisConn))
-        signalR.AddStackExchangeRedis(redisConn, opts =>
-            opts.Configuration.ChannelPrefix = StackExchange.Redis.RedisChannel.Literal("cmc"));
-}
-
-// ── Module Auto-Discovery ─────────────────────────────────────────────────
-// Scannt alle referenzierten Assemblies nach IModule-Implementierungen.
-// Neues Modul hinzufügen: Assembly referenzieren – Program.cs bleibt unberührt.
+// ── Module Registration (auto-discovery via ModuleDiscovery) ────────────
 builder.AddAllModules();
 
 // Add Authorization policies (Authentication is already configured by Identity Infrastructure)
@@ -165,7 +145,7 @@ app.UseAuthorization();
 app.UseWebSockets();
 
 // Map endpoints
-app.MapAllModuleEndpoints(); // IEndpointModule-Implementierungen (z.B. SignalR-Hubs)
+app.MapAllModuleEndpoints(); // SignalR-Hubs und weitere Modul-Endpunkte
 app.MapControllers();
 // WASM SPA-Fallback: Alle nicht-API-Routen liefern index.html zurück
 app.MapFallbackToFile("index.html");
@@ -177,11 +157,7 @@ app.MapHealthChecks("/health");
 // In Dev: Makefile-Target `make migrate` oder `dotnet run -- --migrate-only` nutzen
 if (args.Contains("--migrate-only"))
 {
-    await app.Services.MigrateIdentityDatabaseAsync();
-    await app.Services.MigrateTodosDatabaseAsync();
-    await app.Services.MigrateMeasuresDatabaseAsync();
-    await app.Services.MigrateTaxonomyDatabaseAsync();
-    await app.Services.MigrateNotificationsDatabaseAsync();
+    await app.Services.MigrateAllModulesAsync();
     Console.WriteLine("Migrations completed. Exiting (--migrate-only mode).");
     return;
 }

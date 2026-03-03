@@ -1,0 +1,16 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/bin/Debug/net8.0/Identity.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/bin/Debug/net8.0/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/bin/Debug/net8.0/Identity.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/refint/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/ref/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/bin/Debug/net8.0/SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.Contracts.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/Debug/net8.0/Identity.9E2B3B73.Up2Date

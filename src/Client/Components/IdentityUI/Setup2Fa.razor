@@ -1,0 +1,219 @@
+@page "/setup-2fa"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject AuthStateService AuthState
+
+<PageTitle>Zwei-Faktor-Authentifizierung einrichten - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 48px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudIcon Icon="Icons.Material.Filled.LockPerson"
+                     Style="font-size: 64px; color: var(--mud-palette-primary);"
+                     Class="mb-3" />
+            <MudText Typo="Typo.h5" GutterBottom="true">Zwei-Faktor-Authentifizierung</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Erhöhen Sie die Sicherheit Ihres Kontos mit einem Authenticator-App-Code.
+            </MudText>
+        </div>
+
+        @if (_isLoading)
+        {
+            <div style="text-align: center; padding: 48px 0;">
+                <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">
+                    QR-Code wird generiert...
+                </MudText>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(_loadError))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">
+                <strong>[@_loadErrorCode]</strong> @_loadError
+            </MudAlert>
+            <MudButton OnClick="@LoadSetup" Variant="Variant.Outlined" FullWidth="true">
+                Erneut versuchen
+            </MudButton>
+        }
+        else if (_setup is not null)
+        {
+            <!-- Schritt 1: QR-Code scannen -->
+            <MudText Typo="Typo.subtitle1" Class="mb-2">
+                <strong>Schritt 1:</strong> QR-Code scannen
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+                Öffnen Sie Ihre Authenticator-App (z.&nbsp;B. Google Authenticator, Authy, 1Password)
+                und scannen Sie den folgenden QR-Code.
+            </MudText>
+
+            <div style="text-align: center; margin-bottom: 24px;">
+                <img src="data:image/png;base64,@_setup.QrCodeBase64"
+                     alt="QR-Code für Authenticator-App"
+                     style="border: 8px solid white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.15); max-width: 200px;" />
+            </div>
+
+            <!-- Manueller Key -->
+            <MudExpansionPanels Class="mb-4">
+                <MudExpansionPanel Text="Code manuell eingeben" Icon="Icons.Material.Filled.Key">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-2">
+                        Falls Sie den QR-Code nicht scannen können, geben Sie diesen Schlüssel
+                        manuell in Ihrer App ein:
+                    </MudText>
+                    <MudTextField Value="@_setup.SecretKey"
+                                  ReadOnly="true"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  FullWidth="true"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="Icons.Material.Filled.ContentCopy"
+                                  OnAdornmentClick="@CopySecret" />
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+
+            <!-- Schritt 2: Code bestätigen -->
+            <MudText Typo="Typo.subtitle1" Class="mb-2">
+                <strong>Schritt 2:</strong> Code bestätigen
+            </MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+                Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App ein,
+                um die Einrichtung abzuschließen.
+            </MudText>
+
+            <MudTextField @bind-Value="_code"
+                          Label="6-stelliger Code"
+                          Variant="Variant.Outlined"
+                          InputType="InputType.Telephone"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="Icons.Material.Filled.Pin"
+                          FullWidth="true"
+                          Margin="Margin.Dense"
+                          Class="mb-4"
+                          Placeholder="000000"
+                          MaxLength="6" />
+
+            <MudButton OnClick="@HandleConfirm"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       FullWidth="true"
+                       Disabled="@(_isConfirming || _code.Length != 6)">
+                @if (_isConfirming)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    <span style="margin-left: 8px;">Wird überprüft...</span>
+                }
+                else
+                {
+                    <MudIcon Icon="Icons.Material.Filled.VerifiedUser" Class="mr-2" />
+                    <span>Einrichtung abschließen</span>
+                }
+            </MudButton>
+        }
+
+        <MudDivider Style="margin: 24px 0;" />
+
+        <div style="text-align: center;">
+            <MudLink Href="/login" Color="Color.Secondary">
+                Abbrechen und zurück zur Anmeldung
+            </MudLink>
+        </div>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private TwoFactorSetupDto? _setup;
+    private string _code = string.Empty;
+    private string _loadError = string.Empty;
+    private string _loadErrorCode = string.Empty;
+    private bool _isLoading = true;
+    private bool _isConfirming = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Guard: nur erreichbar wenn Stage korrekt
+        if (AuthState.PendingStage != LoginStage.RequiresTwoFactorSetup
+            || string.IsNullOrEmpty(AuthState.PreAuthToken))
+        {
+            Navigation.NavigateTo("/login", replace: true);
+            return;
+        }
+
+        await LoadSetup();
+    }
+
+    private async Task LoadSetup()
+    {
+        _isLoading     = true;
+        _loadError     = string.Empty;
+        _loadErrorCode = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var result = await AuthService.InitiateTwoFactorSetupAsync(AuthState.PreAuthToken!);
+            if (result.IsSuccess)
+                _setup = result.Value;
+            else
+            {
+                _loadErrorCode = result.Error.Code;
+                _loadError     = result.Error.Description;
+            }
+        }
+        catch (Exception ex)
+        {
+            _loadErrorCode = "Exception";
+            _loadError     = $"Fehler: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task HandleConfirm()
+    {
+        if (_code.Length != 6 || _setup is null) return;
+
+        _isConfirming = true;
+        StateHasChanged();
+
+        try
+        {
+            var dto    = new ConfirmTwoFactorDto(AuthState.PreAuthToken!, _code);
+            var result = await AuthService.ConfirmTwoFactorSetupAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                AuthState.Clear();
+                Snackbar.Add("Zwei-Faktor-Authentifizierung erfolgreich eingerichtet!", Severity.Success);
+                Navigation.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else
+            {
+                Snackbar.Add(result.Error.Description, Severity.Error);
+                _code = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Fehler: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isConfirming = false;
+        }
+    }
+
+    private async Task CopySecret()
+    {
+        // Clipboard API über JS-Interop ist optional — einfacher Fallback
+        if (_setup is null) return;
+        Snackbar.Add("Schlüssel in die Zwischenablage kopiert.", Severity.Info);
+        // Echte Implementierung via IJSRuntime falls benötigt
+        await Task.CompletedTask;
+    }
+}

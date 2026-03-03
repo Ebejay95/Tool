@@ -34,6 +34,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9SZXNldFBhc3N3b3JkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/Components/Setup2Fa.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9TZXR1cDJGYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/Components/Validate2Fa.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9WYWxpZGF0ZTJGYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/Components/VerifyMail.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9WZXJpZnlNYWlsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

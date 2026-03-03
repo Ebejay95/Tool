@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "yGOmT+bv3t0=",
+  "dgSpecHash": "N2KPlX3SJQ4=",
   "success": true,
   "projectFilePath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/Client.csproj",
   "expectedPackageFiles": [
-    "/Users/jonathaneberle/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/microsoft.aspnetcore.authorization/8.0.8/microsoft.aspnetcore.authorization.8.0.8.nupkg.sha512",
@@ -52,6 +51,7 @@
     "/Users/jonathaneberle/.nuget/packages/microsoft.net.illink.tasks/8.0.19/microsoft.net.illink.tasks.8.0.19.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/microsoft.net.sdk.webassembly.pack/8.0.19/microsoft.net.sdk.webassembly.pack.8.0.19.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/mudblazor/6.19.1/mudblazor.6.19.1.nupkg.sha512",
+    "/Users/jonathaneberle/.nuget/packages/riok.mapperly/3.6.0/riok.mapperly.3.6.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.diagnostics.diagnosticsource/8.0.0/system.diagnostics.diagnosticsource.8.0.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.identitymodel.tokens.jwt/7.5.2/system.identitymodel.tokens.jwt.7.5.2.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512",

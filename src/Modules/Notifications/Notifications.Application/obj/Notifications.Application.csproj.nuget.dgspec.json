@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj"
               },
               "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj": {
                 "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj"
@@ -86,14 +86,14 @@
         }
       }
     },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj",
-        "projectName": "Todos.Domain",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj",
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj",
+        "projectName": "Notifications.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj",
         "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/obj/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
@@ -107,11 +107,7 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {

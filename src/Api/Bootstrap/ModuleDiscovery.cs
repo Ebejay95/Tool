@@ -1,6 +1,5 @@
 using System.Reflection;
 using ServerKernel;
-using SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using System.IO;
@@ -48,8 +47,12 @@ public static class ModuleDiscovery
             throw new InvalidOperationException(
                 $"Doppelte [ModuleOrder]-Werte gefunden – Registrierungsreihenfolge wäre nichtdeterministisch: {string.Join(" | ", duplicates)}");
 
+        // ApplicationParts zentral registrieren – Module müssen AddControllers() nicht mehr selbst aufrufen.
+        // AddControllers() ist idempotent; der bereits in Program.cs registrierte Builder wird zurückgegeben.
+        var mvcBuilder = builder.Services.AddControllers();
         foreach (var type in moduleTypes)
         {
+            mvcBuilder.AddApplicationPart(type.Assembly);
             var method = FindStaticMethod(type, nameof(IModule.AddModule), 3);
             method?.Invoke(null, [builder.Services, builder.Configuration, builder.Environment]);
         }
@@ -74,6 +77,23 @@ public static class ModuleDiscovery
         }
 
         return app;
+    }
+
+    /// <summary>
+    /// Scannt alle IMigrateModule-Implementierungen und führt deren MigrateAsync() auf.
+    /// Aufruf in --migrate-only-Modus.
+    /// </summary>
+    public static async Task MigrateAllModulesAsync(this IServiceProvider services)
+    {
+        var moduleTypes = FindConcreteImplementors(typeof(IMigrateModule))
+            .OrderBy(t => t.GetCustomAttribute<ModuleOrderAttribute>()?.Order ?? 0);
+
+        foreach (var type in moduleTypes)
+        {
+            var method = FindStaticMethod(type, nameof(IMigrateModule.MigrateAsync), 1);
+            if (method != null)
+                await (Task)method.Invoke(null, [services])!;
+        }
     }
 
     // ─── Internals ────────────────────────────────────────────────────────────

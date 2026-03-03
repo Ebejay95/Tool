@@ -1,0 +1,128 @@
+@page "/validate-2fa"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject AuthStateService AuthState
+
+<PageTitle>Zwei-Faktor-Code eingeben - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 64px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudIcon Icon="Icons.Material.Filled.PhonelinkLock"
+                     Style="font-size: 64px; color: var(--mud-palette-primary);"
+                     Class="mb-3" />
+            <MudText Typo="Typo.h5" GutterBottom="true">Zwei-Faktor-Authentifizierung</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Geben Sie den aktuellen Code aus Ihrer Authenticator-App ein.
+            </MudText>
+        </div>
+
+        <!-- E-Mail-Anzeige (nur Info) -->
+        @if (!string.IsNullOrEmpty(AuthState.PendingEmail))
+        {
+            <MudAlert Severity="Severity.Info" Icon="Icons.Material.Filled.Person" Class="mb-4">
+                Anmeldung als <strong>@AuthState.PendingEmail</strong>
+            </MudAlert>
+        }
+
+        <!-- Code-Eingabe -->
+        <MudTextField @bind-Value="_code"
+                      Label="6-stelliger Authenticator-Code"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Telephone"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="Icons.Material.Filled.Pin"
+                      FullWidth="true"
+                      Margin="Margin.Dense"
+                      Class="mb-4"
+                      Placeholder="000000"
+                      MaxLength="6"
+                      AutoFocus="true" />
+
+        <!-- Anmelden-Button -->
+        <MudButton OnClick="@HandleValidate"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   FullWidth="true"
+                   Class="mb-3"
+                   Disabled="@(_isValidating || _code.Length != 6)">
+            @if (_isValidating)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                <span style="margin-left: 8px;">Wird überprüft...</span>
+            }
+            else
+            {
+                <MudIcon Icon="Icons.Material.Filled.Login" Class="mr-2" />
+                <span>Anmelden</span>
+            }
+        </MudButton>
+
+        <MudDivider Style="margin: 16px 0;" />
+
+        <!-- Hinweis -->
+        <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Center" Class="mb-3">
+            Öffnen Sie Google Authenticator, Authy oder eine andere Authenticator-App
+            und geben Sie den aktuell angezeigten 6-stelligen Code ein.
+        </MudText>
+
+        <div style="text-align: center;">
+            <MudLink Href="/login" Color="Color.Secondary">
+                Zurück zur Anmeldung
+            </MudLink>
+        </div>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string _code = string.Empty;
+    private bool _isValidating = false;
+
+    protected override void OnInitialized()
+    {
+        // Guard: nur erreichbar wenn Stage korrekt
+        if (AuthState.PendingStage != LoginStage.RequiresTwoFactorValidation
+            || string.IsNullOrEmpty(AuthState.PreAuthToken))
+        {
+            Navigation.NavigateTo("/login", replace: true);
+        }
+    }
+
+    private async Task HandleValidate()
+    {
+        if (_code.Length != 6) return;
+
+        _isValidating = true;
+        StateHasChanged();
+
+        try
+        {
+            var dto    = new ValidateTwoFactorDto(AuthState.PreAuthToken!, _code);
+            var result = await AuthService.ValidateTwoFactorAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                AuthState.Clear();
+                Navigation.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else
+            {
+                Snackbar.Add(result.Error.Description, Severity.Error);
+                _code = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Fehler: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isValidating = false;
+        }
+    }
+}

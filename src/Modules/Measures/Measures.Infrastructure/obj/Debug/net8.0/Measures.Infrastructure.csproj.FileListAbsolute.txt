@@ -20,3 +20,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/SharedKernel.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/Measures.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/Measures.Contracts.pdb

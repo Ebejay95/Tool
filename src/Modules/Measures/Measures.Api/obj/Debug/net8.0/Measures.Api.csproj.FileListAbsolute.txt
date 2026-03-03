@@ -20,3 +20,7 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/obj/Debug/net8.0/refint/Measures.Api.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/obj/Debug/net8.0/Measures.Api.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/obj/Debug/net8.0/ref/Measures.Api.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/bin/Debug/net8.0/ServerKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/bin/Debug/net8.0/ServerKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/bin/Debug/net8.0/Measures.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Api/bin/Debug/net8.0/Measures.Contracts.pdb

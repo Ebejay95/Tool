@@ -7,6 +7,10 @@
 
   <ItemGroup>
     <ProjectReference Include="../Todos.Domain/Todos.Domain.csproj" />
+    <!-- Notifications-Abstractions: WASM-safe, ermöglicht TodoEventHandlers ohne Kopplung an Notifications.Application -->
+    <ProjectReference Include="../../../Shared/Notifications.Abstractions/Notifications.Abstractions.csproj" />
+    <!-- DTOs für Client + Application-Handler -->
+    <ProjectReference Include="../Todos.Contracts/Todos.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -977,6 +977,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "Measures.Contracts": "1.0.0",
           "Measures.Domain": "1.0.0",
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
@@ -986,6 +987,16 @@
         },
         "runtime": {
           "bin/placeholder/Measures.Application.dll": {}
+        }
+      },
+      "Measures.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Measures.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Measures.Contracts.dll": {}
         }
       },
       "Measures.Domain/1.0.0": {
@@ -2554,6 +2565,11 @@
       "type": "project",
       "path": "../Measures.Application/Measures.Application.csproj",
       "msbuildProject": "../Measures.Application/Measures.Application.csproj"
+    },
+    "Measures.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Measures.Contracts/Measures.Contracts.csproj",
+      "msbuildProject": "../Measures.Contracts/Measures.Contracts.csproj"
     },
     "Measures.Domain/1.0.0": {
       "type": "project",

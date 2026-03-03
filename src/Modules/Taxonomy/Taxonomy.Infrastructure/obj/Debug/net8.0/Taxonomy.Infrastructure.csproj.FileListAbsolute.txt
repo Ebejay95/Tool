@@ -20,3 +20,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Infrastructure/obj/Debug/net8.0/Taxonomy.Infrastructure.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Infrastructure/obj/Debug/net8.0/Taxonomy.Infrastructure.genruntimeconfig.cache
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Infrastructure/obj/Debug/net8.0/ref/Taxonomy.Infrastructure.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Infrastructure/bin/Debug/net8.0/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Infrastructure/bin/Debug/net8.0/Taxonomy.Contracts.pdb

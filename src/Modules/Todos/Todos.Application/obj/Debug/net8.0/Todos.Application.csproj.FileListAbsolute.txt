@@ -16,3 +16,7 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/obj/Debug/net8.0/refint/Todos.Application.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/obj/Debug/net8.0/Todos.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/obj/Debug/net8.0/ref/Todos.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/bin/Debug/net8.0/Notifications.Abstractions.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/bin/Debug/net8.0/Todos.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/bin/Debug/net8.0/Notifications.Abstractions.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/bin/Debug/net8.0/Todos.Contracts.pdb

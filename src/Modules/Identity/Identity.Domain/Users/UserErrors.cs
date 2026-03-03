@@ -22,4 +22,17 @@ public static class UserErrors
 
     public static readonly Error InvalidResetToken = new("User.InvalidResetToken", "Invalid password reset token");
     public static readonly Error ExpiredResetToken = new("User.ExpiredResetToken", "Password reset token has expired");
+
+    // ── E-Mail-Verifizierung ──────────────────────────────────────────────────
+    public static readonly Error EmailNotVerified = new("User.EmailNotVerified", "Email address has not been verified");
+    public static readonly Error EmailAlreadyVerified = new("User.EmailAlreadyVerified", "Email address is already verified");
+    public static readonly Error InvalidEmailVerificationToken = new("User.InvalidEmailVerificationToken", "Invalid email verification token");
+    public static readonly Error ExpiredEmailVerificationToken = new("User.ExpiredEmailVerificationToken", "Email verification token has expired");
+    public static readonly Error EmailVerificationTooSoon = new("User.EmailVerificationTooSoon", "Please wait at least one hour before requesting a new verification email");
+
+    // ── Zwei-Faktor-Authentifizierung ─────────────────────────────────────────
+    public static readonly Error TwoFactorRequired = new("User.TwoFactorRequired", "Two-factor authentication code is required");
+    public static readonly Error TwoFactorAlreadyEnabled = new("User.TwoFactorAlreadyEnabled", "Two-factor authentication is already enabled");
+    public static readonly Error TwoFactorNotConfigured = new("User.TwoFactorNotConfigured", "Two-factor authentication is not configured");
+    public static readonly Error InvalidTwoFactorCode = new("User.InvalidTwoFactorCode", "Invalid two-factor authentication code");
 }

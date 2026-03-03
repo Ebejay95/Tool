@@ -1,0 +1,126 @@
+@page "/profile"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+
+<PageTitle>Profil - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+
+    @if (_user is null)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+    }
+    else
+    {
+        @* ── Profil-Info ───────────────────────────────────────────────────── *@
+        <MudPaper Elevation="2" Class="pa-6 mb-6">
+            <div class="d-flex align-center gap-4 mb-4">
+                <MudAvatar Color="Color.Primary" Size="Size.Large">
+                    @(_user.FirstName.Length > 0 ? _user.FirstName[0] : '?')
+                </MudAvatar>
+                <div>
+                    <MudText Typo="Typo.h5">@_user.FullName</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">@_user.Email</MudText>
+                </div>
+            </div>
+        </MudPaper>
+
+        @* ── Passwort ändern ────────────────────────────────────────────────── *@
+        <MudPaper Elevation="2" Class="pa-6">
+            <MudText Typo="Typo.h6" GutterBottom="true">Passwort ändern</MudText>
+
+            <EditForm Model="@_changePasswordModel" OnValidSubmit="@HandleChangePasswordAsync">
+                <DataAnnotationsValidator />
+
+                <MudTextField @bind-Value="_changePasswordModel.CurrentPassword"
+                              Label="Aktuelles Passwort"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Lock"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Class="mb-4"
+                              For="@(() => _changePasswordModel.CurrentPassword)" />
+
+                <MudTextField @bind-Value="_changePasswordModel.NewPassword"
+                              Label="Neues Passwort"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.LockOpen"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Class="mb-4"
+                              HelperText="Mindestens 8 Zeichen"
+                              For="@(() => _changePasswordModel.NewPassword)" />
+
+                <MudTextField @bind-Value="_confirmPassword"
+                              Label="Neues Passwort bestätigen"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.LockOpen"
+                              FullWidth="true"
+                              Margin="Margin.Dense"
+                              Class="mb-6"
+                              Error="@(!string.IsNullOrEmpty(_confirmPassword) && _confirmPassword != _changePasswordModel.NewPassword)"
+                              ErrorText="Passwörter stimmen nicht überein" />
+
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           Disabled="@(_isLoading || (!string.IsNullOrEmpty(_confirmPassword) && _confirmPassword != _changePasswordModel.NewPassword))">
+                    @if (_isLoading)
+                    {
+                        <MudProgressCircular Indeterminate="true" Size="Size.Small" Class="mr-2" />
+                    }
+                    Passwort ändern
+                </MudButton>
+            </EditForm>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private Identity.Application.DTOs.UserInfo? _user;
+    private readonly Identity.Application.DTOs.ChangePasswordDto _changePasswordModel = new();
+    private string _confirmPassword = string.Empty;
+    private bool _isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await AuthService.GetCurrentUserAsync();
+    }
+
+    private async Task HandleChangePasswordAsync()
+    {
+        if (_changePasswordModel.NewPassword != _confirmPassword)
+            return;
+
+        _isLoading = true;
+        try
+        {
+            var result = await AuthService.ChangePasswordAsync(_changePasswordModel);
+
+            if (result.IsSuccess)
+            {
+                Snackbar.Add("Passwort erfolgreich geändert.", Severity.Success);
+                _changePasswordModel.CurrentPassword = string.Empty;
+                _changePasswordModel.NewPassword = string.Empty;
+                _confirmPassword = string.Empty;
+            }
+            else
+            {
+                Snackbar.Add($"Fehler: {result.Error.Description}", Severity.Error);
+            }
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

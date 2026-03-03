@@ -5,10 +5,11 @@
 # db-clean  → DB-Daten komplett löschen (PVC weg)
 # prod      → Docker bauen, pushen, prod deployen
 
-.PHONY: dev clean db-clean prod status logs seq-logs redis-logs help \
+.PHONY: dev clean db-clean prod status logs seq-logs redis-logs mailhog-logs help \
         _db-apply _db-wait _db-forward _migrate \
         _seq-apply _seq-wait _seq-forward \
-        _redis-apply _redis-wait _redis-forward
+        _redis-apply _redis-wait _redis-forward \
+        _mailhog-apply _mailhog-wait _mailhog-forward
 
 .DEFAULT_GOAL := help
 
@@ -24,7 +25,9 @@ DEV_PORT      := 8080
 DB_PORT       := 5432
 SEQ_PORT      := 5341
 REDIS_PORT    := 6379
-REDIS_PASS    := local_redis_password
+REDIS_PASS        := local_redis_password
+MAILHOG_SMTP_PORT := 1025
+MAILHOG_WEB_PORT  := 8025
 PROJECT       := src/Api
 DB_CONN       := "Host=localhost;Port=$(DB_PORT);Database=cmc_local;Username=cmc_user;Password=local_dev_password_change_me;SslMode=Disable"
 REDIS_CONN    := "localhost:$(REDIS_PORT),password=$(REDIS_PASS)"
@@ -32,9 +35,10 @@ REDIS_CONN    := "localhost:$(REDIS_PORT),password=$(REDIS_PASS)"
 # ---------------------------------------------------------------------------
 # dev: DB hochfahren (falls nötig), migrieren, Hot-Reload starten
 # ---------------------------------------------------------------------------
-dev: _db-apply _seq-apply _redis-apply _db-wait _seq-wait _redis-wait _db-forward _seq-forward _redis-forward _migrate
+dev: _db-apply _seq-apply _redis-apply _mailhog-apply _db-wait _seq-wait _redis-wait _mailhog-wait _db-forward _seq-forward _redis-forward _mailhog-forward _migrate
 	@echo "🚀 Hot-Reload auf http://localhost:$(DEV_PORT) ..."
 	@echo "📊 Seq (Logs/Traces): http://localhost:$(SEQ_PORT)"
+	@echo "📧 MailHog (E-Mails):  http://localhost:$(MAILHOG_WEB_PORT)"
 	@lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
 	@cd $(PROJECT) && \
 		ASPNETCORE_ENVIRONMENT=Development \
@@ -51,6 +55,8 @@ clean:
 	@pkill -f "kubectl.*port-forward.*$(DB_PORT)" 2>/dev/null || true
 	@pkill -f "kubectl.*port-forward.*$(SEQ_PORT)" 2>/dev/null || true
 	@pkill -f "kubectl.*port-forward.*$(REDIS_PORT)" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(MAILHOG_SMTP_PORT)" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(MAILHOG_WEB_PORT)" 2>/dev/null || true
 	@lsof -ti:$(DEV_PORT) | xargs kill -9 2>/dev/null || true
 	@echo "✅ Gestoppt"
 
@@ -91,22 +97,27 @@ seq-logs:
 redis-logs:
 	@kubectl logs -n $(NAMESPACE) -l app=redis -f
 
+mailhog-logs:
+	@kubectl logs -n $(NAMESPACE) -l app=mailhog -f
+
 help:
 	@echo ""
 	@echo "Api – Befehle:"
 	@echo ""
-	@echo "  dev        🚀 DB + Seq + Redis starten + migrieren + Hot-Reload"
-	@echo "  clean      🛑 Dev-Prozesse stoppen  (DB/Seq/Redis bleiben persistent)"
+	@echo "  dev        🚀 DB + Seq + Redis + MailHog starten + migrieren + Hot-Reload"
+	@echo "  clean      🛑 Dev-Prozesse stoppen  (DB/Seq/Redis/MailHog bleiben persistent)"
 	@echo "  db-clean   🗑️  DB-Daten löschen     (PVC weg, nächstes 'dev' baut neu)"
 	@echo "  prod       🚀 Docker bauen + pushen + prod deployen"
 	@echo "  status     📊 K8s Pod-Status (local)"
 	@echo "  logs       📜 Postgres-Logs folgen"
 	@echo "  seq-logs   📜 Seq-Logs folgen"
 	@echo "  redis-logs 📜 Redis-Logs folgen"
+	@echo "  mailhog-logs 📜 MailHog-Logs folgen"
 	@echo ""
-	@echo "  App:   http://localhost:$(DEV_PORT)"
-	@echo "  Seq:   http://localhost:$(SEQ_PORT)"
-	@echo "  Redis: localhost:$(REDIS_PORT)"
+	@echo "  App:     http://localhost:$(DEV_PORT)"
+	@echo "  Seq:     http://localhost:$(SEQ_PORT)"
+	@echo "  MailHog: http://localhost:$(MAILHOG_WEB_PORT)"
+	@echo "  Redis:   localhost:$(REDIS_PORT)"
 	@echo "  REGISTRY=$(REGISTRY)  (überschreibbar: make prod REGISTRY=...)"
 	@echo ""
 
@@ -147,6 +158,21 @@ _redis-forward:
 	@pkill -f "kubectl.*port-forward.*$(REDIS_PORT)" 2>/dev/null || true
 	@lsof -ti:$(REDIS_PORT) | xargs kill -9 2>/dev/null || true
 	@kubectl port-forward -n $(NAMESPACE) service/redis $(REDIS_PORT):$(REDIS_PORT) &
+	@sleep 2
+
+_mailhog-apply:
+	@echo "☁️  Starte MailHog (lokaler E-Mail-Catch-All)..."
+	@kubectl apply -f k8s/local/mailhog.yaml
+
+_mailhog-wait:
+	@echo "⏳ Warte auf MailHog-Pod..."
+	@kubectl rollout status deployment/mailhog -n $(NAMESPACE) --timeout=60s
+
+_mailhog-forward:
+	@echo "📡 Port-Forward MailHog SMTP → localhost:$(MAILHOG_SMTP_PORT), Web → localhost:$(MAILHOG_WEB_PORT) ..."
+	@pkill -f "kubectl.*port-forward.*$(MAILHOG_SMTP_PORT)" 2>/dev/null || true
+	@pkill -f "kubectl.*port-forward.*$(MAILHOG_WEB_PORT)" 2>/dev/null || true
+	@kubectl port-forward -n $(NAMESPACE) service/mailhog $(MAILHOG_SMTP_PORT):1025 $(MAILHOG_WEB_PORT):8025 &
 	@sleep 2
 
 _db-wait:

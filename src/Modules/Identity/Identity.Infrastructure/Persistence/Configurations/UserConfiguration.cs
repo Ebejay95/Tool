@@ -57,6 +57,29 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.PasswordResetTokenExpiry);
 
+        // ── E-Mail-Verifizierung
+        builder.Property(u => u.IsEmailVerified)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        builder.Property(u => u.EmailVerificationToken)
+            .HasMaxLength(50);
+
+        builder.Property(u => u.EmailVerificationTokenExpiry);
+
+        builder.Property(u => u.EmailVerificationLastSentAt);
+
+        // ── Zwei-Faktor-Authentifizierung (TOTP)
+        builder.Property(u => u.TwoFactorSecret)
+            .HasMaxLength(200);
+
+        builder.Property(u => u.TwoFactorPendingSecret)
+            .HasMaxLength(200);
+
+        builder.Property(u => u.IsTwoFactorEnabled)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         // Ignore domain events (not persisted)
         builder.Ignore(u => u.DomainEvents);
     }

@@ -7,14 +7,12 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Infrastructure.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/ServerKernel.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/SharedKernel.dll
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Todos.Domain.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/ServerKernel.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/SharedKernel.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Domain.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Infrastructure.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Abstractions.pdb
-/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Todos.Domain.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/Notifications.Api.csproj.AssemblyReference.cache
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/Notifications.Api.GeneratedMSBuildEditorConfig.editorconfig
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/Notifications.Api.AssemblyInfoInputs.cache
@@ -26,3 +24,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/refint/Notifications.Api.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/Notifications.Api.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/obj/Debug/net8.0/ref/Notifications.Api.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Api/bin/Debug/net8.0/Notifications.Contracts.pdb

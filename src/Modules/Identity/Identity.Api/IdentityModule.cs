@@ -1,6 +1,6 @@
 using Identity.Application;
 using Identity.Infrastructure;
-using SharedKernel;
+using ServerKernel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,9 +9,8 @@ namespace Identity.Api;
 
 /// <summary>
 /// Kapselt die vollständige Service-Registration des Identity-Moduls.
-/// Aufruf in Program.cs: builder.Services.AddModule&lt;IdentityModule&gt;(config, env)
 /// </summary>
-public sealed class IdentityModule : IModule
+public sealed class IdentityModule : IModule, IMigrateModule
 {
     public static IServiceCollection AddModule(
         IServiceCollection services,
@@ -20,7 +19,9 @@ public sealed class IdentityModule : IModule
     {
         services.AddIdentityApplication();
         services.AddIdentityInfrastructure(configuration);
-
         return services;
     }
+
+    public static Task MigrateAsync(IServiceProvider serviceProvider)
+        => serviceProvider.MigrateIdentityDatabaseAsync();
 }

@@ -2,6 +2,7 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject AuthStateService AuthState
 
 <PageTitle>Login - CMC</PageTitle>
 
@@ -91,14 +92,36 @@
             _isLoading = true;
             var result = await AuthService.LoginAsync(_loginDto);
 
-            if (result.IsSuccess)
+            if (result.IsFailure)
             {
-                Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
-                Navigation.NavigateTo("/dashboard", forceLoad: true);
+                Snackbar.Add($"Anmeldung fehlgeschlagen: {result.Error.Description}", Severity.Error);
+                return;
             }
-            else
+
+            var response = result.Value;
+
+            switch (response.Stage)
             {
-                Snackbar.Add($"Anmeldung fehlgeschlagen: {result.Error}", Severity.Error);
+                case LoginStage.Complete:
+                    Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
+                    Navigation.NavigateTo("/dashboard", forceLoad: true);
+                    break;
+
+                case LoginStage.RequiresEmailVerification:
+                    AuthState.SetEmailVerification(response.Email ?? _loginDto.Email);
+                    Snackbar.Add("Bitte bestätigen Sie zunächst Ihre E-Mail-Adresse.", Severity.Warning);
+                    Navigation.NavigateTo("/verify-mail");
+                    break;
+
+                case LoginStage.RequiresTwoFactorSetup:
+                    AuthState.SetTwoFactorSetup(response.PreAuthToken!, response.Email ?? _loginDto.Email);
+                    Navigation.NavigateTo("/setup-2fa");
+                    break;
+
+                case LoginStage.RequiresTwoFactorValidation:
+                    AuthState.SetTwoFactorValidation(response.PreAuthToken!, response.Email ?? _loginDto.Email);
+                    Navigation.NavigateTo("/validate-2fa");
+                    break;
             }
         }
         catch (Exception ex)

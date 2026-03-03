@@ -201,6 +201,16 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "Measures.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Measures.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Measures.Contracts.dll": {}
+        }
+      },
       "Measures.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -593,6 +603,11 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Measures.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Measures.Contracts/Measures.Contracts.csproj",
+      "msbuildProject": "../Measures.Contracts/Measures.Contracts.csproj"
+    },
     "Measures.Domain/1.0.0": {
       "type": "project",
       "path": "../Measures.Domain/Measures.Domain.csproj",
@@ -606,6 +621,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Measures.Contracts >= 1.0.0",
       "Measures.Domain >= 1.0.0",
       "MediatR >= 12.2.0",
       "Microsoft.Extensions.Logging.Abstractions >= 8.0.0"
@@ -636,6 +652,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj": {
+              "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj"
+            },
             "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj": {
               "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj"
             }

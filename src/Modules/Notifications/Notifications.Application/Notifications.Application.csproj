@@ -16,8 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="../../../Shared/SharedKernel/SharedKernel.csproj" />
     <ProjectReference Include="../../../Shared/Notifications.Abstractions/Notifications.Abstractions.csproj" />
-    <!-- Todos-Domain-Events abonnieren (einwegige Abhängigkeit: Notifications reagiert auf Todos) -->
-    <ProjectReference Include="../../../Modules/Todos/Todos.Domain/Todos.Domain.csproj" />
+    <!-- DTOs für Client -->
+    <ProjectReference Include="../Notifications.Contracts/Notifications.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

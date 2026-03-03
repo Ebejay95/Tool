@@ -675,6 +675,22 @@
           }
         }
       },
+      "Otp.NET/1.4.0": {
+        "runtime": {
+          "lib/net8.0/Otp.NET.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "QRCoder/1.6.0": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.6.0.0",
+            "fileVersion": "1.6.0.0"
+          }
+        }
+      },
       "System.CodeDom/4.4.0": {
         "runtime": {
           "lib/netstandard2.0/System.CodeDom.dll": {
@@ -782,6 +798,7 @@
       "System.Threading.Channels/6.0.0": {},
       "Identity.Application/1.0.0": {
         "dependencies": {
+          "Identity.Contracts": "1.0.0",
           "Identity.Domain": "1.0.0",
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
@@ -790,6 +807,17 @@
         },
         "runtime": {
           "Identity.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Identity.Contracts/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Identity.Contracts.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -814,6 +842,8 @@
           "Microsoft.EntityFrameworkCore": "8.0.1",
           "Microsoft.EntityFrameworkCore.Design": "8.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
+          "Otp.NET": "1.4.0",
+          "QRCoder": "1.6.0",
           "System.IdentityModel.Tokens.Jwt": "7.3.1"
         },
         "runtime": {
@@ -1214,6 +1244,20 @@
       "path": "npgsql.entityframeworkcore.postgresql/8.0.0",
       "hashPath": "npgsql.entityframeworkcore.postgresql.8.0.0.nupkg.sha512"
     },
+    "Otp.NET/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Fk1NKc0lWmlo6LAFYpFJInRgFKt72knRNEvxndDYoQHFwYOPXav+WEUBvQA0k4lxq5xt0SymrZ+oi0F/G40bPQ==",
+      "path": "otp.net/1.4.0",
+      "hashPath": "otp.net.1.4.0.nupkg.sha512"
+    },
+    "QRCoder/1.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
+      "path": "qrcoder/1.6.0",
+      "hashPath": "qrcoder.1.6.0.nupkg.sha512"
+    },
     "System.CodeDom/4.4.0": {
       "type": "package",
       "serviceable": true,
@@ -1334,6 +1378,11 @@
       "hashPath": "system.threading.channels.6.0.0.nupkg.sha512"
     },
     "Identity.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Identity.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

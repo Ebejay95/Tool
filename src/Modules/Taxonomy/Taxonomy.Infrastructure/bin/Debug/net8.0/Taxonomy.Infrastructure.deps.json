@@ -631,10 +631,19 @@
         "dependencies": {
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Taxonomy.Contracts": "1.0.0",
           "Taxonomy.Domain": "1.0.0"
         },
         "runtime": {
           "Taxonomy.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Taxonomy.Contracts/1.0.0": {
+        "runtime": {
+          "Taxonomy.Contracts.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -987,6 +996,11 @@
       "sha512": ""
     },
     "Taxonomy.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Taxonomy.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

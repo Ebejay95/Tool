@@ -18,3 +18,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/obj/Debug/net8.0/refint/Identity.Application.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/obj/Debug/net8.0/Identity.Application.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/obj/Debug/net8.0/ref/Identity.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/bin/Debug/net8.0/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/bin/Debug/net8.0/Identity.Contracts.pdb

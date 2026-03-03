@@ -1,0 +1,154 @@
+@typeparam TItem where TItem : class
+@* Kombinationsfeld für Taxonomy-Zuweisung (Kategorien oder Tags).
+   - Fokus öffnet Dropdown sofort (alle noch nicht selektierten Items)
+   - Tippen filtert live
+   - Klick / Enter auf vorhandenem Item → Chip erscheint, Feld wird geleert
+   - Enter wenn kein Treffer → OnCreateRequested(label) → Parent erstellt per API, neuer Chip erscheint direkt selektiert
+   Komplett zustandslos: keine API-Kenntnis, SelectedIds wird in-place mutiert. *@
+
+<div>
+    <div style="margin-bottom:1em; min-height:32px;">
+        @if (_selectedItems.Count > 0)
+        {
+            <div style="display:flex;flex-wrap:wrap;gap:4px;"
+                @onmousedown:stopPropagation="true"
+                @onmousedown:preventDefault="true">
+                @foreach (var item in _selectedItems)
+                {
+                    var captured = item;
+                    <MudChip T="string"
+                            Style="@($"background:{GetColor(captured)};color:#fff;font-size:0.78rem;")"
+                            OnClose="@(() => RemoveItem(captured))"
+                            Size="Size.Small">
+                        @GetLabel(captured)
+                    </MudChip>
+                }
+            </div>
+        }
+    </div>
+    <MudAutocomplete T="TItem"
+                     Text="@_searchText"
+                     TextChanged="@(t => _searchText = t)"
+                     Label="@Label"
+                     Placeholder="@Placeholder"
+                     SearchFunc="@SearchItems"
+                     ValueChanged="@SelectExisting"
+                     ToStringFunc="@(_ => "")"
+                     ResetValueOnEmptyText="true"
+                     CoerceText="false"
+                     CoerceValue="false"
+                     OpenIcon=""
+                     CloseIcon=""
+                     AdornmentIcon="@Icons.Material.Filled.Search"
+                     Adornment="Adornment.Start"
+                     OpenOnFocus="true"
+                     MinCharacters="0"
+                     Variant="Variant.Outlined"
+                     Margin="Margin.Dense"
+                     MaxItems="20"
+                     OnKeyDown="@HandleKeyDown"
+                     @ref="_autocomplete">
+        <ItemTemplate Context="item">
+            <div style="display:flex;align-items:center;gap:8px;padding:2px 0;">
+                <div style="@($"width:10px;height:10px;border-radius:50%;background:{GetColor(item!)};")" />
+                <MudText Typo="Typo.body2">@GetLabel(item!)</MudText>
+            </div>
+        </ItemTemplate>
+    </MudAutocomplete>
+</div>
+
+@code {
+    /// <summary>Alle verfügbaren Items (gefiltert per Suche).</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TItem>? AvailableItems { get; set; }
+
+    /// <summary>Aktuell selektierte IDs – wird in-place mutiert.</summary>
+    [Parameter, EditorRequired]
+    public ISet<Guid> SelectedIds { get; set; } = new HashSet<Guid>();
+
+    /// <summary>Wird nach jeder Änderung an SelectedIds gefeuert (für StateHasChanged am Parent).</summary>
+    [Parameter]
+    public EventCallback SelectedIdsChanged { get; set; }
+
+    /// <summary>Gefeuert wenn Enter auf unbekanntem Label gedrückt wird – Parent erstellt das Item per API.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback<string> OnCreateRequested { get; set; }
+
+    /// <summary>Extrahiert die ID eines Items.</summary>
+    [Parameter, EditorRequired]
+    public Func<TItem, Guid> GetId { get; set; } = default!;
+
+    /// <summary>Extrahiert den Label-Text eines Items.</summary>
+    [Parameter, EditorRequired]
+    public Func<TItem, string> GetLabel { get; set; } = default!;
+
+    /// <summary>Extrahiert die Farbe (CSS-Hex) eines Items.</summary>
+    [Parameter, EditorRequired]
+    public Func<TItem, string> GetColor { get; set; } = default!;
+
+    /// <summary>Label über dem Eingabefeld.</summary>
+    [Parameter]
+    public string Label { get; set; } = "";
+
+    /// <summary>Platzhaltertext im Eingabefeld.</summary>
+    [Parameter]
+    public string Placeholder { get; set; } = "Suchen oder neu erstellen…";
+
+    private MudAutocomplete<TItem> _autocomplete = default!;
+    private string _searchText = "";
+
+    // Computed: nie cachen – muss immer aktuellen Stand von SelectedIds widerspiegeln
+    private List<TItem> _selectedItems =>
+        (AvailableItems ?? []).Where(x => SelectedIds.Contains(GetId(x))).ToList();
+
+    private Task<IEnumerable<TItem>> SearchItems(string text)
+    {
+        // Bereits selektierte Items aus der Dropdown-Liste ausblenden
+        IEnumerable<TItem> pool = (AvailableItems ?? []).Where(x => !SelectedIds.Contains(GetId(x)));
+
+        if (!string.IsNullOrWhiteSpace(text))
+            pool = pool.Where(x => GetLabel(x).Contains(text.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        return Task.FromResult(pool);
+    }
+
+    private async Task SelectExisting(TItem? item)
+    {
+        if (item is null) return;
+        SelectedIds.Add(GetId(item));
+        await SelectedIdsChanged.InvokeAsync();
+        // Feld leeren und Autocomplete-internen Wert zurücksetzen
+        _searchText = "";
+        await _autocomplete.ResetAsync();
+    }
+
+    private async Task RemoveItem(TItem item)
+    {
+        SelectedIds.Remove(GetId(item));
+        await SelectedIdsChanged.InvokeAsync();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        // Nur reagieren wenn Enter ohne aktive Dropdown-Auswahl gedrückt wird
+        if (e.Key != "Enter" || string.IsNullOrWhiteSpace(_searchText)) return;
+
+        var trimmed = _searchText.Trim();
+
+        // Exakter Treffer → direkt selektieren (Dropdown hat aber schon ValueChanged ausgelöst – Guard)
+        var existing = (AvailableItems ?? [])
+            .FirstOrDefault(x => string.Equals(GetLabel(x), trimmed, StringComparison.OrdinalIgnoreCase));
+
+        if (existing is not null)
+        {
+            await SelectExisting(existing);
+        }
+        else
+        {
+            // Kein Treffer → Parent soll neues Item anlegen
+            _searchText = "";
+            await _autocomplete.ResetAsync();
+            await OnCreateRequested.InvokeAsync(trimmed);
+        }
+    }
+}

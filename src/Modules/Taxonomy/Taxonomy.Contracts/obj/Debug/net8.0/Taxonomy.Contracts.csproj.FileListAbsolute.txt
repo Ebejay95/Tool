@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/bin/Debug/net8.0/Taxonomy.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/bin/Debug/net8.0/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/bin/Debug/net8.0/Taxonomy.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/refint/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/Taxonomy.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/Debug/net8.0/ref/Taxonomy.Contracts.dll

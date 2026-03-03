@@ -19,6 +19,10 @@ public sealed class JwtTokenOptions
 
 public sealed class JwtTokenService : ITokenService
 {
+    private const string PreAuthClaim   = "auth_stage";
+    private const string PreAuthAudience = "pre_auth";
+    private const int    PreAuthMinutes  = 10;
+
     private readonly JwtTokenOptions _options;
     private readonly SymmetricSecurityKey _key;
 
@@ -28,8 +32,12 @@ public sealed class JwtTokenService : ITokenService
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
     }
 
-    public string GenerateToken(User user)
+    // ── Vollständiges JWT ─────────────────────────────────────────────────────
+
+    public GeneratedToken GenerateToken(User user)
     {
+        var expiresAt = DateTime.UtcNow.AddDays(_options.ExpirationDays);
+
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
@@ -48,10 +56,10 @@ public sealed class JwtTokenService : ITokenService
             issuer: _options.Issuer,
             audience: _options.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(_options.ExpirationDays),
+            expires: expiresAt,
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new GeneratedToken(new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
     }
 
     public Result<UserId> ValidateToken(string token)
@@ -59,6 +67,7 @@ public sealed class JwtTokenService : ITokenService
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+            tokenHandler.MapInboundClaims = false;
             var validationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -75,9 +84,7 @@ public sealed class JwtTokenService : ITokenService
 
             var userIdClaim = principal.FindFirst(JwtRegisteredClaimNames.Sub);
             if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
-            {
                 return Result.Failure<UserId>(new Error("Token.InvalidUserId", "Invalid user ID in token"));
-            }
 
             return Result.Success(UserId.From(userId));
         }
@@ -92,6 +99,75 @@ public sealed class JwtTokenService : ITokenService
         catch (Exception)
         {
             return Result.Failure<UserId>(new Error("Token.ValidationFailed", "Token validation failed"));
+        }
+    }
+
+    // ── Pre-Auth-JWT (kurzlebig, nur für 2FA-Schritte) ───────────────────────
+
+    public GeneratedToken GeneratePreAuthToken(UserId userId, string stage)
+    {
+        var expiresAt = DateTime.UtcNow.AddMinutes(PreAuthMinutes);
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId.Value.ToString()),
+            new Claim(PreAuthClaim, stage),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _options.Issuer,
+            audience: PreAuthAudience,
+            claims: claims,
+            expires: expiresAt,
+            signingCredentials: credentials);
+
+        return new GeneratedToken(new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
+    }
+
+    public Result<PreAuthClaims> ValidatePreAuthToken(string token)
+    {
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            tokenHandler.MapInboundClaims = false;
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _key,
+                ValidateIssuer = true,
+                ValidIssuer = _options.Issuer,
+                ValidateAudience = true,
+                ValidAudience = PreAuthAudience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+
+            var userIdClaim = principal.FindFirst(JwtRegisteredClaimNames.Sub);
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+                return Result.Failure<PreAuthClaims>(new Error("Token.InvalidUserId", "Invalid user ID in token"));
+
+            var stageClaim = principal.FindFirst(PreAuthClaim)?.Value;
+            if (string.IsNullOrEmpty(stageClaim))
+                return Result.Failure<PreAuthClaims>(new Error("Token.NotPreAuth", "Token is not a pre-auth token"));
+
+            return Result.Success(new PreAuthClaims(UserId.From(userId), stageClaim));
+        }
+        catch (SecurityTokenExpiredException)
+        {
+            return Result.Failure<PreAuthClaims>(new Error("Token.Expired", "Pre-auth token has expired"));
+        }
+        catch (SecurityTokenException)
+        {
+            return Result.Failure<PreAuthClaims>(new Error("Token.Invalid", "Invalid pre-auth token"));
+        }
+        catch (Exception)
+        {
+            return Result.Failure<PreAuthClaims>(new Error("Token.ValidationFailed", "Token validation failed"));
         }
     }
 }

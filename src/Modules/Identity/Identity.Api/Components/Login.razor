@@ -2,6 +2,7 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
+@inject IJSRuntime JS
 
 <PageTitle>Login - CMC</PageTitle>
 
@@ -84,6 +85,12 @@
     private bool _rememberMe = false;
     private bool _isLoading = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (await AuthService.IsAuthenticatedAsync())
+            Navigation.NavigateTo("/dashboard");
+    }
+
     private async Task HandleLogin()
     {
         try
@@ -93,12 +100,37 @@
 
             if (result.IsSuccess)
             {
-                Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
-                Navigation.NavigateTo("/dashboard", forceLoad: true);
+                switch (result.Value.Stage)
+                {
+                    case LoginStage.Complete:
+                        Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
+                        Navigation.NavigateTo("/dashboard", forceLoad: true);
+                        break;
+
+                    case LoginStage.RequiresEmailVerification:
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingEmail", result.Value.Email ?? _loginDto.Email);
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingStage", ((int)LoginStage.RequiresEmailVerification).ToString());
+                        Navigation.NavigateTo("/verify-mail");
+                        break;
+
+                    case LoginStage.RequiresTwoFactorSetup:
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "preAuthToken", result.Value.PreAuthToken ?? string.Empty);
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingEmail",  _loginDto.Email);
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingStage", ((int)LoginStage.RequiresTwoFactorSetup).ToString());
+                        Navigation.NavigateTo("/setup-2fa");
+                        break;
+
+                    case LoginStage.RequiresTwoFactorValidation:
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "preAuthToken", result.Value.PreAuthToken ?? string.Empty);
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingEmail",  _loginDto.Email);
+                        await JS.InvokeVoidAsync("sessionStorage.setItem", "pendingStage", ((int)LoginStage.RequiresTwoFactorValidation).ToString());
+                        Navigation.NavigateTo("/validate-2fa");
+                        break;
+                }
             }
             else
             {
-                Snackbar.Add($"Anmeldung fehlgeschlagen: {result.Error}", Severity.Error);
+                Snackbar.Add($"Anmeldung fehlgeschlagen: {result.Error.Description}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -108,14 +140,6 @@
         finally
         {
             _isLoading = false;
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (await AuthService.IsAuthenticatedAsync())
-        {
-            Navigation.NavigateTo("/dashboard");
         }
     }
 }

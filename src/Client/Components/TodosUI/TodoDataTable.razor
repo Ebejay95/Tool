@@ -2,37 +2,16 @@
 @* Tabellen-Ansicht aller Aufgaben.
    Komplett zustandslos – Daten und Callbacks kommen als Parameter. *@
 
-<MudPaper Elevation="2" Style="padding: 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <MudText Typo="Typo.h6">Meine Aufgaben</MudText>
-        <MudButton OnClick="@OnRefresh"
-                   Variant="Variant.Text"
-                   Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.Refresh"
-                   Disabled="@Loading">
-            Aktualisieren
-        </MudButton>
-    </div>
-
-    @if (Loading)
-    {
-        <div style="text-align: center; padding: 40px;">
-            <MudProgressCircular Indeterminate="true" />
-            <MudText Typo="Typo.body2" Class="mt-4">Lade Aufgaben...</MudText>
-        </div>
-    }
-    else if (!Items.Any())
-    {
-        <div style="text-align: center; padding: 40px;">
-            <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Large" Color="Color.Secondary" />
-            <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-4">Keine Aufgaben vorhanden</MudText>
-            <MudText Typo="Typo.body2" Color="Color.Secondary">
-                Erstellen Sie Ihre erste Aufgabe mit dem Formular oben.
-            </MudText>
-        </div>
-    }
-    else
-    {
+<EntityTable TItem="TodoListItemViewModel"
+             Items="@Items"
+             Loading="@Loading"
+             Title="Meine Aufgaben"
+             LoadingText="Lade Aufgaben..."
+             EmptyIcon="@Icons.Material.Filled.Assignment"
+             EmptyTitle="Keine Aufgaben vorhanden"
+             EmptySubText="Erstellen Sie Ihre erste Aufgabe mit dem Formular oben."
+             OnRefresh="@OnRefresh">
+    <TableContent>
         <MudDataGrid Items="@Items" Filterable="true" SortMode="SortMode.Single">
             <Columns>
                 <PropertyColumn Property="x => x.Title" Title="Titel" />
@@ -100,8 +79,8 @@
                 </TemplateColumn>
             </Columns>
         </MudDataGrid>
-    }
-</MudPaper>
+    </TableContent>
+</EntityTable>
 
 @code {
     [Parameter, EditorRequired]

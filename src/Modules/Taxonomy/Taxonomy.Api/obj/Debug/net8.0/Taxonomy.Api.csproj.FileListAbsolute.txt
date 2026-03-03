@@ -20,3 +20,7 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/obj/Debug/net8.0/refint/Taxonomy.Api.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/obj/Debug/net8.0/Taxonomy.Api.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/obj/Debug/net8.0/ref/Taxonomy.Api.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/bin/Debug/net8.0/ServerKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/bin/Debug/net8.0/ServerKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/bin/Debug/net8.0/Taxonomy.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Api/bin/Debug/net8.0/Taxonomy.Contracts.pdb

@@ -26,20 +26,20 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/Identity.Application.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/Identity.Application.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj"
               },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/Measures.Application.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/Measures.Application.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj"
               },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj"
               },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj"
               },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/Todos.Application.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/Todos.Application.csproj"
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/Todos.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/Todos.Contracts.csproj"
               },
               "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj": {
                 "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj"
@@ -98,6 +98,10 @@
               "target": "Package",
               "version": "[6.19.1, )"
             },
+            "Riok.Mapperly": {
+              "target": "Package",
+              "version": "[3.6.0, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[7.5.2, )"
@@ -134,232 +138,14 @@
         }
       }
     },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/Identity.Application.csproj": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/Identity.Application.csproj",
-        "projectName": "Identity.Application",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/Identity.Application.csproj",
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj",
+        "projectName": "Identity.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/Identity.Contracts.csproj",
         "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Application/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/Identity.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/Identity.Domain.csproj"
-              },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj"
-              },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.2.0, )"
-            },
-            "Microsoft.Extensions.Logging.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/Identity.Domain.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/Identity.Domain.csproj",
-        "projectName": "Identity.Domain",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/Identity.Domain.csproj",
-        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Domain/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "BCrypt.Net-Next": {
-              "target": "Package",
-              "version": "[4.0.3, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/Measures.Application.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/Measures.Application.csproj",
-        "projectName": "Measures.Application",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/Measures.Application.csproj",
-        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Application/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.2.0, )"
-            },
-            "Microsoft.Extensions.Logging.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj",
-        "projectName": "Measures.Domain",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/Measures.Domain.csproj",
-        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Domain/obj/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
@@ -414,14 +200,14 @@
         }
       }
     },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj",
-        "projectName": "Notifications.Application",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/Notifications.Application.csproj",
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj",
+        "projectName": "Measures.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/Measures.Contracts.csproj",
         "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Application/obj/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
@@ -435,165 +221,7 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj"
-              },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/Notifications.Abstractions/Notifications.Abstractions.csproj"
-              },
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.2.0, )"
-            },
-            "Microsoft.Extensions.DependencyInjection.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.Extensions.Logging.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj",
-        "projectName": "Taxonomy.Application",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/Taxonomy.Application.csproj",
-        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Application/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.2.0, )"
-            },
-            "Microsoft.Extensions.Logging.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj",
-        "projectName": "Taxonomy.Domain",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj",
-        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -630,14 +258,14 @@
         }
       }
     },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/Todos.Application.csproj": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/Todos.Application.csproj",
-        "projectName": "Todos.Application",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/Todos.Application.csproj",
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj",
+        "projectName": "Notifications.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/Notifications.Contracts.csproj",
         "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Application/obj/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
@@ -651,11 +279,7 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -672,16 +296,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "dependencies": {
-            "MediatR": {
-              "target": "Package",
-              "version": "[12.2.0, )"
-            },
-            "Microsoft.Extensions.Logging.Abstractions": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -702,14 +316,14 @@
         }
       }
     },
-    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj",
-        "projectName": "Todos.Domain",
-        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/Todos.Domain.csproj",
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj",
+        "projectName": "Taxonomy.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj",
         "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
-        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Domain/obj/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
@@ -723,11 +337,65 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {
-              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
-                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
-              }
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
             }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/Todos.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/Todos.Contracts.csproj",
+        "projectName": "Todos.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/Todos.Contracts.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
           }
         },
         "warningProperties": {

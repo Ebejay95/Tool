@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "WycXDNJRs/w=",
+  "dgSpecHash": "pVHRJWLJwjE=",
   "success": true,
   "projectFilePath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -42,6 +42,8 @@
     "/Users/jonathaneberle/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/npgsql/8.0.0/npgsql.8.0.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/npgsql.entityframeworkcore.postgresql/8.0.0/npgsql.entityframeworkcore.postgresql.8.0.0.nupkg.sha512",
+    "/Users/jonathaneberle/.nuget/packages/otp.net/1.4.0/otp.net.1.4.0.nupkg.sha512",
+    "/Users/jonathaneberle/.nuget/packages/qrcoder/1.6.0/qrcoder.1.6.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.codedom/4.4.0/system.codedom.4.4.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.collections.immutable/6.0.0/system.collections.immutable.6.0.0.nupkg.sha512",
     "/Users/jonathaneberle/.nuget/packages/system.composition/6.0.0/system.composition.6.0.0.nupkg.sha512",

@@ -217,6 +217,16 @@
           "bin/placeholder/SharedKernel.dll": {}
         }
       },
+      "Taxonomy.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Taxonomy.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Taxonomy.Contracts.dll": {}
+        }
+      },
       "Taxonomy.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -598,6 +608,11 @@
       "path": "../../../Shared/SharedKernel/SharedKernel.csproj",
       "msbuildProject": "../../../Shared/SharedKernel/SharedKernel.csproj"
     },
+    "Taxonomy.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Taxonomy.Contracts/Taxonomy.Contracts.csproj",
+      "msbuildProject": "../Taxonomy.Contracts/Taxonomy.Contracts.csproj"
+    },
     "Taxonomy.Domain/1.0.0": {
       "type": "project",
       "path": "../Taxonomy.Domain/Taxonomy.Domain.csproj",
@@ -608,6 +623,7 @@
     "net8.0": [
       "MediatR >= 12.2.0",
       "Microsoft.Extensions.Logging.Abstractions >= 8.0.0",
+      "Taxonomy.Contracts >= 1.0.0",
       "Taxonomy.Domain >= 1.0.0"
     ]
   },
@@ -636,6 +652,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj": {
+              "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj"
+            },
             "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj": {
               "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Taxonomy/Taxonomy.Domain/Taxonomy.Domain.csproj"
             }

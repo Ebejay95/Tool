@@ -76,3 +76,33 @@ public sealed class ResetPasswordHandler : IRequestHandler<ResetPasswordCommand,
         return Result.Success();
     }
 }
+
+public sealed record ChangePasswordCommand(UserId UserId, ChangePasswordDto Data) : Command;
+
+public sealed class ChangePasswordHandler : IRequestHandler<ChangePasswordCommand, Result>
+{
+    private readonly IUserRepository _userRepository;
+    private readonly IIdentityUnitOfWork _unitOfWork;
+
+    public ChangePasswordHandler(IUserRepository userRepository, IIdentityUnitOfWork unitOfWork)
+    {
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<Result> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByIdAsync(request.UserId.Value, cancellationToken);
+        if (user is null)
+            return Result.Failure(UserErrors.UserNotFound);
+
+        var result = user.ChangePassword(request.Data.CurrentPassword, request.Data.NewPassword);
+        if (result.IsFailure)
+            return result;
+
+        _userRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+}

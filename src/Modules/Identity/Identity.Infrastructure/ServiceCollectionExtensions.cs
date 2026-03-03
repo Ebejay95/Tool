@@ -1,4 +1,5 @@
 using Identity.Application.Ports;
+using Identity.Application.UseCases.Commands;
 using Identity.Infrastructure.Outbox;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories;
@@ -39,6 +40,10 @@ public static class ServiceCollectionExtensions
 
         // Services
         services.AddSingleton<ITokenService, JwtTokenService>();
+        services.AddSingleton<ITotpService, TotpService>();
+
+        // TOTP-Konfiguration (Issuer-Name für Authenticator-App)
+        services.Configure<TotpOptions>(configuration.GetSection("Totp"));
 
         // JWT Configuration
         var jwtSection = configuration.GetSection("Jwt");

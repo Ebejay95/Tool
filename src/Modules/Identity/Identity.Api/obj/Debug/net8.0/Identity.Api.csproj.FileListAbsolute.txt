@@ -33,3 +33,5 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/obj/Debug/net8.0/refint/Identity.Api.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/obj/Debug/net8.0/Identity.Api.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/obj/Debug/net8.0/ref/Identity.Api.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/bin/Debug/net8.0/Identity.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Identity/Identity.Api/bin/Debug/net8.0/Identity.Contracts.pdb

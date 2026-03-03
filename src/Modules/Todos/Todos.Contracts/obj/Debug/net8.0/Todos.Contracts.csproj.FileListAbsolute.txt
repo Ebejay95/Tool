@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/bin/Debug/net8.0/Todos.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/bin/Debug/net8.0/Todos.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/bin/Debug/net8.0/Todos.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/refint/Todos.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/Todos.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Contracts/obj/Debug/net8.0/ref/Todos.Contracts.dll

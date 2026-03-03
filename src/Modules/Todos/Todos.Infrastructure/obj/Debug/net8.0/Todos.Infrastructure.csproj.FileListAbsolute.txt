@@ -20,3 +20,7 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/obj/Debug/net8.0/Todos.Infrastructure.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/obj/Debug/net8.0/Todos.Infrastructure.genruntimeconfig.cache
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/obj/Debug/net8.0/ref/Todos.Infrastructure.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/bin/Debug/net8.0/Notifications.Abstractions.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/bin/Debug/net8.0/Todos.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/bin/Debug/net8.0/Notifications.Abstractions.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Infrastructure/bin/Debug/net8.0/Todos.Contracts.pdb

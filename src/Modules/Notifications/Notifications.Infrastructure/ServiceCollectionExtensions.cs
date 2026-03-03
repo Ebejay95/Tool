@@ -8,6 +8,7 @@ using Notifications.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace Notifications.Infrastructure;
 
@@ -19,27 +20,50 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Registriert den E-Mail-Channel anhand der Konfiguration:
+    ///   Email:Provider = "smtp"     → SmtpEmailNotificationChannel (Dev: MailHog, Prod: echter SMTP)
+    ///   Email:Provider = "graph"    → GraphEmailNotificationChannel  (Prod: Microsoft Graph API)
+    ///   Email:Provider = "simulate" → SmtpEmailNotificationChannel mit SimulateOnly=true (Standard)
+    /// </summary>
     public static IServiceCollection AddEmailNotifications(
         this IServiceCollection services,
-        Action<SocketEmailNotificationOptions>? configureOptions = null)
+        IConfiguration          configuration)
     {
-        services.AddSingleton<IEmailNotificationChannel, SocketEmailNotificationChannel>();
+        var provider = configuration["Email:Provider"] ?? "simulate";
+
+        if (provider.Equals("graph", StringComparison.OrdinalIgnoreCase))
+        {
+            services.Configure<GraphEmailSettings>(configuration.GetSection("Email:Graph"));
+            services.AddSingleton<IEmailNotificationChannel, GraphEmailNotificationChannel>();
+        }
+        else
+        {
+            // smtp + simulate nutzen beide SmtpEmailNotificationChannel
+            services.Configure<SmtpEmailSettings>(configuration.GetSection("Email:Smtp"));
+            services.AddSingleton<IEmailNotificationChannel, SmtpEmailNotificationChannel>();
+        }
+
         services.AddSingleton<INotificationChannel>(provider =>
             provider.GetRequiredService<IEmailNotificationChannel>());
-
-        if (configureOptions != null)
-            services.Configure(configureOptions);
 
         return services;
     }
 
     /// <summary>
-    /// Registriert den SignalR-Channel (Snackbar/Toast im Browser).
-    /// Voraussetzung: AddSignalR() wurde bereits aufgerufen.
-    /// In Program.cs muss außerdem app.MapHub&lt;NotificationHub&gt;("/hubs/notifications") stehen.
+    /// Registriert SignalR inkl. optionalem Redis-Backplane und den SignalR-Notification-Channel.
+    /// Ruft AddSignalR() selbst auf – kein separater Aufruf in Program.cs nötig.
     /// </summary>
-    public static IServiceCollection AddSignalRNotifications(this IServiceCollection services)
+    public static IServiceCollection AddSignalRNotifications(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        var redisConn = configuration["Redis:ConnectionString"];
+        var signalR = services.AddSignalR();
+        if (!string.IsNullOrWhiteSpace(redisConn))
+            signalR.AddStackExchangeRedis(redisConn, opts =>
+                opts.Configuration.ChannelPrefix = RedisChannel.Literal("cmc"));
+
         services.AddSingleton<ISignalRNotificationChannel, SignalRNotificationChannel>();
         services.AddSingleton<INotificationChannel>(provider =>
             provider.GetRequiredService<ISignalRNotificationChannel>());

@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/bin/Debug/net8.0/Notifications.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/bin/Debug/net8.0/Notifications.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/bin/Debug/net8.0/Notifications.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/refint/Notifications.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/Notifications.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Notifications/Notifications.Contracts/obj/Debug/net8.0/ref/Notifications.Contracts.dll

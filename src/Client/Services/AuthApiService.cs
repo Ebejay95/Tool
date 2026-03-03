@@ -43,11 +43,20 @@ public sealed class AuthApiService : IAuthService
             var loginResponse = await response.Content
                 .ReadFromJsonAsync<LoginResponseDto>(JsonOptions);
 
-            if (loginResponse is null || string.IsNullOrEmpty(loginResponse.Token))
+            if (loginResponse is null)
                 return Result.Failure<LoginResponseDto>(
                     new Error("Auth.InvalidResponse", "Ungültige Server-Antwort beim Login."));
 
-            await _tokenService.SetTokenAsync(loginResponse.Token);
+            // Nur bei vollständiger Anmeldung Token speichern
+            if (loginResponse.Stage == LoginStage.Complete)
+            {
+                if (string.IsNullOrEmpty(loginResponse.Token))
+                    return Result.Failure<LoginResponseDto>(
+                        new Error("Auth.InvalidResponse", "Kein Token in der Server-Antwort."));
+
+                await _tokenService.SetTokenAsync(loginResponse.Token);
+            }
+
             return Result.Success(loginResponse);
         }
         catch (Exception ex)
@@ -141,11 +150,158 @@ public sealed class AuthApiService : IAuthService
         }
     }
 
+    public async Task<Result> ChangePasswordAsync(ChangePasswordDto dto)
+    {
+        try
+        {
+            var token = await _tokenService.GetTokenAsync();
+            if (string.IsNullOrEmpty(token))
+                return Result.Failure(new Error("Auth.Unauthorized", "Nicht angemeldet."));
+
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.PostAsJsonAsync("api/v1/auth/change-password", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure(new Error(error.Code, error.Message));
+            }
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure(new Error("Auth.NetworkError", ex.Message));
+        }
+    }
+
     public async Task InitializeAsync()
     {
         // Token aus localStorage laden – läuft in WASM automatisch via TokenService.
         // Keine explizite Initialisierung nötig, GetTokenAsync prüft bereits den Ablauf.
         await _tokenService.GetTokenAsync();
+    }
+
+    // ── E-Mail-Verifizierung ──────────────────────────────────────────────────
+
+    public async Task<Result> VerifyEmailAsync(VerifyEmailDto dto)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync("api/v1/auth/verify-email", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure(new Error(error.Code, error.Message));
+            }
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure(new Error("Auth.NetworkError", ex.Message));
+        }
+    }
+
+    public async Task<Result> ResendVerificationEmailAsync(ResendVerificationEmailDto dto)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync("api/v1/auth/resend-verification-email", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure(new Error(error.Code, error.Message));
+            }
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure(new Error("Auth.NetworkError", ex.Message));
+        }
+    }
+
+    // ── Zwei-Faktor-Authentifizierung ─────────────────────────────────────────
+
+    public async Task<Result<TwoFactorSetupDto>> InitiateTwoFactorSetupAsync(string preAuthToken)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync(
+                "api/v1/auth/setup-2fa/init",
+                new { PreAuthToken = preAuthToken });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure<TwoFactorSetupDto>(new Error(error.Code, error.Message));
+            }
+
+            var dto = await response.Content.ReadFromJsonAsync<TwoFactorSetupDto>(JsonOptions);
+            if (dto is null)
+                return Result.Failure<TwoFactorSetupDto>(new Error("Auth.InvalidResponse", "Ungültige Server-Antwort."));
+
+            return Result.Success(dto);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure<TwoFactorSetupDto>(new Error("Auth.NetworkError", ex.Message));
+        }
+    }
+
+    public async Task<Result<LoginResponseDto>> ConfirmTwoFactorSetupAsync(ConfirmTwoFactorDto dto)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync("api/v1/auth/setup-2fa/confirm", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure<LoginResponseDto>(new Error(error.Code, error.Message));
+            }
+
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>(JsonOptions);
+            if (loginResponse is null || string.IsNullOrEmpty(loginResponse.Token))
+                return Result.Failure<LoginResponseDto>(new Error("Auth.InvalidResponse", "Ungültige Server-Antwort."));
+
+            await _tokenService.SetTokenAsync(loginResponse.Token);
+            return Result.Success(loginResponse);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure<LoginResponseDto>(new Error("Auth.NetworkError", ex.Message));
+        }
+    }
+
+    public async Task<Result<LoginResponseDto>> ValidateTwoFactorAsync(ValidateTwoFactorDto dto)
+    {
+        try
+        {
+            var response = await _http.PostAsJsonAsync("api/v1/auth/validate-2fa", dto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await TryReadApiErrorAsync(response);
+                return Result.Failure<LoginResponseDto>(new Error(error.Code, error.Message));
+            }
+
+            var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>(JsonOptions);
+            if (loginResponse is null || string.IsNullOrEmpty(loginResponse.Token))
+                return Result.Failure<LoginResponseDto>(new Error("Auth.InvalidResponse", "Ungültige Server-Antwort."));
+
+            await _tokenService.SetTokenAsync(loginResponse.Token);
+            return Result.Success(loginResponse);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure<LoginResponseDto>(new Error("Auth.NetworkError", ex.Message));
+        }
     }
 
     // ── Hilfsmethoden ─────────────────────────────────────────────────────────

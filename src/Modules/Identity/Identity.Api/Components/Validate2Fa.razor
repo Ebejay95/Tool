@@ -1,0 +1,120 @@
+@page "/validate-2fa"
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<PageTitle>Zwei-Faktor-Code eingeben - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 64px;">
+    <MudPaper Elevation="2" Style="padding: 32px;">
+
+        <div style="text-align: center; margin-bottom: 32px;">
+            <MudIcon Icon="Icons.Material.Filled.PhonelinkLock"
+                     Style="font-size: 64px; color: var(--mud-palette-primary);"
+                     Class="mb-3" />
+            <MudText Typo="Typo.h5" GutterBottom="true">Zwei-Faktor-Authentifizierung</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                Geben Sie den aktuellen Code aus Ihrer Authenticator-App ein.
+            </MudText>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_pendingEmail))
+        {
+            <MudAlert Severity="Severity.Info" Icon="Icons.Material.Filled.Person" Class="mb-4">
+                Anmeldung als <strong>@_pendingEmail</strong>
+            </MudAlert>
+        }
+
+        <MudTextField @bind-Value="_code"
+                      Label="6-stelliger Authenticator-Code"
+                      Variant="Variant.Outlined"
+                      InputType="InputType.Number"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="Icons.Material.Filled.Pin"
+                      FullWidth="true"
+                      Margin="Margin.Dense"
+                      Class="mb-4"
+                      MaxLength="6"
+                      AutoFocus="true" />
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+        }
+
+        <MudButton OnClick="@HandleValidate"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   FullWidth="true"
+                   Class="mb-3"
+                   Disabled="@(_isValidating || _code.Length != 6)">
+            @if (_isValidating)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                <span style="margin-left: 8px;">Wird überprüft...</span>
+            }
+            else
+            {
+                <MudIcon Icon="Icons.Material.Filled.Login" Class="mr-2" />
+                <span>Anmelden</span>
+            }
+        </MudButton>
+
+        <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Center" Class="mb-3">
+            Öffnen Sie Ihre Authenticator-App und geben Sie den 6-stelligen Code ein.
+        </MudText>
+
+        <MudDivider Style="margin: 16px 0;" />
+        <div style="text-align: center;">
+            <MudLink Href="/login" Color="Color.Secondary">Zurück zur Anmeldung</MudLink>
+        </div>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string _code = string.Empty;
+    private string _errorMessage = string.Empty;
+    private string _pendingEmail = string.Empty;
+    private string? _preAuthToken;
+    private bool _isValidating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var stageStr  = await JS.InvokeAsync<string>("sessionStorage.getItem", "pendingStage");
+        _preAuthToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "preAuthToken");
+        _pendingEmail = await JS.InvokeAsync<string>("sessionStorage.getItem", "pendingEmail") ?? string.Empty;
+
+        if (stageStr != ((int)LoginStage.RequiresTwoFactorValidation).ToString() || string.IsNullOrEmpty(_preAuthToken))
+            Navigation.NavigateTo("/login", replace: true);
+    }
+
+    private async Task HandleValidate()
+    {
+        if (_code.Length != 6) return;
+        _isValidating = true; _errorMessage = string.Empty; StateHasChanged();
+
+        try
+        {
+            var dto    = new ValidateTwoFactorDto(_preAuthToken!, _code);
+            var result = await AuthService.ValidateTwoFactorAsync(dto);
+
+            if (result.IsSuccess)
+            {
+                await ClearSessionStorage();
+                Navigation.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else { _errorMessage = result.Error.Description; _code = string.Empty; }
+        }
+        catch (Exception ex) { _errorMessage = $"Fehler: {ex.Message}"; }
+        finally { _isValidating = false; }
+    }
+
+    private async Task ClearSessionStorage()
+    {
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "preAuthToken");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "pendingEmail");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "pendingStage");
+    }
+}

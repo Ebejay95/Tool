@@ -612,6 +612,17 @@
         }
       },
       "System.Threading.Channels/6.0.0": {},
+      "Notifications.Abstractions/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "Notifications.Abstractions.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "SharedKernel/1.0.0": {
         "dependencies": {
           "MediatR": "12.2.0",
@@ -630,10 +641,20 @@
         "dependencies": {
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Notifications.Abstractions": "1.0.0",
+          "Todos.Contracts": "1.0.0",
           "Todos.Domain": "1.0.0"
         },
         "runtime": {
           "Todos.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Todos.Contracts/1.0.0": {
+        "runtime": {
+          "Todos.Contracts.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -980,12 +1001,22 @@
       "path": "system.threading.channels/6.0.0",
       "hashPath": "system.threading.channels.6.0.0.nupkg.sha512"
     },
+    "Notifications.Abstractions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "SharedKernel/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "Todos.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Todos.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

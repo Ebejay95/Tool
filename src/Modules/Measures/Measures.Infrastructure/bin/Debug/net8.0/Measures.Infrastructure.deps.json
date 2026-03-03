@@ -615,12 +615,21 @@
       "System.Threading.Channels/6.0.0": {},
       "Measures.Application/1.0.0": {
         "dependencies": {
+          "Measures.Contracts": "1.0.0",
           "Measures.Domain": "1.0.0",
           "MediatR": "12.2.0",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
         },
         "runtime": {
           "Measures.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Measures.Contracts/1.0.0": {
+        "runtime": {
+          "Measures.Contracts.dll": {
             "assemblyVersion": "1.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -982,6 +991,11 @@
       "hashPath": "system.threading.channels.6.0.0.nupkg.sha512"
     },
     "Measures.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Measures.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
