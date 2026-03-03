@@ -22,8 +22,6 @@
                           Label="E-Mail"
                           Variant="Variant.Outlined"
                           InputType="InputType.Email"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="Icons.Material.Filled.Email"
                           FullWidth="true"
                           Margin="Margin.Dense"
                           Class="mb-4"
@@ -32,9 +30,10 @@
             <MudTextField @bind-Value="_loginDto.Password"
                           Label="Passwort"
                           Variant="Variant.Outlined"
-                          InputType="InputType.Password"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          InputType="@_pwInputType"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@_pwIcon"
+                          OnAdornmentClick="TogglePw"
                           FullWidth="true"
                           Margin="Margin.Dense"
                           Class="mb-4"
@@ -84,6 +83,17 @@
     private readonly LoginDto _loginDto = new();
     private bool _rememberMe = false;
     private bool _isLoading = false;
+
+    private bool _showPw = false;
+    private InputType _pwInputType = InputType.Password;
+    private string _pwIcon = Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePw()
+    {
+        _showPw = !_showPw;
+        _pwInputType = _showPw ? InputType.Text : InputType.Password;
+        _pwIcon = _showPw ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
 
     private async Task HandleLogin()
     {

@@ -50,24 +50,24 @@ public sealed class ThemeService
         Palette = new Palette
         {
             // Markenfarben
-            Primary           = "#ffffff",
-            PrimaryDarken     = "#EBEBEB",
-            PrimaryLighten    = "#6d9bff",
-            PrimaryContrastText = "#FFFFFF",
-            Secondary         = "#313131",
-            SecondaryContrastText = "#FFFFFF",
+            Primary           = "#000e2e",
+            PrimaryDarken     = "#000e2e",
+            PrimaryLighten    = "#000e2ea5",
+            PrimaryContrastText = "#ffffff",
+            Secondary         = "#000e2e",
+            SecondaryContrastText = "#ffffff",
 
             // AppBar
-            AppbarBackground  = "#6d9bff",
+            AppbarBackground  = "#000e2e",
             AppbarText        = "#FFFFFF",
 
             // Hintergründe
             Background        = "#F4F4F4",
-            BackgroundGrey    = "#EBEBEB",
+            BackgroundGrey    = "#e0dbdb",
             Surface           = "#FFFFFF",
             DrawerBackground  = "#FFFFFF",
             DrawerText        = "#313131",
-            DrawerIcon        = "#6d9bff",
+            DrawerIcon        = "#000e2e",
 
             // Text
             TextPrimary       = "#1A1A1A",

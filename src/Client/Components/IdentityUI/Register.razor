@@ -42,8 +42,6 @@
                           Label="E-Mail"
                           Variant="Variant.Outlined"
                           InputType="InputType.Email"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="Icons.Material.Filled.Email"
                           FullWidth="true"
                           Margin="Margin.Dense"
                           Class="mb-4"
@@ -52,9 +50,10 @@
             <MudTextField @bind-Value="_registerDto.Password"
                           Label="Passwort"
                           Variant="Variant.Outlined"
-                          InputType="InputType.Password"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          InputType="@_pwInputType"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@_pwIcon"
+                          OnAdornmentClick="TogglePw"
                           FullWidth="true"
                           Margin="Margin.Dense"
                           Class="mb-4"
@@ -64,9 +63,10 @@
             <MudTextField @bind-Value="_confirmPassword"
                           Label="Passwort bestätigen"
                           Variant="Variant.Outlined"
-                          InputType="InputType.Password"
-                          Adornment="Adornment.Start"
-                          AdornmentIcon="Icons.Material.Filled.Lock"
+                          InputType="@_confirmPwInputType"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@_confirmPwIcon"
+                          OnAdornmentClick="ToggleConfirmPw"
                           FullWidth="true"
                           Margin="Margin.Dense"
                           Class="mb-4"
@@ -116,6 +116,26 @@
     private string _confirmPassword = "";
     private bool _acceptTerms = false;
     private bool _isLoading = false;
+
+    private bool _showPw = false;
+    private InputType _pwInputType = InputType.Password;
+    private string _pwIcon = Icons.Material.Filled.VisibilityOff;
+    private void TogglePw()
+    {
+        _showPw = !_showPw;
+        _pwInputType = _showPw ? InputType.Text : InputType.Password;
+        _pwIcon = _showPw ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+
+    private bool _showConfirmPw = false;
+    private InputType _confirmPwInputType = InputType.Password;
+    private string _confirmPwIcon = Icons.Material.Filled.VisibilityOff;
+    private void ToggleConfirmPw()
+    {
+        _showConfirmPw = !_showConfirmPw;
+        _confirmPwInputType = _showConfirmPw ? InputType.Text : InputType.Password;
+        _confirmPwIcon = _showConfirmPw ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
 
     private async Task HandleRegister()
     {
