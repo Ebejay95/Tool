@@ -18,10 +18,13 @@ public enum TodoPriority
     Critical = 3
 }
 
-public sealed class Todo : AggregateRoot, IResourceOwner
+public sealed class Todo : AggregateRoot, IResourceOwner, IExportable
 {
     // IResourceOwner: erlaubt generischen OwnershipHandler ohne Todo-spezifischen Code in Api
     string IResourceOwner.OwnerId => UserId.Value.ToString();
+
+    // IExportable: macht Todo in der Import/Export-Registry verfügbar
+    public static string ExportableTypeName => "Todo";
 
     private Todo() { } // For EF
 
@@ -48,18 +51,35 @@ public sealed class Todo : AggregateRoot, IResourceOwner
 
     public new TodoId Id { get; private set; } = null!;
     public UserId UserId { get; private set; } = null!;
+
+    [ExportField("Titel", order: 1)]
     public string Title { get; private set; } = string.Empty;
+
+    [ExportField("Beschreibung", order: 2)]
     public string Description { get; private set; } = string.Empty;
+
+    [ExportField("Status", order: 3)]
     public TodoStatus Status { get; private set; }
+
+    [ExportField("Priorität", order: 4)]
     public TodoPriority Priority { get; private set; }
+
+    [ExportField("Fälligkeitsdatum", order: 5)]
     public DateTime? DueDate { get; private set; }
+
+    [ExportField("Erstellt am", order: 6, canImport: false)]
     public DateTime CreatedAt { get; private set; }
+
+    [ExportField("Aktualisiert am", order: 7, canImport: false)]
     public DateTime UpdatedAt { get; private set; }
+
+    [ExportField("Abgeschlossen am", order: 8, canImport: false)]
     public DateTime? CompletedAt { get; private set; }
 
     public List<Guid> CategoryIds { get; private set; } = [];
     public List<Guid> TagIds { get; private set; } = [];
 
+    [ExportField("Überfällig", order: 9, canImport: false)]
     public bool IsOverdue => DueDate.HasValue && DueDate < DateTime.UtcNow && Status != TodoStatus.Completed;
 
     public void SetCategories(IEnumerable<Guid> ids) { CategoryIds = ids.ToList(); UpdatedAt = DateTime.UtcNow; }

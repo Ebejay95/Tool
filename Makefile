@@ -214,5 +214,10 @@ _migrate:
 			--project ../Modules/Taxonomy/Taxonomy.Infrastructure \
 			--startup-project . \
 			--context TaxonomyDbContext \
+			--connection $(DB_CONN) && \
+		dotnet ef database update \
+			--project ../Modules/ImportExport/ImportExport.Infrastructure \
+			--startup-project . \
+			--context ImportExportDbContext \
 			--connection $(DB_CONN)
 	@echo "✅ Migrationen abgeschlossen"

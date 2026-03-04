@@ -1,10 +1,13 @@
-@* Formular zum Erstellen einer neuen Maßnahme.
-   Komplett zustandslos – alle Daten kommen als Parameter rein. *@
+@* Formular zum Erstellen/Bearbeiten einer Maßnahme.
+   Komplett zustandslos – alle Daten kommen als Parameter rein.
+   ShowPaper=false / ShowTitle=false / ShowSubmitButton=false für Dialog-Modus. *@
 
-<MudPaper Elevation="2" Style="padding: 24px;">
-    <MudText Typo="Typo.h6" GutterBottom="true">
-        Neue Maßnahme erstellen
-    </MudText>
+<MudPaper Elevation="@(ShowPaper ? 2 : 0)"
+          Style="@(ShowPaper ? "padding: 24px;" : "padding: 0; background: transparent; box-shadow: none;")">
+    @if (ShowTitle)
+    {
+        <MudText Typo="Typo.h6" GutterBottom="true">Neue Maßnahme erstellen</MudText>
+    }
 
     <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
         <DataAnnotationsValidator />
@@ -84,6 +87,8 @@
                 </MudSelect>
             </MudItem>
 
+            @if (ShowSubmitButton)
+            {
             <MudItem xs="12" md="4">
                 <MudButton ButtonType="ButtonType.Submit"
                            Variant="Variant.Filled"
@@ -98,6 +103,7 @@
                     Erstellen
                 </MudButton>
             </MudItem>
+            }
 
             <MudItem xs="12">
                 <MudTextField @bind-Value="Model.Justification"
@@ -146,6 +152,13 @@
     [Parameter]                 public IReadOnlyList<TagViewModel>?      AvailableTags             { get; set; }
     [Parameter]                 public EventCallback<string>             OnCreateCategoryRequested { get; set; }
     [Parameter]                 public EventCallback<string>             OnCreateTagRequested      { get; set; }
+
+    /// <summary>Blendet den "Erstellen"-Button aus — z.B. wenn das Formular in einem EntityDialog verwendet wird.</summary>
+    [Parameter]                 public bool                              ShowSubmitButton          { get; set; } = true;
+    /// <summary>Blendet die Überschrift "Neue Maßnahme erstellen" aus.</summary>
+    [Parameter]                 public bool                              ShowTitle                 { get; set; } = true;
+    /// <summary>Blendet das umgebende MudPaper aus — z.B. im Dialog-Modus.</summary>
+    [Parameter]                 public bool                              ShowPaper                 { get; set; } = true;
 
     private async Task HandleSubmit() => await OnSubmit.InvokeAsync();
 }

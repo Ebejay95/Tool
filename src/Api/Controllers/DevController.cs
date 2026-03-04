@@ -50,27 +50,53 @@ public sealed class DevController : ControllerBase
             _         => NotificationSeverity.Info
         };
 
-        var recipients = new List<string>();
+        if (req.ToCurrentUser && _currentUser.UserId is null)
+            return Unauthorized();
 
-        if (req.ToCurrentUser)
+        var messages = new List<NotificationMessage>();
+
+        // ── Nicht-Email-Channels: Recipient = User-ID ─────────────────────
+        var nonEmailChannels = req.Channels
+            .Where(c => !c.Equals("email", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        if (nonEmailChannels.Length > 0)
         {
-            if (_currentUser.UserId is null)
-                return Unauthorized();
-            recipients.Add(_currentUser.UserId.Value.ToString());
+            var recipients = new List<string>();
+
+            if (req.ToCurrentUser)
+                recipients.Add(_currentUser.UserId!.Value.ToString());
+
+            if (req.AdditionalRecipients is { Count: > 0 })
+                recipients.AddRange(req.AdditionalRecipients);
+
+            if (recipients.Count == 0)
+                return BadRequest("Kein Empfänger angegeben.");
+
+            messages.AddRange(recipients.Select(r => new NotificationMessage(
+                channels:  nonEmailChannels,
+                recipient: r,
+                title:     req.Title,
+                body:      req.Body,
+                severity:  severity)));
         }
 
-        if (req.AdditionalRecipients is { Count: > 0 })
-            recipients.AddRange(req.AdditionalRecipients);
+        // ── Email-Channel: Recipient = E-Mail-Adresse ─────────────────────
+        if (req.Channels.Any(c => c.Equals("email", StringComparison.OrdinalIgnoreCase)))
+        {
+            if (req.ToCurrentUser && !string.IsNullOrEmpty(_currentUser.Email))
+            {
+                messages.Add(new NotificationMessage(
+                    channels:  ["email"],
+                    recipient: _currentUser.Email,
+                    title:     req.Title,
+                    body:      req.Body,
+                    severity:  severity));
+            }
+        }
 
-        if (recipients.Count == 0)
+        if (messages.Count == 0)
             return BadRequest("Kein Empfänger angegeben.");
-
-        var messages = recipients.Select(r => new NotificationMessage(
-            channels:  req.Channels,
-            recipient: r,
-            title:     req.Title,
-            body:      req.Body,
-            severity:  severity));
 
         var result = await _publisher.PublishBatchAsync(messages, cancellationToken);
 

@@ -69,12 +69,19 @@
 
                 <TemplateColumn Title="Aktionen" Sortable="false">
                     <CellTemplate>
-                        <MudButton Size="Size.Small"
-                                   Color="Color.Error"
-                                   Variant="Variant.Text"
-                                   OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))">
-                            Löschen
-                        </MudButton>
+                        @if (OnEdit.HasDelegate)
+                        {
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                           Size="Size.Small"
+                                           Color="Color.Default"
+                                           Title="Bearbeiten"
+                                           OnClick="@(() => OnEdit.InvokeAsync(context.Item))" />
+                        }
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                       Size="Size.Small"
+                                       Color="Color.Error"
+                                       Title="Löschen"
+                                       OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))" />
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -89,7 +96,11 @@
     [Parameter]
     public bool Loading { get; set; }
 
-    /// <summary>Aufgerufen wenn der User "Löschen" klickt – übergibt die Id.</summary>
+    /// <summary>Aufgerufen wenn der User das Bearbeiten-Icon klickt – optional.</summary>
+    [Parameter]
+    public EventCallback<MeasureListItemViewModel> OnEdit { get; set; }
+
+    /// <summary>Aufgerufen wenn der User das Löschen-Icon klickt – übergibt die Id.</summary>
     [Parameter, EditorRequired]
     public EventCallback<Guid> OnDelete { get; set; }
 

@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Client",
   "resources": {
-    "hash": "sha256-i4P5XMGmrc/eyp5CpQDc4qAY3eqjtGcw3sC5oZXKP/k=",
+    "hash": "sha256-JW1SWJ8dQcNiMSDiQlwYYLUYjlyNqDPwEDZKijBbH7A=",
     "jsModuleNative": {
       "dotnet.native.8.0.19.repxb6913k.js": "sha256-O/NCYcAN9uPocD7ns7AzF/cqx7f5vL1PTJCQs0vEXyk="
     },
@@ -231,24 +231,26 @@
       "mscorlib.wasm": "sha256-RLW/7NVuhoPfq151II3kX2kWHgBwQgpCw9aemQNg3to=",
       "netstandard.wasm": "sha256-lAg5WvTiA8wbsIwlr51xh0YWpXT9F5EX3Cnv+11O/mU=",
       "System.Private.CoreLib.wasm": "sha256-3O3muuRQwoLRecYRjfIFWUURvTjP4EmD2O8wYg2UDNY=",
-      "Identity.Contracts.wasm": "sha256-UU63R/wIDvUyG/ef4/9+kFsnymRpXfnlkdP8zflDGs8=",
-      "Measures.Contracts.wasm": "sha256-78I/5GHnPwkGS9tswGzGwvxdmfsgBpqVhGwgral8U+o=",
-      "Notifications.Abstractions.wasm": "sha256-sTU+w7kERv/b4+dsj0hgCkmaZdzxANg9afyoc68Ri1Y=",
-      "Notifications.Contracts.wasm": "sha256-/7jxHhmCKciVvlnjG/QVkZRKDxlfakQKCt8KCbN605M=",
-      "SharedKernel.wasm": "sha256-Q88xm7JdQa+5iKzsSJiuoikmmySSnL+z9ZprtvhCF7A=",
-      "Taxonomy.Contracts.wasm": "sha256-inF/xZf59I6RTEQ8EPudRhKAAnVpg7NT9Wo1ipR84OM=",
-      "Todos.Contracts.wasm": "sha256-Tsg93eGpiIWGyktX6K6cNrqGgfETZq4BdLlNSFayWVg=",
-      "Client.wasm": "sha256-+StLMp7Jn5YoCNow4x67mXa/4OnlIg2R8DqnSs7fJz0="
+      "Identity.Contracts.wasm": "sha256-q7FrZ2RJwLLdDPFuAp8vihaBILuXzaDkchG35QN4QAc=",
+      "ImportExport.Contracts.wasm": "sha256-oDbUkY5TUfIiZtq4DD9XinM2j4BQzH9zIpGiavWchA0=",
+      "Measures.Contracts.wasm": "sha256-iNTa2Zsy3b9c/KL9yvQ0oVsa7cY8fzgGUlOHkAQXqwM=",
+      "Notifications.Abstractions.wasm": "sha256-XFyUYPPZTWfUw37L2BU6Kgz3ZXrBCPftzeaomU9Mm7I=",
+      "Notifications.Contracts.wasm": "sha256-xCnRctj3RFmCS6xFg7IzRLcjaz+7SBAMXGbqWUzjlNk=",
+      "SharedKernel.wasm": "sha256-sOnKGccvI7thWSt2xfTtQc0QMgpqf5jve8tZN8W3Nt0=",
+      "Taxonomy.Contracts.wasm": "sha256-RWO2JvnnNpEj6xUdqb3rQXUWbpEF4DI0g/YFouxp7RU=",
+      "Todos.Contracts.wasm": "sha256-Ua5me0hv71k0awcK2abw81VYgDEXdd4kFaV4roe2ZM0=",
+      "Client.wasm": "sha256-LAAKanG/cgCyvdtc3WKbIhwQsDuTxNEvr1NPjzVBCoM="
     },
     "pdb": {
-      "SharedKernel.pdb": "sha256-dT7ia9eccS5eADA8i113J5mtgAxlpZE+lqD5uUbfHuc=",
-      "Notifications.Abstractions.pdb": "sha256-bVhoKGBL2pDuYU2zl2XHkTakMAwvtrsfRSTq520yxMg=",
-      "Identity.Contracts.pdb": "sha256-tUThdoTbacVj6s3/s2oF8oTieG6EXNAezZB5jVSJEwc=",
-      "Notifications.Contracts.pdb": "sha256-6i3sZRFRZJ6K2SlOvvAK46k8/QRpc5Jzob+SgjMJ7zA=",
-      "Todos.Contracts.pdb": "sha256-V8PfWoMxyO76CviTFYpKuiEOaHQzn9lBcEbc9ZmZETw=",
-      "Measures.Contracts.pdb": "sha256-CHeOme5hefnb4hTmcv3vdjOHyYgIdefKTaO8h3kp2D8=",
-      "Taxonomy.Contracts.pdb": "sha256-R4vGbrJ5WvvJqBCOaMtDgR4JCE1mSmw2AMgHvDiWA8c=",
-      "Client.pdb": "sha256-EGRw1IPu3V/MiMQ+LHcER3inOnrNWipC6tsrTL24JFI="
+      "SharedKernel.pdb": "sha256-Mj8ABE1/wO060g3TjgzTLLA4t2QhosDHUAPr8Y8fzP8=",
+      "Notifications.Abstractions.pdb": "sha256-j4GETBvnLcJzrLAY19+rNgOF31X6UUrjtzM0BmyMi7Y=",
+      "Identity.Contracts.pdb": "sha256-PiWWWJOT+Ili6Eg1n8U0XPIv8u3241nEYFx4A/tB9U8=",
+      "Notifications.Contracts.pdb": "sha256-REY0++6d4ZI39foTo6vyTNSX/9waIq3hQJ6iUXxvZhE=",
+      "Todos.Contracts.pdb": "sha256-sm/6RAY67Gy4JHqAb22BbqCLJvwt+FiEUVhi2El3hXQ=",
+      "Measures.Contracts.pdb": "sha256-4mcA9I4jqBT7Ha1ackNez3fZdg30CL2Quo5CZf1vvDc=",
+      "Taxonomy.Contracts.pdb": "sha256-rI8HKP/X5QT3pJUxysSYRstc+wFEwcIacOx05+vMVo8=",
+      "ImportExport.Contracts.pdb": "sha256-IuJNgNVpr/bpNb3apfzyFLhUYr+vG1/BbySGTCWr+VQ=",
+      "Client.pdb": "sha256-pbtkIqhWFtb7udS/Uyq2OE1PcydOoM5whKDlMq0Q6Ws="
     }
   },
   "cacheBootResources": true,

@@ -22,3 +22,9 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/SharedKernel.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/Measures.Contracts.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/Measures.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Application.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Measures/Measures.Infrastructure/bin/Debug/net8.0/ImportExport.Domain.pdb

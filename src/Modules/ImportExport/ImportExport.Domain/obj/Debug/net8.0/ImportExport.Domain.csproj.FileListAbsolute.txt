@@ -1,0 +1,16 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/bin/Debug/net8.0/ImportExport.Domain.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/bin/Debug/net8.0/ImportExport.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/bin/Debug/net8.0/ImportExport.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/bin/Debug/net8.0/SharedKernel.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/bin/Debug/net8.0/SharedKernel.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.csproj.AssemblyReference.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportEx.93642B57.Up2Date
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/refint/ImportExport.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ImportExport.Domain.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/Debug/net8.0/ref/ImportExport.Domain.dll

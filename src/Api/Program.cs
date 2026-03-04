@@ -2,6 +2,7 @@ using Api.Bootstrap;
 using Api.Authorization;
 using Api.Extensions;
 using Api.Middleware;
+using ImportExport.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -112,6 +113,13 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Initialisiere die ExportableEntityRegistry mit allen Domain-Assemblies, die IExportable-Typen enthalten.
+// Neue exportierbare Module hier ergänzen.
+app.Services.InitializeExportableRegistry([
+    typeof(Todos.Domain.AssemblyMarker).Assembly,
+    typeof(Measures.Domain.AssemblyMarker).Assembly,
+]);
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

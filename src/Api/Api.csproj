@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Application\Taxonomy.Application.csproj" />
     <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Infrastructure\Taxonomy.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Taxonomy\Taxonomy.Api\Taxonomy.Api.csproj" />
+    <ProjectReference Include="..\Modules\ImportExport\ImportExport.Api\ImportExport.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

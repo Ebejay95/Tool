@@ -36,9 +36,10 @@
                 <MudTextField @bind-Value="_changePasswordModel.CurrentPassword"
                               Label="Aktuelles Passwort"
                               Variant="Variant.Outlined"
-                              InputType="InputType.Password"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Lock"
+                              InputType="@_currentPwType"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@_currentPwIcon"
+                              OnAdornmentClick="ToggleCurrentPw"
                               FullWidth="true"
                               Margin="Margin.Dense"
                               Class="mb-4"
@@ -47,9 +48,10 @@
                 <MudTextField @bind-Value="_changePasswordModel.NewPassword"
                               Label="Neues Passwort"
                               Variant="Variant.Outlined"
-                              InputType="InputType.Password"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.LockOpen"
+                              InputType="@_newPwType"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@_newPwIcon"
+                              OnAdornmentClick="ToggleNewPw"
                               FullWidth="true"
                               Margin="Margin.Dense"
                               Class="mb-4"
@@ -59,9 +61,10 @@
                 <MudTextField @bind-Value="_confirmPassword"
                               Label="Neues Passwort bestätigen"
                               Variant="Variant.Outlined"
-                              InputType="InputType.Password"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.LockOpen"
+                              InputType="@_confirmPwType"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@_confirmPwIcon"
+                              OnAdornmentClick="ToggleConfirmPw"
                               FullWidth="true"
                               Margin="Margin.Dense"
                               Class="mb-6"
@@ -90,6 +93,34 @@
     private readonly Identity.Application.DTOs.ChangePasswordDto _changePasswordModel = new();
     private string _confirmPassword = string.Empty;
     private bool _isLoading;
+
+    // ── Passwort-Sichtbarkeit ────────────────────────────────────────────────
+    private InputType _currentPwType = InputType.Password;
+    private string _currentPwIcon = Icons.Material.Filled.VisibilityOff;
+    private void ToggleCurrentPw()
+    {
+        var show = _currentPwType == InputType.Password;
+        _currentPwType = show ? InputType.Text : InputType.Password;
+        _currentPwIcon = show ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+
+    private InputType _newPwType = InputType.Password;
+    private string _newPwIcon = Icons.Material.Filled.VisibilityOff;
+    private void ToggleNewPw()
+    {
+        var show = _newPwType == InputType.Password;
+        _newPwType = show ? InputType.Text : InputType.Password;
+        _newPwIcon = show ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
+
+    private InputType _confirmPwType = InputType.Password;
+    private string _confirmPwIcon = Icons.Material.Filled.VisibilityOff;
+    private void ToggleConfirmPw()
+    {
+        var show = _confirmPwType == InputType.Password;
+        _confirmPwType = show ? InputType.Text : InputType.Password;
+        _confirmPwIcon = show ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+    }
 
     protected override async Task OnInitializedAsync()
     {

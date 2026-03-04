@@ -1,0 +1,12 @@
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/bin/Debug/net8.0/ImportExport.Contracts.deps.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/bin/Debug/net8.0/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/bin/Debug/net8.0/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.AssemblyInfoInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.AssemblyInfo.cs
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.csproj.CoreCompileInputs.cache
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.sourcelink.json
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/refint/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/Debug/net8.0/ref/ImportExport.Contracts.dll

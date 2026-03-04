@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ImportExport.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.19" />
+    <PackageReference Include="MudBlazor" Version="6.19.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/ServerKernel/ServerKernel.csproj" />
+    <ProjectReference Include="../ImportExport.Application/ImportExport.Application.csproj" />
+    <ProjectReference Include="../ImportExport.Infrastructure/ImportExport.Infrastructure.csproj" />
+    <ProjectReference Include="../ImportExport.Contracts/ImportExport.Contracts.csproj" />
+  </ItemGroup>
+</Project>

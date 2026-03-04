@@ -28,6 +28,7 @@
     <ProjectReference Include="../Modules/Todos/Todos.Contracts/Todos.Contracts.csproj" />
     <ProjectReference Include="../Modules/Measures/Measures.Contracts/Measures.Contracts.csproj" />
     <ProjectReference Include="../Modules/Taxonomy/Taxonomy.Contracts/Taxonomy.Contracts.csproj" />
+    <ProjectReference Include="../Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Measures.Domain\Measures.Domain.csproj" />
     <ProjectReference Include="..\Measures.Application\Measures.Application.csproj" />
+    <ProjectReference Include="..\..\ImportExport\ImportExport.Application\ImportExport.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

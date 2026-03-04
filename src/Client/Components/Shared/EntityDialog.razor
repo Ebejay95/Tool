@@ -1,0 +1,92 @@
+@* Generischer Dialog-Shell für Create/Edit-Operationen.
+   TitleContent, DialogContent (FormContent-Slot) und DialogActions (Abbrechen + Speichern)
+   werden als Boilerplate bereitgestellt. Der eigentliche Formular-Inhalt wird per
+   FormContent-Slot injiziert – analog zu EntityTable.TableContent.
+
+   Verwendung:
+   <EntityDialog Title="Aufgabe bearbeiten"
+                 TitleIcon="@Icons.Material.Filled.Edit"
+                 IsVisible="@_open"
+                 IsVisibleChanged="@(v => _open = v)"
+                 OnSave="@HandleSaveAsync"
+                 OnCancel="@CloseDialog"
+                 IsSaving="@_isSaving">
+       <FormContent>
+           <TodoCreateForm ... ShowSubmitButton="false" ShowTitle="false" />
+       </FormContent>
+   </EntityDialog> *@
+
+<MudDialog @bind-IsVisible="IsVisible" Options="@_options">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @if (!string.IsNullOrWhiteSpace(TitleIcon))
+            {
+                <MudIcon Icon="@TitleIcon" Class="mr-2" Style="vertical-align:middle;" />
+            }
+            @Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @FormContent
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@OnCancel"
+                   Disabled="@IsSaving"
+                   Variant="Variant.Text">
+            Abbrechen
+        </MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@IsSaving"
+                   OnClick="@OnSave">
+            @if (IsSaving)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+            }
+            Speichern
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    /// <summary>Steuert die Sichtbarkeit des Dialogs (two-way bindbar).</summary>
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    /// <summary>Titel der Dialog-Überschrift.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    /// <summary>Optionales MudBlazor-Icon links im Titel (z.B. Icons.Material.Filled.Edit).</summary>
+    [Parameter]
+    public string? TitleIcon { get; set; }
+
+    /// <summary>Zeigt den Lade-Spinner auf dem Speichern-Button und deaktiviert beide Buttons.</summary>
+    [Parameter]
+    public bool IsSaving { get; set; }
+
+    /// <summary>Aufgerufen beim Klick auf "Speichern".</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnSave { get; set; }
+
+    /// <summary>Aufgerufen beim Klick auf "Abbrechen" oder Dialog-Schließen.</summary>
+    [Parameter, EditorRequired]
+    public EventCallback OnCancel { get; set; }
+
+    /// <summary>Formular-Inhalt – hier wird z.B. <TodoCreateForm> oder <MeasureCreateForm> injiziert.</summary>
+    [Parameter]
+    public RenderFragment? FormContent { get; set; }
+
+    /// <summary>Maximale Breite des Dialogs. Standard: Medium.</summary>
+    [Parameter]
+    public MaxWidth MaxWidth { get; set; } = MaxWidth.Medium;
+
+    private DialogOptions _options => new()
+    {
+        MaxWidth  = MaxWidth,
+        FullWidth = true
+    };
+}

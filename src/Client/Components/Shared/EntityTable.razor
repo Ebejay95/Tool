@@ -1,19 +1,30 @@
 @typeparam TItem
 @* Generischer Shell-Wrapper für alle Entity-Listen.
-   Übernimmt Boilerplate: Paper, Header (Titel + Refresh), Loading-Spinner und Empty-State.
+   Übernimmt Boilerplate: Paper, Header (Titel + Aktionen + Refresh), Loading-Spinner und Empty-State.
    MudDataGrid verbleibt im aufrufenden Component (TableContent-Slot), damit Blazors
-   Compile-Zeit-Typinferenz für PropertyColumn<T,TProperty> erhalten bleibt. *@
+   Compile-Zeit-Typinferenz für PropertyColumn<T,TProperty> erhalten bleibt.
+
+   Erweiterungspunkte:
+   - HeaderActions : beliebige Aktionen (Filter, Add-Button, …) neben dem Titel
+   - OnRefresh     : optional – Refresh-Button erscheint nur wenn ein Delegate gesetzt ist
+   - TableContent  : der eigentliche MudDataGrid / MudTable mit Columns *@
 
 <MudPaper Elevation="2" Style="padding: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <MudText Typo="Typo.h6">@Title</MudText>
-        <MudButton OnClick="@OnRefresh"
-                   Variant="Variant.Text"
-                   Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.Refresh"
-                   Disabled="@Loading">
-            Aktualisieren
-        </MudButton>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            @HeaderActions
+            @if (OnRefresh.HasDelegate)
+            {
+                <MudButton OnClick="@OnRefresh"
+                           Variant="Variant.Text"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Refresh"
+                           Disabled="@Loading">
+                    Aktualisieren
+                </MudButton>
+            }
+        </div>
     </div>
 
     @if (Loading)
@@ -69,12 +80,24 @@
     [Parameter]
     public string EmptySubText { get; set; } = "";
 
-    /// <summary>Aufgerufen beim Klick auf „Aktualisieren".</summary>
-    [Parameter, EditorRequired]
+    /// <summary>
+    /// Optionale Slot-Inhalte im Header-Bereich rechts neben dem Titel,
+    /// links vom Aktualisieren-Button (falls vorhanden).
+    /// Typische Verwendung: Filter-Dropdowns, „Neu"-Buttons, Suchfelder.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? HeaderActions { get; set; }
+
+    /// <summary>
+    /// Aufgerufen beim Klick auf „Aktualisieren".
+    /// Optional – der Button wird nur gerendert wenn ein Delegate gesetzt ist.
+    /// Wenn der Refresh über HeaderActions gesteuert wird, muss dieser Parameter nicht gesetzt werden.
+    /// </summary>
+    [Parameter]
     public EventCallback OnRefresh { get; set; }
 
     /// <summary>
-    /// Der eigentliche Tabelleninhalt (MudDataGrid mit Columns).
+    /// Der eigentliche Tabelleninhalt (MudDataGrid / MudTable mit Columns).
     /// Wird nur gerendert wenn Items nicht leer und Loading false ist.
     /// </summary>
     [Parameter, EditorRequired]

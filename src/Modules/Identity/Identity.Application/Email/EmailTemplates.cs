@@ -51,23 +51,22 @@ public static class EmailTemplates
     }
 
     /// <summary>
-    /// Passwort-Reset-E-Mail mit Reset-Code.
+    /// Passwort-Reset-E-Mail mit Einmal-Link.
     /// </summary>
-    public static string PasswordReset(string resetToken)
+    public static string PasswordReset(string resetUrl)
     {
         var content = $"""
             <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;color:{ColorText};">
               Sie haben eine Passwortzurücksetzung für Ihren Account angefordert.
-              Verwenden Sie den folgenden Code, um Ihr Passwort zurückzusetzen:
+              Klicken Sie auf den Button, um ein neues Passwort zu vergeben.
             </p>
 
-            <p style="margin:0 0 8px 0;font-size:14px;color:{ColorMuted};">Ihr Reset-Code:</p>
-            {CodeBlock(resetToken)}
+            {PrimaryButton("Passwort jetzt zurücksetzen", resetUrl)}
 
             {Divider()}
 
             <p style="margin:16px 0 0 0;font-size:13px;color:{ColorMuted};">
-              ⚠️ Dieser Code ist <strong>1 Stunde</strong> gültig.<br>
+              ⚠️ Dieser Link ist <strong>1 Stunde</strong> gültig und kann nur einmal verwendet werden.<br>
               Falls Sie keine Passwortzurücksetzung angefordert haben,
               ignorieren Sie diese E-Mail bitte. Ihr Passwort bleibt unverändert.
             </p>

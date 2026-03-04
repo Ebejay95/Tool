@@ -128,13 +128,13 @@ public sealed class AuthApiService : IAuthService
         }
     }
 
-    public async Task<Result> ResetPasswordAsync(string token, string newPassword)
+    public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
     {
         try
         {
             var response = await _http.PostAsJsonAsync(
                 "api/v1/auth/reset-password",
-                new ResetPasswordDto { Token = token, NewPassword = newPassword });
+                new ResetPasswordDto { Email = email, Token = token, NewPassword = newPassword });
 
             if (!response.IsSuccessStatusCode)
             {

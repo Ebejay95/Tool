@@ -6,6 +6,7 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject NotificationHubService NotifHubService
+@inject IJSRuntime JS
 @implements IAsyncDisposable
 
 <MudThemeProvider Theme="@ThemeService.Theme" IsDarkMode="@ThemeService.IsDarkMode" />
@@ -21,7 +22,62 @@
     </MudMainContent>
 </MudLayout>
 
+@foreach (var smiley in _smileys)
+{
+    <div class="easter-egg-smiley" @key="smiley.Id" style="bottom: @(smiley.Bottom)px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 256 256" role="img" aria-label="Smiley">
+            <circle cx="128" cy="128" r="110" fill="#FFD54A" stroke="#000" stroke-width="8"/>
+            <circle cx="88" cy="105" r="14" fill="#000"/>
+            <circle cx="168" cy="105" r="14" fill="#000"/>
+            <path d="M78 150 C 95 190, 161 190, 178 150" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+    </div>
+}
+
+<style>
+    @@keyframes smiley-roll {
+        from {
+            transform: translateX(-150px) rotate(0deg);
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        to {
+            transform: translateX(calc(100vw + 150px)) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
+    .easter-egg-smiley {
+        position: fixed;
+        bottom: 40px;
+        left: 0;
+        z-index: 99999;
+        pointer-events: none;
+        animation: smiley-roll 2.5s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+</style>
+
 @code {
+    private record SmileyEntry(int Id, int Bottom);
+    private readonly List<SmileyEntry> _smileys = new();
+    private int _nextSmileyId = 0;
+    private readonly Random _rng = new();
+    private DotNetObjectReference<MainLayout>? _dotNetRef;
+
+    [JSInvokable]
+    public async Task TriggerEasterEgg()
+    {
+        var entry = new SmileyEntry(_nextSmileyId++, _rng.Next(20, 180));
+        _smileys.Add(entry);
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Delay(2600);
+        _smileys.RemoveAll(s => s.Id == entry.Id);
+        await InvokeAsync(StateHasChanged);
+    }
+
     protected override void OnInitialized()
     {
         ThemeService.OnThemeChanged += StateHasChanged;
@@ -33,6 +89,10 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
+
+        // Easter Egg: Tastatur-Listener registrieren
+        _dotNetRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("easterEggHelper.register", _dotNetRef);
 
         // Theme aus Cookie wiederherstellen (muss vor StateHasChanged stehen)
         await ThemeService.InitializeAsync();
@@ -78,5 +138,6 @@
         ThemeService.OnThemeChanged -= StateHasChanged;
         NotifHubService.OnNotificationReceived -= HandleNotificationReceived;
         await NotifHubService.StopAsync();
+        _dotNetRef?.Dispose();
     }
 }

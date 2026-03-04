@@ -41,8 +41,8 @@
                      CloseIcon=""
                      AdornmentIcon="@Icons.Material.Filled.Search"
                      Adornment="Adornment.Start"
-                     OpenOnFocus="true"
-                     MinCharacters="0"
+                     OpenOnFocus="false"
+                     MinCharacters="1"
                      Variant="Variant.Outlined"
                      Margin="Margin.Dense"
                      MaxItems="20"
@@ -103,11 +103,14 @@
 
     private Task<IEnumerable<TItem>> SearchItems(string text)
     {
+        // Leeres Suchfeld → kein Dropdown anzeigen (verhindert auch das automatische
+        // Öffnen nach ResetAsync / Fokus-Events)
+        if (string.IsNullOrWhiteSpace(text))
+            return Task.FromResult(Enumerable.Empty<TItem>());
+
         // Bereits selektierte Items aus der Dropdown-Liste ausblenden
         IEnumerable<TItem> pool = (AvailableItems ?? []).Where(x => !SelectedIds.Contains(GetId(x)));
-
-        if (!string.IsNullOrWhiteSpace(text))
-            pool = pool.Where(x => GetLabel(x).Contains(text.Trim(), StringComparison.OrdinalIgnoreCase));
+        pool = pool.Where(x => GetLabel(x).Contains(text.Trim(), StringComparison.OrdinalIgnoreCase));
 
         return Task.FromResult(pool);
     }

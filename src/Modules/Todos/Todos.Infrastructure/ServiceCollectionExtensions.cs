@@ -1,9 +1,11 @@
 using SharedKernel;
 using Todos.Application.Ports;
+using Todos.Infrastructure.ImportExport;
 using Todos.Infrastructure.Outbox;
 using Todos.Infrastructure.Persistence;
 using Todos.Infrastructure.Repositories;
 using Todos.Infrastructure.Services;
+using ImportExport.Application.UseCases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +35,10 @@ public static class ServiceCollectionExtensions
 
         // Query Services
         services.AddScoped<ITodoQueryService, TodoQueryService>();
+
+        // Import/Export
+        services.AddScoped<IExportSource, TodoExportSource>();
+        services.AddScoped<IImportAdapter, TodoImportAdapter>();
 
         // Outbox Processor: dispatcht Domain-Events nach DB-Commit (at-least-once)
         services.AddHostedService<TodosOutboxProcessor>();

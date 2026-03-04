@@ -1,4 +1,6 @@
+using ImportExport.Application.UseCases;
 using Measures.Application.Ports;
+using Measures.Infrastructure.ImportExport;
 using Measures.Infrastructure.Outbox;
 using Measures.Infrastructure.Persistence;
 using Measures.Infrastructure.Repositories;
@@ -32,6 +34,10 @@ public static class ServiceCollectionExtensions
 
         // Query Services
         services.AddScoped<IMeasureQueryService, MeasureQueryService>();
+
+        // Import/Export
+        services.AddScoped<IExportSource, MeasureExportSource>();
+        services.AddScoped<IImportAdapter, MeasureImportAdapter>();
 
         // Outbox Processor
         services.AddHostedService<MeasuresOutboxProcessor>();

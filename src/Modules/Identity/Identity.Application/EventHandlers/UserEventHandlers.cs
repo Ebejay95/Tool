@@ -11,22 +11,31 @@ public sealed class UserPasswordResetRequestedHandler : INotificationHandler<Use
 {
     private readonly Notifications.Abstractions.INotificationPublisher _notificationPublisher;
     private readonly ILogger<UserPasswordResetRequestedHandler> _logger;
+    private readonly string _baseUrl;
 
     public UserPasswordResetRequestedHandler(
         Notifications.Abstractions.INotificationPublisher notificationPublisher,
-        ILogger<UserPasswordResetRequestedHandler> logger)
+        ILogger<UserPasswordResetRequestedHandler> logger,
+        IConfiguration configuration)
     {
         _notificationPublisher = notificationPublisher;
         _logger = logger;
+        _baseUrl = configuration["ApiSettings:FrontendBaseUrl"]?.TrimEnd('/')
+                ?? configuration["ApiSettings:BaseUrl"]?.TrimEnd('/')
+                ?? "https://app.yourdomain.com";
     }
 
     public async Task Handle(UserPasswordResetRequestedEvent notification, CancellationToken cancellationToken)
     {
+        var resetUrl = $"{_baseUrl}/reset-password"
+                     + $"?email={Uri.EscapeDataString(notification.Email)}"
+                     + $"&token={Uri.EscapeDataString(notification.ResetToken)}";
+
         var message = new NotificationMessage(
             NotificationChannels.Email,
             notification.Email,
             "Passwort zurücksetzen",
-            EmailTemplates.PasswordReset(notification.ResetToken),
+            EmailTemplates.PasswordReset(resetUrl),
             metadata: new Dictionary<string, object>
             {
                 ["IsHtml"]     = true,
@@ -94,7 +103,9 @@ public sealed class UserEmailVerificationRequestedHandler : INotificationHandler
     {
         _notificationPublisher = notificationPublisher;
         _logger = logger;
-        _baseUrl = configuration["ApiSettings:BaseUrl"]?.TrimEnd('/') ?? "https://app.yourdomain.com";
+        _baseUrl = configuration["ApiSettings:FrontendBaseUrl"]?.TrimEnd('/')
+                ?? configuration["ApiSettings:BaseUrl"]?.TrimEnd('/')
+                ?? "https://app.yourdomain.com";
     }
 
     public async Task Handle(UserEmailVerificationRequestedEvent notification, CancellationToken cancellationToken)

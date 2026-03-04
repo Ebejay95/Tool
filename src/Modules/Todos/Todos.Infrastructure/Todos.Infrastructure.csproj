@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Todos.Application/Todos.Application.csproj" />
+    <ProjectReference Include="../../ImportExport/ImportExport.Application/ImportExport.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

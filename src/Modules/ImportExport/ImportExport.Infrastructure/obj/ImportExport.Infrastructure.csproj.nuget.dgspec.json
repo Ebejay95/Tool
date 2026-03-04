@@ -1,0 +1,372 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Infrastructure/ImportExport.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/ImportExport.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/ImportExport.Application.csproj",
+        "projectName": "ImportExport.Application",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/ImportExport.Application.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj"
+              },
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/ImportExport.Domain.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/ImportExport.Domain.csproj"
+              },
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.2.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj",
+        "projectName": "ImportExport.Contracts",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/ImportExport.Contracts.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Contracts/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/ImportExport.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/ImportExport.Domain.csproj",
+        "projectName": "ImportExport.Domain",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/ImportExport.Domain.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Infrastructure/ImportExport.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Infrastructure/ImportExport.Infrastructure.csproj",
+        "projectName": "ImportExport.Infrastructure",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Infrastructure/ImportExport.Infrastructure.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/ImportExport.Application.csproj": {
+                "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/ImportExport/ImportExport.Application/ImportExport.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.102.2, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[33.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj",
+        "projectName": "SharedKernel",
+        "projectPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/SharedKernel.csproj",
+        "packagesPath": "/Users/jonathaneberle/.nuget/packages/",
+        "outputPath": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Shared/SharedKernel/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/jonathaneberle/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.2.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

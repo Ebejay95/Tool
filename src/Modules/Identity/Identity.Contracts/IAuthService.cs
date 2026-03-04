@@ -25,7 +25,7 @@ public interface IAuthService
 
     Task<Result> RequestPasswordResetAsync(string email);
 
-    Task<Result> ResetPasswordAsync(string token, string newPassword);
+    Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
 
     Task<Result> ChangePasswordAsync(ChangePasswordDto dto);
 

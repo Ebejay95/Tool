@@ -1205,3 +1205,12 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/compressed/whmoxgnuwa.gz
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/compressed/fdyih59vl1.gz
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/compressed/9zoieii5ru.gz
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/ImportExport.Contracts.wasm
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/ImportExport.Contracts.pdb.gz
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/wwwroot/_framework/ImportExport.Contracts.wasm.gz
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/bin/Debug/net8.0/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/webcil/ImportExport.Contracts.wasm
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/compressed/fhkqcu6mwy.gz
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/obj/Debug/net8.0/compressed/4rpd7rlue8.gz

@@ -49,6 +49,46 @@
         };
     </script>
 
+    <!-- Import/Export: Browser-Datei-Download via Base64 -->
+    <script>
+        window.importExportHelpers = {
+            downloadFile: function (fileName, contentType, base64Data) {
+                try {
+                    const byteChars = atob(base64Data);
+                    const byteNums = new Array(byteChars.length);
+                    for (let i = 0; i < byteChars.length; i++) byteNums[i] = byteChars.charCodeAt(i);
+                    const blob = new Blob([new Uint8Array(byteNums)], { type: contentType });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    // Kurz warten bevor Blob-URL freigegeben wird
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
+                } catch (e) {
+                    console.error('[importExportHelpers] Download fehlgeschlagen:', e);
+                }
+            }
+        };
+    </script>
+
+    <!-- Easter Egg: Ctrl/Cmd+Shift+S → rollender Smiley -->
+    <script>
+        window.easterEggHelper = {
+            register: function (dotnetRef) {
+                window.addEventListener('keydown', function (e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        dotnetRef.invokeMethodAsync('TriggerEasterEgg');
+                    }
+                });
+            }
+        };
+    </script>
+
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

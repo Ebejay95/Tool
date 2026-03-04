@@ -2,10 +2,13 @@ using SharedKernel;
 
 namespace Measures.Domain.Measures;
 
-public sealed class Measure : AggregateRoot, IResourceOwner
+public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
 {
     // IResourceOwner: erlaubt generischen OwnershipHandler ohne Measures-spezifischen Code in Api
     string IResourceOwner.OwnerId => UserId.Value.ToString();
+
+    // IExportable: macht Measure in der Import/Export-Registry verfügbar
+    public static string ExportableTypeName => "Measure";
 
     private Measure() { } // For EF
 
@@ -59,21 +62,34 @@ public sealed class Measure : AggregateRoot, IResourceOwner
     public UserId UserId { get; private set; } = null!;
 
     /// <summary>ISO-ID z. B. A.5.1</summary>
+    [ExportField("ISO-ID", order: 1)]
     public string IsoId { get; private set; } = string.Empty;
+
+    [ExportField("Kategorie", order: 2)]
     public string Category { get; private set; } = string.Empty;
+
+    [ExportField("Name", order: 3)]
     public string Name { get; private set; } = string.Empty;
+
+    [ExportField("Kosten (EUR)", order: 4)]
     public decimal CostEur { get; private set; }
+
+    [ExportField("Aufwand (Std.)", order: 5)]
     public double EffortHours { get; private set; }
 
     /// <summary>Risiko-Wirksamkeit 1–5</summary>
+    [ExportField("Risikowirksamkeit", order: 6)]
     public int ImpactRisk { get; private set; }
 
     /// <summary>Gesamt-Verlässlichkeit 1–3</summary>
+    [ExportField("Verlässlichkeit", order: 7)]
     public int Confidence { get; private set; }
 
     /// <summary>ISO-IDs abhängiger Maßnahmen</summary>
+    [ExportField("Abhängigkeiten", order: 8)]
     public List<string> Dependencies { get; private set; } = [];
 
+    [ExportField("Begründung", order: 9)]
     public string? Justification { get; private set; }
 
     public List<Guid> CategoryIds { get; private set; } = [];
@@ -83,20 +99,36 @@ public sealed class Measure : AggregateRoot, IResourceOwner
     public void SetTags(IEnumerable<Guid> ids)       { TagIds       = ids.ToList(); UpdatedAt = DateTime.UtcNow; }
 
     // Confidence-Subparameter (1–3)
+    [ExportField("Datenqualität", order: 10)]
     public int ConfDataQuality { get; private set; }
+
+    [ExportField("Datenquellen", order: 11)]
     public int ConfDataSourceCount { get; private set; }
+
+    [ExportField("Datenaktualität", order: 12)]
     public int ConfDataRecency { get; private set; }
+
+    [ExportField("Spezifität", order: 13)]
     public int ConfSpecificity { get; private set; }
 
     // Graph-Felder
+    [ExportField("Abhängige (Graph)", order: 14, canImport: false)]
     public int GraphDependentsCount { get; private set; }
 
     /// <summary>Multiplikator, max. 2.0</summary>
+    [ExportField("Wirkungsmultiplikator", order: 15, canImport: false)]
     public double GraphImpactMultiplier { get; private set; }
+
+    [ExportField("Gesamtkosten (Graph)", order: 16, canImport: false)]
     public decimal GraphTotalCost { get; private set; }
+
+    [ExportField("Kosteneffizienz (Graph)", order: 17, canImport: false)]
     public double GraphCostEfficiency { get; private set; }
 
+    [ExportField("Erstellt am", order: 18, canImport: false)]
     public DateTime CreatedAt { get; private set; }
+
+    [ExportField("Aktualisiert am", order: 19, canImport: false)]
     public DateTime UpdatedAt { get; private set; }
 
     public static Result<Measure> Create(

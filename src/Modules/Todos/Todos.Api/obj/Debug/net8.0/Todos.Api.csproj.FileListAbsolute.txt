@@ -35,3 +35,9 @@
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/Todos.Contracts.dll
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/Notifications.Abstractions.pdb
 /Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/Todos.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Application.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Contracts.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Domain.dll
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Application.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Contracts.pdb
+/Users/jonathaneberle/Projekte/Audicius/Tool/src/Modules/Todos/Todos.Api/bin/Debug/net8.0/ImportExport.Domain.pdb

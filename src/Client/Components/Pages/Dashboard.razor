@@ -25,6 +25,7 @@
             <TodoDataTable Items="@_todos"
                            Loading="@_isLoadingTodos"
                            OnToggleStatus="@HandleToggleStatusAsync"
+                           OnEdit="@HandleOpenEditDialog"
                            OnDelete="@HandleDeleteAsync"
                            OnRefresh="@LoadTodosAsync"
                            AvailableCategories="@_categories"
@@ -33,6 +34,28 @@
     </MudGrid>
 </MudContainer>
 
+<!-- ── Aufgabe bearbeiten Dialog ───────────────────────────────────────── -->
+<EntityDialog Title="Aufgabe bearbeiten"
+              TitleIcon="@Icons.Material.Filled.Edit"
+              IsVisible="@_editDialogOpen"
+              IsVisibleChanged="@(v => { if (!v) CloseEditDialog(); })"
+              OnSave="@HandleSaveEditAsync"
+              OnCancel="@CloseEditDialog"
+              IsSaving="@_isSavingEdit">
+    <FormContent>
+        <TodoCreateForm Model="@_editTodoModel"
+                        OnSubmit="@HandleSaveEditAsync"
+                        Loading="@_isSavingEdit"
+                        ShowSubmitButton="false"
+                        ShowTitle="false"
+                        ShowPaper="false"
+                        AvailableCategories="@_categories"
+                        AvailableTags="@_tags"
+                        OnCreateCategoryRequested="@HandleCreateCategoryAsync"
+                        OnCreateTagRequested="@HandleCreateTagAsync" />
+    </FormContent>
+</EntityDialog>
+
 @code {
     private List<TodoListItemViewModel> _todos          = [];
     private CreateTodoViewModel         _newTodo        = new();
@@ -40,6 +63,12 @@
     private bool                        _isCreating     = false;
     private List<CategoryViewModel>     _categories     = [];
     private List<TagViewModel>          _tags           = [];
+
+    // ── Edit-Dialog State ───────────────────────────────────────────────────
+    private bool                    _editDialogOpen = false;
+    private bool                    _isSavingEdit   = false;
+    private TodoListItemViewModel?  _editingTodo    = null;
+    private CreateTodoViewModel     _editTodoModel  = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -122,6 +151,44 @@
         }
         else
             Snackbar.Add($"Fehler: {result.Error}", Severity.Error);
+    }
+
+    // ── Edit-Dialog Handler ─────────────────────────────────────────────────
+
+    private void HandleOpenEditDialog(TodoListItemViewModel todo)
+    {
+        _editingTodo   = todo;
+        _editTodoModel = todo.ToEditModel();
+        _editDialogOpen = true;
+    }
+
+    private void CloseEditDialog()
+    {
+        _editDialogOpen = false;
+        _editingTodo    = null;
+    }
+
+    private async Task HandleSaveEditAsync()
+    {
+        if (_editingTodo is null) return;
+
+        _isSavingEdit = true;
+
+        var dto    = _editTodoModel.ToUpdateDto();
+        var result = await TodoApiService.UpdateTodoAsync(_editingTodo.Id.ToString(), dto);
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add("Aufgabe aktualisiert!", Severity.Success);
+            CloseEditDialog();
+            await LoadTodosAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Fehler beim Speichern: {result.Error}", Severity.Error);
+        }
+
+        _isSavingEdit = false;
     }
 
     private async Task HandleCreateCategoryAsync(string label)

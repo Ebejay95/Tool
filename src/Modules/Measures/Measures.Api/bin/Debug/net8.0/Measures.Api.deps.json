@@ -162,6 +162,41 @@
         }
       },
       "System.Diagnostics.DiagnosticSource/8.0.0": {},
+      "ImportExport.Application/1.0.0": {
+        "dependencies": {
+          "ImportExport.Contracts": "1.0.0",
+          "ImportExport.Domain": "1.0.0",
+          "MediatR": "12.2.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "ImportExport.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ImportExport.Contracts/1.0.0": {
+        "runtime": {
+          "ImportExport.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ImportExport.Domain/1.0.0": {
+        "dependencies": {
+          "SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "ImportExport.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Measures.Application/1.0.0": {
         "dependencies": {
           "Measures.Contracts": "1.0.0",
@@ -197,6 +232,7 @@
       },
       "Measures.Infrastructure/1.0.0": {
         "dependencies": {
+          "ImportExport.Application": "1.0.0",
           "Measures.Application": "1.0.0",
           "Measures.Domain": "1.0.0",
           "MediatR": "12.2.0",
@@ -386,6 +422,21 @@
       "sha512": "sha512-c9xLpVz6PL9lp/djOWtk5KPDZq3cSYpmXoJQY524EOtuFl5z9ZtsotpsyrDW40U1DRnQSYvcPKEUV0X//u6gkQ==",
       "path": "system.diagnostics.diagnosticsource/8.0.0",
       "hashPath": "system.diagnostics.diagnosticsource.8.0.0.nupkg.sha512"
+    },
+    "ImportExport.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ImportExport.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ImportExport.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Measures.Application/1.0.0": {
       "type": "project",

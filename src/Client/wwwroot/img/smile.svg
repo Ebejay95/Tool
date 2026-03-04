@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Smiley">
+  <!-- Face -->
+  <circle cx="128" cy="128" r="110" fill="#FFD54A" stroke="#000" stroke-width="8"/>
+
+  <!-- Eyes -->
+  <circle cx="88" cy="105" r="14" fill="#000"/>
+  <circle cx="168" cy="105" r="14" fill="#000"/>
+
+  <!-- Smile -->
+  <path d="M78 150 C 95 190, 161 190, 178 150"
+        fill="none" stroke="#000" stroke-width="10" stroke-linecap="round"/>
+</svg>

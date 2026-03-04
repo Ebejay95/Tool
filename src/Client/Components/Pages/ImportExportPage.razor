@@ -1,0 +1,574 @@
+@page "/import-export"
+@inject ImportExportApiService ImportExportService
+@inject IAuthService AuthService
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageTitle>Import / Export - CMC</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Import / Export</MudText>
+
+    @if (_isLoading)
+    {
+        <MudProgressLinear Indeterminate Color="Color.Primary" Class="mb-4" />
+    }
+
+    <MudTabs Elevation="2" Rounded ApplyEffectsToContainer Class="mb-4">
+
+        <!-- ── Tab 1: Export ──────────────────────────────────────────── -->
+        <MudTabPanel Text="Exportieren" Icon="@Icons.Material.Filled.FileDownload">
+            <MudPaper Elevation="0" Class="pa-6">
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Entitätstyp" @bind-Value="_exportEntityType"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Category"
+                                   AdornmentColor="Color.Primary"
+                                   HelperText="Wähle den zu exportierenden Typ">
+                            @foreach (var e in _entities)
+                            {
+                                <MudSelectItem Value="@e.TypeName">@e.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Format" @bind-Value="_exportChannel"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Storage"
+                                   AdornmentColor="Color.Primary">
+                            @foreach (var ch in _channels)
+                            {
+                                <MudSelectItem Value="@ch.Key">@ch.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="Guid?" Label="Mapping-Profil (optional)" @bind-Value="_exportMappingProfileId"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Map"
+                                   Clearable>
+                            @foreach (var mp in _filteredMappingProfiles)
+                            {
+                                <MudSelectItem Value="@((Guid?)mp.Id)">@mp.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" Class="d-flex justify-end">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.FileDownload"
+                                   Disabled="@(_isExporting || string.IsNullOrEmpty(_exportEntityType) || string.IsNullOrEmpty(_exportChannel))"
+                                   OnClick="HandleExportAsync">
+                            @if (_isExporting)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate Class="mr-2" />
+                                <span>Wird exportiert...</span>
+                            }
+                            else
+                            {
+                                <span>Exportieren</span>
+                            }
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudTabPanel>
+
+        <!-- ── Tab 2: Import ──────────────────────────────────────────── -->
+        <MudTabPanel Text="Importieren" Icon="@Icons.Material.Filled.FileUpload">
+            <MudPaper Elevation="0" Class="pa-6">
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Entitätstyp" @bind-Value="_importEntityType"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Category"
+                                   AdornmentColor="Color.Primary">
+                            @foreach (var e in _entities)
+                            {
+                                <MudSelectItem Value="@e.TypeName">@e.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Format" @bind-Value="_importChannel"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Storage"
+                                   AdornmentColor="Color.Primary">
+                            @foreach (var ch in _channels)
+                            {
+                                <MudSelectItem Value="@ch.Key">@ch.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="Guid?" Label="Mapping-Profil (optional)" @bind-Value="_importMappingProfileId"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                                   AdornmentIcon="@Icons.Material.Filled.Map"
+                                   Clearable>
+                            @foreach (var mp in _filteredImportMappingProfiles)
+                            {
+                                <MudSelectItem Value="@((Guid?)mp.Id)">@mp.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected" Accept=".xlsx,.csv" MaximumFileCount="1">
+                            <ButtonTemplate>
+                                <MudButton HtmlTag="label"
+                                           Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.AttachFile"
+                                           for="@context.Id">
+                                    Datei auswählen (@(_importFile?.Name ?? "keine Datei"))
+                                </MudButton>
+                            </ButtonTemplate>
+                        </MudFileUpload>
+                    </MudItem>
+
+                    <MudItem xs="12" Class="d-flex justify-end">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.FileUpload"
+                                   Disabled="@(_isImporting || _importFile is null || string.IsNullOrEmpty(_importEntityType) || string.IsNullOrEmpty(_importChannel))"
+                                   OnClick="HandleImportAsync">
+                            @if (_isImporting)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate Class="mr-2" />
+                                <span>Wird importiert...</span>
+                            }
+                            else
+                            {
+                                <span>Importieren</span>
+                            }
+                        </MudButton>
+                    </MudItem>
+
+                    @if (_importResult is not null)
+                    {
+                        <MudItem xs="12">
+                            <MudAlert Severity="@(_importResult.ErrorCount > 0 ? Severity.Warning : Severity.Success)" Class="mt-2">
+                                <MudText><strong>@_importResult.ImportedCount</strong> importiert,
+                                    <strong>@_importResult.SkippedCount</strong> übersprungen,
+                                    <strong>@_importResult.ErrorCount</strong> Fehler.</MudText>
+                            </MudAlert>
+                            @if (_importResult.Errors.Count > 0)
+                            {
+                                <MudList T="string" Dense Class="mt-2">
+                                    @foreach (var err in _importResult.Errors)
+                                    {
+                                        <MudListItem T="string" Icon="@Icons.Material.Filled.ErrorOutline" IconColor="Color.Error">@err</MudListItem>
+                                    }
+                                </MudList>
+                            }
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudPaper>
+        </MudTabPanel>
+
+        <!-- ── Tab 3: Mapping-Profile ─────────────────────────────────── -->
+        <MudTabPanel Text="Mapping-Profile" Icon="@Icons.Material.Filled.Map">
+            <EntityTable TItem="MappingProfileDto"
+                         Items="@_displayedProfilesList"
+                         Loading="@_isLoading"
+                         Title="Mapping-Profile"
+                         LoadingText="Lade Profile..."
+                         EmptyIcon="@Icons.Material.Filled.Map"
+                         EmptyTitle="Keine Mapping-Profile vorhanden"
+                         EmptySubText="Erstellen Sie Ihr erstes Mapping-Profil über den Button oben."
+                         OnRefresh="@LoadDataAsync">
+                <HeaderActions>
+                    <MudSelect T="string" Label="Nach Entitätstyp filtern" @bind-Value="_profileFilterEntity"
+                               AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined"
+                               Style="min-width: 180px;" Margin="Margin.Dense"
+                               Clearable>
+                        @foreach (var e in _entities)
+                        {
+                            <MudSelectItem Value="@e.TypeName">@e.DisplayName</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="() => OpenProfileDialog(null)">
+                        Neues Profil
+                    </MudButton>
+                </HeaderActions>
+                <TableContent>
+                    <MudTable Items="@_displayedProfilesList" Dense Hover Bordered Striped>
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Entitätstyp</MudTh>
+                            <MudTh>Format</MudTh>
+                            <MudTh>Felder</MudTh>
+                            <MudTh>Geändert</MudTh>
+                            <MudTh>Aktionen</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd>@context.Name</MudTd>
+                            <MudTd>@context.EntityTypeName</MudTd>
+                            <MudTd>@context.Channel</MudTd>
+                            <MudTd>@context.FieldRules.Count</MudTd>
+                            <MudTd>@context.UpdatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</MudTd>
+                            <MudTd>
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary"
+                                               OnClick="() => OpenProfileDialog(context)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                                               OnClick="() => DeleteProfileAsync(context.Id)" />
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </TableContent>
+            </EntityTable>
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>
+
+<!-- ── Mapping-Profil Dialog ─────────────────────────────────────────────── -->
+<MudDialog @bind-IsVisible="_profileDialogOpen" Options="_dialogOptions">
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Map" Class="mr-2" />
+                @(_editingProfile is null ? "Neues Mapping-Profil" : "Profil bearbeiten")
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="_dialogName" Label="Name" Variant="Variant.Outlined" Required />
+                </MudItem>
+                @if (_editingProfile is null)
+                {
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Entitätstyp" @bind-Value="_dialogEntityType"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Required>
+                            @foreach (var e in _entities)
+                            {
+                                <MudSelectItem Value="@e.TypeName">@e.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12" sm="6">
+                        <MudSelect T="string" Label="Format" @bind-Value="_dialogChannel"
+                                   AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Required>
+                            @foreach (var ch in _channels)
+                            {
+                                <MudSelectItem Value="@ch.Key">@ch.DisplayName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.caption" Color="Color.Tertiary">
+                            Entitätstyp: <strong>@_editingProfile.EntityTypeName</strong> &nbsp;|&nbsp;
+                            Format: <strong>@_editingProfile.Channel</strong>
+                        </MudText>
+                    </MudItem>
+                }
+
+                <!-- Feld-Regeln -->
+                <MudItem xs="12">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Spalten-Zuordnungen</MudText>
+
+                    @foreach (var rule in _dialogRules)
+                    {
+                        var idx = _dialogRules.IndexOf(rule);
+                        <MudGrid Spacing="1" Class="mb-1">
+                            <MudItem xs="5">
+                                <MudTextField Value="@rule.SourceColumn"
+                                              ValueChanged="@((string v) => _dialogRules[idx] = rule with { SourceColumn = v })"
+                                              Label="Quellspalte" Variant="Variant.Outlined" Dense />
+                            </MudItem>
+                            <MudItem xs="5">
+                                <MudSelect T="string" Label="Zieleigenschaft"
+                                           Value="@rule.TargetField"
+                                           ValueChanged="@((string v) => _dialogRules[idx] = rule with { TargetField = v })"
+                                           AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Dense>
+                                    @foreach (var f in DialogTargetFields)
+                                    {
+                                        <MudSelectItem Value="@f.PropertyName">@f.DisplayName</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </MudItem>
+                            <MudItem xs="2" Class="d-flex align-center">
+                                <MudIconButton Icon="@Icons.Material.Filled.Remove" Size="Size.Small" Color="Color.Error"
+                                               OnClick="() => _dialogRules.RemoveAt(idx)" />
+                            </MudItem>
+                        </MudGrid>
+                    }
+
+                    <MudButton Variant="Variant.Text" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="AddDialogRule" Class="mt-1">
+                        Zuordnung hinzufügen
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="CloseProfileDialog">Abbrechen</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       Disabled="@_isSavingProfile"
+                       OnClick="SaveProfileAsync">
+                @if (_isSavingProfile)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate Class="mr-2" />
+                }
+                Speichern
+            </MudButton>
+        </DialogActions>
+    </MudDialog>
+
+@code {
+    // ── State ─────────────────────────────────────────────────────────────────
+    private bool _isLoading    = true;
+
+    private List<ExportableEntityDto> _entities = [];
+    private List<ChannelInfoDto>      _channels = [];
+    private List<MappingProfileDto>   _profiles = [];
+
+    // Export Tab
+    private string  _exportEntityType       = string.Empty;
+    private string  _exportChannel          = string.Empty;
+    private Guid?   _exportMappingProfileId = null;
+    private bool    _isExporting            = false;
+
+    // Import Tab
+    private string        _importEntityType       = string.Empty;
+    private string        _importChannel          = string.Empty;
+    private Guid?         _importMappingProfileId = null;
+    private IBrowserFile? _importFile             = null;
+    private ImportResult? _importResult           = null;
+    private bool          _isImporting            = false;
+
+    // Mapping Profile Tab
+    private string _profileFilterEntity = string.Empty;
+
+    // Profile Dialog
+    private bool                  _profileDialogOpen  = false;
+    private bool                  _isSavingProfile    = false;
+    private MappingProfileDto?    _editingProfile     = null;
+    private string                _dialogName         = string.Empty;
+    private string                _dialogEntityType   = string.Empty;
+    private string                _dialogChannel      = string.Empty;
+    private List<FieldRuleDto>    _dialogRules        = [];
+
+    private readonly DialogOptions _dialogOptions = new()
+    {
+        MaxWidth  = MaxWidth.Medium,
+        FullWidth = true,
+        CloseOnEscapeKey = true
+    };
+
+    // ── Computed ──────────────────────────────────────────────────────────────
+
+    private IEnumerable<MappingProfileDto> _filteredMappingProfiles =>
+        string.IsNullOrEmpty(_exportEntityType)
+            ? _profiles
+            : _profiles.Where(p => p.EntityTypeName == _exportEntityType && p.Channel == _exportChannel);
+
+    private IEnumerable<MappingProfileDto> _filteredImportMappingProfiles =>
+        string.IsNullOrEmpty(_importEntityType)
+            ? _profiles
+            : _profiles.Where(p => p.EntityTypeName == _importEntityType && p.Channel == _importChannel);
+
+    private IReadOnlyList<MappingProfileDto> _displayedProfilesList =>
+        string.IsNullOrEmpty(_profileFilterEntity)
+            ? _profiles
+            : _profiles.Where(p => p.EntityTypeName == _profileFilterEntity).ToList();
+
+    private IReadOnlyList<FieldInfoDto> DialogTargetFields =>
+        _entities.FirstOrDefault(e => e.TypeName == (_editingProfile?.EntityTypeName ?? _dialogEntityType))?.Fields
+        ?? [];
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        var entitiesResult = await ImportExportService.GetExportableEntitiesAsync();
+        var channelsResult = await ImportExportService.GetChannelsAsync();
+        var profilesResult = await ImportExportService.GetMappingProfilesAsync();
+
+        if (entitiesResult.IsSuccess) _entities = entitiesResult.Value;
+        else Snackbar.Add($"Entitäten konnten nicht geladen werden: {entitiesResult.Error.Description}", Severity.Error);
+
+        if (channelsResult.IsSuccess) _channels = channelsResult.Value;
+        else Snackbar.Add($"Formate konnten nicht geladen werden: {channelsResult.Error.Description}", Severity.Error);
+
+        if (profilesResult.IsSuccess) _profiles = profilesResult.Value;
+        else Snackbar.Add($"Mapping-Profile konnten nicht geladen werden: {profilesResult.Error.Description}", Severity.Error);
+
+        // Vorauswahlen setzen
+        if (_entities.Count > 0)
+        {
+            _exportEntityType = _entities[0].TypeName;
+            _importEntityType = _entities[0].TypeName;
+        }
+        if (_channels.Count > 0)
+        {
+            _exportChannel = _channels[0].Key;
+            _importChannel = _channels[0].Key;
+        }
+
+        _isLoading = false;
+    }
+
+    // ── Export ────────────────────────────────────────────────────────────────
+
+    private async Task HandleExportAsync()
+    {
+        _isExporting = true;
+        StateHasChanged();
+
+        var request = new ExportRequest(_exportEntityType, _exportChannel, _exportMappingProfileId);
+        var result  = await ImportExportService.ExportAsync(request);
+
+        if (result.IsSuccess)
+        {
+            await TriggerFileDownloadAsync(result.Value.Data, result.Value.FileName, result.Value.ContentType);
+            Snackbar.Add($"Export erfolgreich: {result.Value.FileName}", Severity.Success);
+        }
+        else
+        {
+            var msg = $"Export fehlgeschlagen: {result.Error.Description}";
+            Snackbar.Add(msg, Severity.Error, cfg => cfg.VisibleStateDuration = 10000);
+            await JS.InvokeVoidAsync("console.error", "[ImportExport]", msg);
+        }
+
+        _isExporting = false;
+    }
+
+    private async Task TriggerFileDownloadAsync(byte[] data, string fileName, string contentType)
+    {
+        var base64 = Convert.ToBase64String(data);
+        await JS.InvokeVoidAsync("importExportHelpers.downloadFile", fileName, contentType, base64);
+    }
+
+    // ── Import ────────────────────────────────────────────────────────────────
+
+    private void OnFileSelected(IBrowserFile? file)
+    {
+        _importFile   = file;
+        _importResult = null;
+    }
+
+    private async Task HandleImportAsync()
+    {
+        if (_importFile is null) return;
+
+        _isImporting  = true;
+        _importResult = null;
+        StateHasChanged();
+
+        const long maxFileSizeMb = 50;
+        await using var stream = _importFile.OpenReadStream(maxFileSizeMb * 1024 * 1024);
+
+        var result = await ImportExportService.ImportAsync(
+            _importEntityType,
+            _importChannel,
+            stream,
+            _importFile.Name,
+            _importMappingProfileId);
+
+        if (result.IsSuccess)
+        {
+            _importResult = result.Value;
+            var msg = $"{result.Value.ImportedCount} Datensätze importiert.";
+            Snackbar.Add(msg, result.Value.ErrorCount > 0 ? Severity.Warning : Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Import fehlgeschlagen: {result.Error.Description}", Severity.Error);
+        }
+
+        _isImporting = false;
+    }
+
+    // ── Mapping Profiles ──────────────────────────────────────────────────────
+
+    private void OpenProfileDialog(MappingProfileDto? profile)
+    {
+        _editingProfile   = profile;
+        _dialogName       = profile?.Name        ?? string.Empty;
+        _dialogEntityType = profile?.EntityTypeName ?? (_entities.Count > 0 ? _entities[0].TypeName : string.Empty);
+        _dialogChannel    = profile?.Channel     ?? (_channels.Count > 0 ? _channels[0].Key : string.Empty);
+        _dialogRules      = profile?.FieldRules.Select(r => new FieldRuleDto(r.SourceColumn, r.TargetField, r.TransformHint)).ToList()
+                            ?? [];
+        _profileDialogOpen = true;
+    }
+
+    private void CloseProfileDialog() => _profileDialogOpen = false;
+
+    private void AddDialogRule()
+        => _dialogRules.Add(new FieldRuleDto(string.Empty, string.Empty, null));
+
+    private async Task SaveProfileAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_dialogName)) return;
+
+        _isSavingProfile = true;
+        StateHasChanged();
+
+        Result<MappingProfileDto> result;
+
+        if (_editingProfile is null)
+        {
+            var req = new CreateMappingProfileRequest(_dialogName, _dialogEntityType, _dialogChannel, _dialogRules);
+            result  = await ImportExportService.CreateMappingProfileAsync(req);
+        }
+        else
+        {
+            var req = new UpdateMappingProfileRequest(_dialogName, _dialogRules);
+            result  = await ImportExportService.UpdateMappingProfileAsync(_editingProfile.Id, req);
+        }
+
+        if (result.IsSuccess)
+        {
+            var idx = _profiles.FindIndex(p => p.Id == result.Value.Id);
+            if (idx >= 0) _profiles[idx] = result.Value;
+            else          _profiles.Add(result.Value);
+
+            Snackbar.Add("Profil gespeichert.", Severity.Success);
+            CloseProfileDialog();
+        }
+        else
+        {
+            Snackbar.Add($"Speichern fehlgeschlagen: {result.Error.Description}", Severity.Error);
+        }
+
+        _isSavingProfile = false;
+    }
+
+    private async Task DeleteProfileAsync(Guid id)
+    {
+        var result = await ImportExportService.DeleteMappingProfileAsync(id);
+        if (result.IsSuccess)
+        {
+            _profiles.RemoveAll(p => p.Id == id);
+            Snackbar.Add("Profil gelöscht.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Löschen fehlgeschlagen: {result.Error.Description}", Severity.Error);
+        }
+    }
+}

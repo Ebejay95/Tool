@@ -23,6 +23,7 @@ builder.Services.AddSingleton<AuthStateService>(); // Flüchtiger 2FA-Ablauf-Zus
 builder.Services.AddScoped<TodoApiService>();
 builder.Services.AddScoped<MeasureApiService>();
 builder.Services.AddScoped<TaxonomyApiService>();
+builder.Services.AddScoped<ImportExportApiService>();
 builder.Services.AddScoped<NotificationHubService>();
 builder.Services.AddScoped<ThemeService>();
 

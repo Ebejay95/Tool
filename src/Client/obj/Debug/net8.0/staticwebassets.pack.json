@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets/css/app.css"
     },
     {
+      "Id": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/wwwroot/img/smile.svg",
+      "PackagePath": "staticwebassets/img/smile.svg"
+    },
+    {
       "Id": "/Users/jonathaneberle/Projekte/Audicius/Tool/src/Client/wwwroot/index.html",
       "PackagePath": "staticwebassets/index.html"
     },
