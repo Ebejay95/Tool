@@ -8,29 +8,29 @@ namespace Taxonomy.Application.Ports;
 public interface ICategoryRepository : IRepository<Category>
 {
     Task<Category?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Category?> GetByIdAccessibleByUserAsync(CategoryId id, UserId userId, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Category>> GetAccessibleByUserAsync(UserId userId, CancellationToken cancellationToken = default);
-    Task<Category?> GetByLabelAndUserIdAsync(string label, UserId userId, CancellationToken cancellationToken = default);
+    Task<Category?> GetByIdAsync(CategoryId id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Category>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Category?> GetByLabelAsync(string label, CancellationToken cancellationToken = default);
 }
 
 public interface ITagRepository : IRepository<Tag>
 {
     Task<Tag?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Tag?> GetByIdAccessibleByUserAsync(TagId id, UserId userId, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Tag>> GetAccessibleByUserAsync(UserId userId, CancellationToken cancellationToken = default);
-    Task<Tag?> GetByLabelAndUserIdAsync(string label, UserId userId, CancellationToken cancellationToken = default);
+    Task<Tag?> GetByIdAsync(TagId id, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Tag>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Tag?> GetByLabelAsync(string label, CancellationToken cancellationToken = default);
 }
 
 public interface ICategoryQueryService
 {
-    Task<IReadOnlyList<CategoryDto>> GetAccessibleByUserAsync(UserId userId, CancellationToken cancellationToken = default);
-    Task<CategoryDto?> GetByIdAccessibleByUserAsync(CategoryId id, UserId userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<CategoryDto?> GetByIdAsync(CategoryId id, CancellationToken cancellationToken = default);
 }
 
 public interface ITagQueryService
 {
-    Task<IReadOnlyList<TagDto>> GetAccessibleByUserAsync(UserId userId, CancellationToken cancellationToken = default);
-    Task<TagDto?> GetByIdAccessibleByUserAsync(TagId id, UserId userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<TagDto>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<TagDto?> GetByIdAsync(TagId id, CancellationToken cancellationToken = default);
 }
 
 public interface ITaxonomyUnitOfWork : IUnitOfWork { }

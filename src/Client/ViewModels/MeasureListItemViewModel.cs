@@ -6,7 +6,6 @@ namespace App.ViewModels;
 public sealed record MeasureListItemViewModel(
     Guid    Id,
     string  IsoId,
-    string  Category,
     string  Name,
     decimal CostEur,
     int     ImpactRisk,

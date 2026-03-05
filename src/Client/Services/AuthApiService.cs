@@ -101,6 +101,8 @@ public sealed class AuthApiService : IAuthService
 
     public Task<UserInfo?> GetCurrentUserAsync() => _tokenService.GetCurrentUserAsync();
 
+    public Task<string?> GetCurrentRoleAsync() => _tokenService.GetCurrentRoleAsync();
+
     public async Task LogoutAsync()
     {
         await _tokenService.RemoveTokenAsync();

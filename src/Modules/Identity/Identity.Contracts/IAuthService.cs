@@ -32,6 +32,9 @@ public interface IAuthService
     /// <summary>Initialisiert den Auth-Zustand aus dem Browser-LocalStorage (nach Page-Load).</summary>
     Task InitializeAsync();
 
+    /// <summary>Gibt die Rolle des eingeloggten Users zurück (aus dem JWT 'role'-Claim).</summary>
+    Task<string?> GetCurrentRoleAsync();
+
     // ── E-Mail-Verifizierung ─────────────────────────────────────────────────
 
     /// <summary>Verifiziert die E-Mail-Adresse mit einem Token aus der Bestätigungs-E-Mail.</summary>

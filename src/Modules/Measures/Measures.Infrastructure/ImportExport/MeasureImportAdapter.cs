@@ -29,7 +29,6 @@ public sealed class MeasureImportAdapter : IImportAdapter
     {
         var isoId    = row.GetValueOrDefault("IsoId")?.Trim();
         var name     = row.GetValueOrDefault("Name")?.Trim();
-        var category = row.GetValueOrDefault("Category")?.Trim() ?? string.Empty;
 
         if (string.IsNullOrWhiteSpace(isoId))    return "Pflichtfeld 'IsoId' (ISO-ID) fehlt.";
         if (string.IsNullOrWhiteSpace(name))     return "Pflichtfeld 'Name' fehlt.";
@@ -52,7 +51,7 @@ public sealed class MeasureImportAdapter : IImportAdapter
         var dependencies  = ParseDependencies(row.GetValueOrDefault("Dependencies"));
 
         var result = Measure.Create(
-            ownerId, isoId, category, name,
+            ownerId, isoId, name,
             costEur, effortHours,
             impactRisk, confidence,
             dependencies, justification,

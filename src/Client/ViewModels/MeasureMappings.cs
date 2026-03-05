@@ -40,7 +40,6 @@ public static partial class MeasureMappings
     public static CreateMeasureViewModel ToEditModel(this MeasureDto dto) => new()
     {
         IsoId               = dto.IsoId,
-        Category            = dto.Category,
         Name                = dto.Name,
         CostEur             = dto.CostEur,
         EffortHours         = dto.EffortHours,
@@ -69,7 +68,6 @@ public static partial class MeasureMappings
 
     public static UpdateMeasureDto ToUpdateDto(this CreateMeasureViewModel vm, MeasureEditState state) => new()
     {
-        Category              = vm.Category,
         Name                  = vm.Name,
         CostEur               = vm.CostEur,
         EffortHours           = vm.EffortHours,

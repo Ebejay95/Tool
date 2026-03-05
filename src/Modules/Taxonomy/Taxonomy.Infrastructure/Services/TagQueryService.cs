@@ -10,21 +10,18 @@ namespace Taxonomy.Infrastructure.Services;
 
 public sealed class TagQueryService(TaxonomyDbContext context) : ITagQueryService
 {
-    public async Task<IReadOnlyList<TagDto>> GetAccessibleByUserAsync(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<TagDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var entities = await context.Tags
-            .Where(t => t.UserId == null || t.UserId == userId)
             .OrderBy(t => t.Label)
             .ToListAsync(cancellationToken);
 
         return entities.Select(TaxonomyMapper.ToDto).ToList();
     }
 
-    public async Task<TagDto?> GetByIdAccessibleByUserAsync(TagId id, UserId userId, CancellationToken cancellationToken = default)
+    public async Task<TagDto?> GetByIdAsync(TagId id, CancellationToken cancellationToken = default)
     {
-        var entity = await context.Tags
-            .FirstOrDefaultAsync(t => t.Id == id && (t.UserId == null || t.UserId == userId), cancellationToken);
-
+        var entity = await context.Tags.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
         return entity is null ? null : TaxonomyMapper.ToDto(entity);
     }
 }

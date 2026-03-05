@@ -3,7 +3,6 @@ namespace Measures.Application.DTOs;
 public sealed class CreateMeasureDto
 {
     public string IsoId { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public decimal CostEur { get; set; }
     public double EffortHours { get; set; }
@@ -25,7 +24,6 @@ public sealed class CreateMeasureDto
 
 public sealed class UpdateMeasureDto
 {
-    public string Category { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public decimal CostEur { get; set; }
     public double EffortHours { get; set; }
@@ -49,7 +47,6 @@ public sealed record MeasureDto(
     string Id,
     string UserId,
     string IsoId,
-    string Category,
     string Name,
     decimal CostEur,
     double EffortHours,
@@ -73,7 +70,6 @@ public sealed record MeasureDto(
 public sealed record MeasureSummaryDto(
     string Id,
     string IsoId,
-    string Category,
     string Name,
     decimal CostEur,
     int ImpactRisk,

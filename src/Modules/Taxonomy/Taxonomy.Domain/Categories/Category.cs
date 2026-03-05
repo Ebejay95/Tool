@@ -3,9 +3,7 @@ using SharedKernel;
 namespace Taxonomy.Domain.Categories;
 
 /// <summary>
-/// Kategorie für die Taxonomie.
-/// UserId == null → globale Kategorie (für alle User sichtbar, nur Admins änderbar).
-/// UserId != null → benutzerspezifische Kategorie.
+/// Globale Kategorie für die Taxonomie – sichtbar und verwaltbar von allen authentifizierten Benutzern.
 /// </summary>
 public sealed class Category : AggregateRoot
 {
@@ -13,24 +11,19 @@ public sealed class Category : AggregateRoot
 
     private Category(
         CategoryId id,
-        UserId? userId,
         string label,
         string color)
     {
-        Id     = id;
-        UserId = userId;
-        Label  = label;
-        Color  = color;
+        Id        = id;
+        Label     = label;
+        Color     = color;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
-        AddDomainEvent(new CategoryCreatedEvent(id, userId, label));
+        AddDomainEvent(new CategoryCreatedEvent(id, label));
     }
 
     public new CategoryId Id { get; private set; } = null!;
-
-    /// <summary>null = global für alle User.</summary>
-    public UserId? UserId { get; private set; }
 
     public string Label { get; private set; } = string.Empty;
 
@@ -42,7 +35,7 @@ public sealed class Category : AggregateRoot
 
     // ── Factory ───────────────────────────────────────────────────────────────
 
-    public static Result<Category> Create(UserId? userId, string label, string color)
+    public static Result<Category> Create(string label, string color)
     {
         if (string.IsNullOrWhiteSpace(label))
             return Result.Failure<Category>(CategoryErrors.LabelRequired);
@@ -53,7 +46,7 @@ public sealed class Category : AggregateRoot
         if (string.IsNullOrWhiteSpace(color))
             return Result.Failure<Category>(CategoryErrors.ColorRequired);
 
-        return Result.Success(new Category(CategoryId.New(), userId, label.Trim(), color.Trim()));
+        return Result.Success(new Category(CategoryId.New(), label.Trim(), color.Trim()));
     }
 
     // ── Mutations ─────────────────────────────────────────────────────────────
@@ -81,10 +74,4 @@ public sealed class Category : AggregateRoot
     public void MarkForDeletion()
         => AddDomainEvent(new CategoryDeletedEvent(Id));
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    /// <summary>Darf der angegebene User diese Kategorie bearbeiten?</summary>
-    public bool IsOwnedBy(UserId userId) => UserId is not null && UserId.Value == userId.Value;
-
-    public bool IsGlobal => UserId is null;
 }

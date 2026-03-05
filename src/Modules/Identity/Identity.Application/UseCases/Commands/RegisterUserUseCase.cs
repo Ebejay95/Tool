@@ -55,7 +55,8 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, R
             user.FullName,
             user.CreatedAt,
             user.LastLoginAt,
-            user.IsActive);
+            user.IsActive,
+            user.Role);
 
         return Result.Success(userDto);
     }

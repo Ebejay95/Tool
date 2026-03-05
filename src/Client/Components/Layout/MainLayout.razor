@@ -84,6 +84,9 @@
 
         // Auf SignalR-Notifications subscriben → Snackbar anzeigen + Bell-Refresh
         NotifHubService.OnNotificationReceived += HandleNotificationReceived;
+
+        // Master-Route-Guard bei Navigation
+        Navigation.LocationChanged += OnLocationChangedMasterGuard;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -107,8 +110,31 @@
 
         if (string.IsNullOrEmpty(token)) return;
 
+        // Master-Route-Guard: nach Login sicherstellen, dass master nur /master/users sieht
+        await EnforceMasterRouteGuardAsync();
+
         // SignalR-Hub starten (Token wird intern von NotificationHubService gesetzt)
         await NotifHubService.StartAsync();
+    }
+
+    private async void OnLocationChangedMasterGuard(object? sender, LocationChangedEventArgs e)
+    {
+        await EnforceMasterRouteGuardAsync();
+    }
+
+    private async Task EnforceMasterRouteGuardAsync()
+    {
+        var isAuthenticated = await AuthService.IsAuthenticatedAsync();
+        if (!isAuthenticated) return;
+
+        var role = await AuthService.GetCurrentRoleAsync();
+        if (role != "master") return;
+
+        var path = new Uri(Navigation.Uri).AbsolutePath;
+        if (!path.Equals("/master/users", StringComparison.OrdinalIgnoreCase))
+        {
+            await InvokeAsync(() => Navigation.NavigateTo("/master/users", replace: true));
+        }
     }
 
     private void HandleNotificationReceived(string title, string body, string severity)
@@ -137,6 +163,7 @@
     {
         ThemeService.OnThemeChanged -= StateHasChanged;
         NotifHubService.OnNotificationReceived -= HandleNotificationReceived;
+        Navigation.LocationChanged -= OnLocationChangedMasterGuard;
         await NotifHubService.StopAsync();
         _dotNetRef?.Dispose();
     }

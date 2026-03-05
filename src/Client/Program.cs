@@ -25,6 +25,7 @@ builder.Services.AddScoped<MeasureApiService>();
 builder.Services.AddScoped<TaxonomyApiService>();
 builder.Services.AddScoped<ImportExportApiService>();
 builder.Services.AddScoped<NotificationHubService>();
+builder.Services.AddScoped<UserManagementApiService>();
 builder.Services.AddScoped<ThemeService>();
 
 // ── UI ─────────────────────────────────────────────────────────────────────

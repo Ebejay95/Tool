@@ -20,7 +20,6 @@ public sealed class CreateMeasureHandler(IMeasureRepository repository, IMeasure
         var result = Measure.Create(
             request.UserId,
             request.Data.IsoId,
-            request.Data.Category,
             request.Data.Name,
             request.Data.CostEur,
             request.Data.EffortHours,

@@ -77,6 +77,10 @@
         var isAuth = await AuthService.IsAuthenticatedAsync();
         if (!isAuth) { Navigation.NavigateTo("/login"); return; }
 
+        // Master darf das Dashboard nicht sehen
+        var role = await AuthService.GetCurrentRoleAsync();
+        if (role == "master") { Navigation.NavigateTo("/master/users", replace: true); return; }
+
         await AuthService.InitializeAsync();
         await Task.WhenAll(LoadTodosAsync(), LoadTaxonomyAsync());
         StateHasChanged();

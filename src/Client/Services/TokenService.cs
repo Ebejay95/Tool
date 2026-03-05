@@ -28,7 +28,7 @@ public sealed class TokenService
             var token = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", TokenKey);
             if (string.IsNullOrEmpty(token)) return null;
 
-            if (IsTokenExpired(token)) 
+            if (IsTokenExpired(token))
             {
                 await RemoveTokenAsync();
                 return null;
@@ -108,6 +108,24 @@ public sealed class TokenService
         {
             var payload = ParseJwtPayload(token);
             return payload?.TryGetValue("sub", out var sub) == true ? sub.ToString() : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Liest die Rolle des eingeloggten Users aus dem JWT ('role'-Claim).</summary>
+    public async Task<string?> GetCurrentRoleAsync()
+    {
+        var token = await GetTokenAsync();
+        if (string.IsNullOrEmpty(token)) return null;
+
+        try
+        {
+            var payload = ParseJwtPayload(token);
+            if (payload is null) return null;
+            return payload.TryGetValue("role", out var role) ? role.ToString() : null;
         }
         catch
         {

@@ -7,6 +7,9 @@ public interface IUserRepository : IRepository<User>
 {
     Task<User?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default);
     Task<bool> ExistsWithEmailAsync(Email email, CancellationToken cancellationToken = default);
+
+    /// <summary>Gibt alle User zurück (inkl. inaktive) – nur für Master-Verwaltung.</summary>
+    Task<IReadOnlyList<User>> GetAllForManagementAsync(CancellationToken cancellationToken = default);
 }
 
 public interface IAuthenticationService

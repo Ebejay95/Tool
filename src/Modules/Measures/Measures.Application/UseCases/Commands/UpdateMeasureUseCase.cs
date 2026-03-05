@@ -18,7 +18,6 @@ public sealed class UpdateMeasureHandler(IMeasureRepository repository, IMeasure
             return Result.Failure<MeasureDto>(MeasureErrors.NotFound);
 
         var updateResult = measure.Update(
-            request.Data.Category,
             request.Data.Name,
             request.Data.CostEur,
             request.Data.EffortHours,

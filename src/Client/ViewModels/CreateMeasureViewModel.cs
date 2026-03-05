@@ -12,9 +12,6 @@ public sealed class CreateMeasureViewModel
     [MaxLength(50, ErrorMessage = "ISO-ID darf max. 50 Zeichen lang sein.")]
     public string IsoId { get; set; } = string.Empty;
 
-    [MaxLength(100, ErrorMessage = "Kategorie darf max. 100 Zeichen lang sein.")]
-    public string Category { get; set; } = string.Empty;
-
     [Required(ErrorMessage = "Name ist erforderlich.")]
     [MaxLength(200, ErrorMessage = "Name darf max. 200 Zeichen lang sein.")]
     public string Name { get; set; } = string.Empty;

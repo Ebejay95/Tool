@@ -41,7 +41,6 @@ public sealed class MeasureQueryService(MeasuresDbContext context) : IMeasureQue
         m.Id.Value.ToString(),
         m.UserId.Value.ToString(),
         m.IsoId,
-        m.Category,
         m.Name,
         m.CostEur,
         m.EffortHours,
@@ -65,7 +64,6 @@ public sealed class MeasureQueryService(MeasuresDbContext context) : IMeasureQue
     private static MeasureSummaryDto ToSummaryDto(Measure m) => new(
         m.Id.Value.ToString(),
         m.IsoId,
-        m.Category,
         m.Name,
         m.CostEur,
         m.ImpactRisk,

@@ -38,7 +38,8 @@ public sealed record UserDto(
     string FullName,
     DateTime CreatedAt,
     DateTime? LastLoginAt,
-    bool IsActive);
+    bool IsActive,
+    string Role);
 
 public sealed record AuthenticationDto(
     string Token,
@@ -114,3 +115,19 @@ public sealed class TwoFactorSetupDto
 public sealed record ConfirmTwoFactorDto(string PreAuthToken, string Code);
 
 public sealed record ValidateTwoFactorDto(string PreAuthToken, string Code);
+
+// ── Master: Nutzerverwaltung ─────────────────────────────────────────────────
+
+/// <summary>Eintrag in der Master-Nutzerliste.</summary>
+public sealed record UserManagementItemDto(
+    string Id,
+    string Email,
+    string FirstName,
+    string LastName,
+    string FullName,
+    string Role,
+    bool IsActive,
+    DateTime CreatedAt);
+
+/// <summary>Rollenzuweisung durch den Master.</summary>
+public sealed record UpdateUserRoleDto(string Role);

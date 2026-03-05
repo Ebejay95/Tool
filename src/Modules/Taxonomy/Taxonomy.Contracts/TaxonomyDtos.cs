@@ -15,11 +15,9 @@ public sealed class UpdateCategoryDto
 }
 
 public sealed record CategoryDto(
-    string  Id,
-    string? UserId,
-    string  Label,
-    string  Color,
-    bool    IsGlobal,
+    string   Id,
+    string   Label,
+    string   Color,
     DateTime CreatedAt,
     DateTime UpdatedAt);
 
@@ -38,10 +36,8 @@ public sealed class UpdateTagDto
 }
 
 public sealed record TagDto(
-    string  Id,
-    string? UserId,
-    string  Label,
-    string  Color,
-    bool    IsGlobal,
+    string   Id,
+    string   Label,
+    string   Color,
     DateTime CreatedAt,
     DateTime UpdatedAt);

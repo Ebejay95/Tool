@@ -16,7 +16,6 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
         MeasureId id,
         UserId userId,
         string isoId,
-        string category,
         string name,
         decimal costEur,
         double effortHours,
@@ -36,7 +35,6 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
         Id = id;
         UserId = userId;
         IsoId = isoId;
-        Category = category;
         Name = name;
         CostEur = costEur;
         EffortHours = effortHours;
@@ -65,31 +63,28 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
     [ExportField("ISO-ID", order: 1)]
     public string IsoId { get; private set; } = string.Empty;
 
-    [ExportField("Kategorie", order: 2)]
-    public string Category { get; private set; } = string.Empty;
-
-    [ExportField("Name", order: 3)]
+    [ExportField("Name", order: 2)]
     public string Name { get; private set; } = string.Empty;
 
-    [ExportField("Kosten (EUR)", order: 4)]
+    [ExportField("Kosten (EUR)", order: 3)]
     public decimal CostEur { get; private set; }
 
-    [ExportField("Aufwand (Std.)", order: 5)]
+    [ExportField("Aufwand (Std.)", order: 4)]
     public double EffortHours { get; private set; }
 
     /// <summary>Risiko-Wirksamkeit 1–5</summary>
-    [ExportField("Risikowirksamkeit", order: 6)]
+    [ExportField("Risikowirksamkeit", order: 5)]
     public int ImpactRisk { get; private set; }
 
     /// <summary>Gesamt-Verlässlichkeit 1–3</summary>
-    [ExportField("Verlässlichkeit", order: 7)]
+    [ExportField("Verlässlichkeit", order: 6)]
     public int Confidence { get; private set; }
 
     /// <summary>ISO-IDs abhängiger Maßnahmen</summary>
-    [ExportField("Abhängigkeiten", order: 8)]
+    [ExportField("Abhängigkeiten", order: 7)]
     public List<string> Dependencies { get; private set; } = [];
 
-    [ExportField("Begründung", order: 9)]
+    [ExportField("Begründung", order: 8)]
     public string? Justification { get; private set; }
 
     public List<Guid> CategoryIds { get; private set; } = [];
@@ -99,42 +94,41 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
     public void SetTags(IEnumerable<Guid> ids)       { TagIds       = ids.ToList(); UpdatedAt = DateTime.UtcNow; }
 
     // Confidence-Subparameter (1–3)
-    [ExportField("Datenqualität", order: 10)]
+    [ExportField("Datenqualität", order: 9)]
     public int ConfDataQuality { get; private set; }
 
-    [ExportField("Datenquellen", order: 11)]
+    [ExportField("Datenquellen", order: 10)]
     public int ConfDataSourceCount { get; private set; }
 
-    [ExportField("Datenaktualität", order: 12)]
+    [ExportField("Datenaktualität", order: 11)]
     public int ConfDataRecency { get; private set; }
 
-    [ExportField("Spezifität", order: 13)]
+    [ExportField("Spezifität", order: 12)]
     public int ConfSpecificity { get; private set; }
 
     // Graph-Felder
-    [ExportField("Abhängige (Graph)", order: 14, canImport: false)]
+    [ExportField("Abhängige (Graph)", order: 13, canImport: false)]
     public int GraphDependentsCount { get; private set; }
 
     /// <summary>Multiplikator, max. 2.0</summary>
-    [ExportField("Wirkungsmultiplikator", order: 15, canImport: false)]
+    [ExportField("Wirkungsmultiplikator", order: 14, canImport: false)]
     public double GraphImpactMultiplier { get; private set; }
 
-    [ExportField("Gesamtkosten (Graph)", order: 16, canImport: false)]
+    [ExportField("Gesamtkosten (Graph)", order: 15, canImport: false)]
     public decimal GraphTotalCost { get; private set; }
 
-    [ExportField("Kosteneffizienz (Graph)", order: 17, canImport: false)]
+    [ExportField("Kosteneffizienz (Graph)", order: 16, canImport: false)]
     public double GraphCostEfficiency { get; private set; }
 
-    [ExportField("Erstellt am", order: 18, canImport: false)]
+    [ExportField("Erstellt am", order: 17, canImport: false)]
     public DateTime CreatedAt { get; private set; }
 
-    [ExportField("Aktualisiert am", order: 19, canImport: false)]
+    [ExportField("Aktualisiert am", order: 18, canImport: false)]
     public DateTime UpdatedAt { get; private set; }
 
     public static Result<Measure> Create(
         UserId userId,
         string isoId,
-        string category,
         string name,
         decimal costEur,
         double effortHours,
@@ -168,7 +162,7 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
 
         var measure = new Measure(
             MeasureId.New(), userId,
-            isoId.Trim(), category.Trim(), name.Trim(),
+            isoId.Trim(), name.Trim(),
             costEur, effortHours,
             impactRisk, confidence,
             dependencies, justification,
@@ -181,7 +175,6 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
     }
 
     public Result Update(
-        string category,
         string name,
         decimal costEur,
         double effortHours,
@@ -210,7 +203,6 @@ public sealed class Measure : AggregateRoot, IResourceOwner, IExportable
         if (graphImpactMultiplier > 2.0)
             return Result.Failure(MeasureErrors.ImpactMultiplierTooHigh);
 
-        Category = category.Trim();
         Name = name.Trim();
         CostEur = costEur;
         EffortHours = effortHours;

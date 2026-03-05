@@ -30,7 +30,6 @@ public sealed class MeasureConfiguration : IEntityTypeConfiguration<Measure>
         builder.HasIndex(m => new { m.IsoId, m.UserId }).IsUnique();
 
         builder.Property(m => m.IsoId).HasMaxLength(20).IsRequired();
-        builder.Property(m => m.Category).HasMaxLength(200).IsRequired();
         builder.Property(m => m.Name).HasMaxLength(500).IsRequired();
 
         builder.Property(m => m.CostEur).HasPrecision(18, 2).IsRequired();

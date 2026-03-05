@@ -19,14 +19,7 @@ public sealed class TagConfiguration : IEntityTypeConfiguration<Tag>
                 value => TagId.From(value))
             .ValueGeneratedNever();
 
-        builder.Property(t => t.UserId)
-            .HasConversion(
-                userId => userId != null ? (Guid?)userId.Value : null,
-                value  => value  != null ? UserId.From(value.Value) : null)
-            .IsRequired(false);
-
-        builder.HasIndex(t => t.UserId);
-        builder.HasIndex(t => new { t.Label, t.UserId }).IsUnique();
+        builder.HasIndex(t => t.Label).IsUnique();
 
         builder.Property(t => t.Label).HasMaxLength(100).IsRequired();
         builder.Property(t => t.Color).HasMaxLength(20).IsRequired();

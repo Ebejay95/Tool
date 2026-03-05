@@ -28,11 +28,6 @@ namespace Measures.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
                     b.Property<string>("CategoryIds")
                         .IsRequired()
                         .HasColumnType("jsonb");

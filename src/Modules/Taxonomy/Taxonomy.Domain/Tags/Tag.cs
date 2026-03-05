@@ -3,9 +3,7 @@ using SharedKernel;
 namespace Taxonomy.Domain.Tags;
 
 /// <summary>
-/// Tag für die Taxonomie.
-/// UserId == null → globaler Tag (für alle User sichtbar).
-/// UserId != null → benutzerspezifischer Tag.
+/// Globaler Tag für die Taxonomie – sichtbar und verwaltbar von allen authentifizierten Benutzern.
 /// </summary>
 public sealed class Tag : AggregateRoot
 {
@@ -13,24 +11,19 @@ public sealed class Tag : AggregateRoot
 
     private Tag(
         TagId id,
-        UserId? userId,
         string label,
         string color)
     {
         Id        = id;
-        UserId    = userId;
         Label     = label;
         Color     = color;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
-        AddDomainEvent(new TagCreatedEvent(id, userId, label));
+        AddDomainEvent(new TagCreatedEvent(id, label));
     }
 
     public new TagId Id { get; private set; } = null!;
-
-    /// <summary>null = global für alle User.</summary>
-    public UserId? UserId { get; private set; }
 
     public string Label { get; private set; } = string.Empty;
 
@@ -42,7 +35,7 @@ public sealed class Tag : AggregateRoot
 
     // ── Factory ───────────────────────────────────────────────────────────────
 
-    public static Result<Tag> Create(UserId? userId, string label, string color)
+    public static Result<Tag> Create(string label, string color)
     {
         if (string.IsNullOrWhiteSpace(label))
             return Result.Failure<Tag>(TagErrors.LabelRequired);
@@ -53,7 +46,7 @@ public sealed class Tag : AggregateRoot
         if (string.IsNullOrWhiteSpace(color))
             return Result.Failure<Tag>(TagErrors.ColorRequired);
 
-        return Result.Success(new Tag(TagId.New(), userId, label.Trim(), color.Trim()));
+        return Result.Success(new Tag(TagId.New(), label.Trim(), color.Trim()));
     }
 
     // ── Mutations ─────────────────────────────────────────────────────────────
@@ -81,9 +74,4 @@ public sealed class Tag : AggregateRoot
     public void MarkForDeletion()
         => AddDomainEvent(new TagDeletedEvent(Id));
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    public bool IsOwnedBy(UserId userId) => UserId is not null && UserId.Value == userId.Value;
-
-    public bool IsGlobal => UserId is null;
 }

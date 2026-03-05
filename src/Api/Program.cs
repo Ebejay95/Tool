@@ -2,13 +2,17 @@ using Api.Bootstrap;
 using Api.Authorization;
 using Api.Extensions;
 using Api.Middleware;
+using Identity.Domain.Users;
+using Identity.Infrastructure.Persistence;
 using ImportExport.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using Serilog;
 using Serilog.Formatting.Compact;
+using SharedKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -167,6 +171,42 @@ if (args.Contains("--migrate-only"))
 {
     await app.Services.MigrateAllModulesAsync();
     Console.WriteLine("Migrations completed. Exiting (--migrate-only mode).");
+    return;
+}
+
+// --seed: Master-User anlegen (idempotent) – wird vom K8s-Job seed-master-user ausgeführt
+if (args.Contains("--seed"))
+{
+    var email    = Environment.GetEnvironmentVariable("MASTER_EMAIL")
+                    ?? throw new InvalidOperationException("MASTER_EMAIL env var not set");
+    var password = Environment.GetEnvironmentVariable("MASTER_PASSWORD")
+                    ?? throw new InvalidOperationException("MASTER_PASSWORD env var not set");
+
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+
+    var emailResult = Email.Create(email);
+    if (emailResult.IsFailure)
+        throw new InvalidOperationException($"Invalid MASTER_EMAIL: {emailResult.Error.Description}");
+
+    var existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email == emailResult.Value);
+    if (existingUser is not null)
+    {
+        if (existingUser.Role == UserRoles.Master)
+        {
+            Console.WriteLine($"Master user '{email}' already exists with correct role. Skipping seed.");
+            return;
+        }
+        return;
+    }
+
+    var userResult = User.CreateMasterUser(emailResult.Value, password);
+    if (userResult.IsFailure)
+        throw new InvalidOperationException($"Failed to create master user: {userResult.Error.Description}");
+
+    db.Users.Add(userResult.Value);
+    await db.SaveChangesAsync();
+    Console.WriteLine($"Master user '{email}' seeded with role '{UserRoles.Master}'.");
     return;
 }
 

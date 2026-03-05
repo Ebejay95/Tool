@@ -1,5 +1,5 @@
 @using MudBlazor
-@* Tabelle der Kategorien – global + persönlich. Global-Einträge können nicht gelöscht werden. *@
+@* Tabelle der Kategorien – alle global. *@
 
 <MudPaper Elevation="2" Style="padding: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -38,29 +38,16 @@
 
                 <PropertyColumn Property="x => x.Label" Title="Name" />
 
-                <PropertyColumn Property="x => x.IsGlobal" Title="Sichtbarkeit">
-                    <CellTemplate>
-                        <MudChip T="string"
-                                 Size="Size.Small"
-                                 Color="@(context.Item.IsGlobal ? Color.Info : Color.Default)">
-                            @context.Item.ScopeLabel
-                        </MudChip>
-                    </CellTemplate>
-                </PropertyColumn>
-
                 <PropertyColumn Property="x => x.CreatedAt" Title="Erstellt" Format="dd.MM.yyyy" />
 
                 <TemplateColumn Title="" Sortable="false" HeaderStyle="width:80px">
                     <CellTemplate>
-                        @if (!context.Item.IsGlobal)
-                        {
-                            <MudButton Size="Size.Small"
-                                       Color="Color.Error"
-                                       Variant="Variant.Text"
-                                       OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))">
-                                Löschen
-                            </MudButton>
-                        }
+                        <MudButton Size="Size.Small"
+                                   Color="Color.Error"
+                                   Variant="Variant.Text"
+                                   OnClick="@(() => OnDelete.InvokeAsync(context.Item.Id))">
+                            Löschen
+                        </MudButton>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>

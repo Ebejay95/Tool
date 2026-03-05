@@ -6,13 +6,14 @@ public sealed class User : AggregateRoot
 {
     private User() { } // For EF
 
-    private User(UserId userId, Email email, HashedPassword hashedPassword, string firstName, string lastName)
+    private User(UserId userId, Email email, HashedPassword hashedPassword, string firstName, string lastName, string role)
     {
         Id = userId;
         Email = email;
         PasswordHash = hashedPassword;
         FirstName = firstName;
         LastName = lastName;
+        Role = role;
         CreatedAt = DateTime.UtcNow;
         IsActive = true;
         IsEmailVerified = false;
@@ -28,6 +29,7 @@ public sealed class User : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime? LastLoginAt { get; private set; }
     public bool IsActive { get; private set; }
+    public string Role { get; private set; } = UserRoles.User;
     public string? PasswordResetToken { get; private set; }
     public DateTime? PasswordResetTokenExpiry { get; private set; }
 
@@ -47,7 +49,7 @@ public sealed class User : AggregateRoot
 
     public string FullName => $"{FirstName} {LastName}";
 
-    public static Result<User> Create(Email email, string password, string firstName, string lastName)
+    public static Result<User> Create(Email email, string password, string firstName, string lastName, string role = UserRoles.User)
     {
         if (string.IsNullOrWhiteSpace(password))
             return Result.Failure<User>(UserErrors.PasswordRequired);
@@ -64,7 +66,7 @@ public sealed class User : AggregateRoot
         var hashedPassword = HashedPassword.Create(password);
         var userId = UserId.New();
 
-        return Result.Success(new User(userId, email, hashedPassword, firstName.Trim(), lastName.Trim()));
+        return Result.Success(new User(userId, email, hashedPassword, firstName.Trim(), lastName.Trim(), role));
     }
 
     public bool VerifyPassword(string password)
@@ -126,6 +128,48 @@ public sealed class User : AggregateRoot
     {
         IsActive = false;
         AddDomainEvent(new UserDeactivatedEvent(Id, Email));
+    }
+
+    /// <summary>
+    /// Setzt die Rolle des Users. Nur zulässige Rollen aus <see cref="UserRoles.AssignableRoles"/> dürfen
+    /// über diese Methode zugewiesen werden – die master-Rolle kann nicht überschrieben werden.
+    /// </summary>
+    public Result SetRole(string role)
+    {
+        if (!UserRoles.AssignableRoles.Contains(role))
+            return Result.Failure(new Error("User.InvalidRole",
+                $"Die Rolle '{role}' ist nicht zulässig. Gültig: {string.Join(", ", UserRoles.AssignableRoles)}"));
+
+        if (Role == UserRoles.Master)
+            return Result.Failure(new Error("User.MasterRoleImmutable",
+                "Die master-Rolle kann nicht geändert werden."));
+
+        Role = role;
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Setzt die E-Mail-Adresse direkt als verifiziert – ohne Token-Prüfung.
+    /// Ausschließlich für das System-Seeding (Master-User) vorgesehen.
+    /// </summary>
+    private void ForceEmailVerified()
+    {
+        IsEmailVerified = true;
+        EmailVerificationToken = null;
+        EmailVerificationTokenExpiry = null;
+    }
+
+    /// <summary>
+    /// Erzeugt den System-Master-User mit der Rolle <see cref="UserRoles.Master"/>.
+    /// Die E-Mail-Adresse wird direkt als verifiziert gesetzt – kein E-Mail-Flow benötigt.
+    /// Ausschließlich für das initiale Seeding vorgesehen.
+    /// </summary>
+    public static Result<User> CreateMasterUser(Email email, string password)
+    {
+        var result = Create(email, password, "Master", "Admin", UserRoles.Master);
+        if (result.IsSuccess)
+            result.Value.ForceEmailVerified();
+        return result;
     }
 
     // ── E-Mail-Verifizierung ─────────────────────────────────────────────────

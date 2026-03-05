@@ -1,5 +1,5 @@
 @using MudBlazor
-@* Tabelle der Tags – global + persönlich. Global-Einträge können nicht gelöscht werden. *@
+@* Tabelle der Tags – alle global. *@
 
 <MudPaper Elevation="2" Style="padding: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -33,17 +33,10 @@
             {
                 <div style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:16px;background-color:@tag.Color;color:#fff;font-size:0.85rem;">
                     <span>@tag.Label</span>
-                    @if (tag.IsGlobal)
-                    {
-                        <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" Style="opacity:0.7;" />
-                    }
-                    else
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.Close"
-                                       Size="Size.Small"
-                                       Style="color:#fff;padding:2px;"
-                                       OnClick="@(() => OnDelete.InvokeAsync(tag.Id))" />
-                    }
+                    <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                   Size="Size.Small"
+                                   Style="color:#fff;padding:2px;"
+                                   OnClick="@(() => OnDelete.InvokeAsync(tag.Id))" />
                 </div>
             }
         </div>

@@ -9,11 +9,7 @@ public sealed record CategoryViewModel(
     Guid     Id,
     string   Label,
     string   Color,
-    bool     IsGlobal,
-    DateTime CreatedAt)
-{
-    public string ScopeLabel => IsGlobal ? "Global" : "Persönlich";
-}
+    DateTime CreatedAt);
 
 public sealed class CreateCategoryViewModel
 {
@@ -31,11 +27,7 @@ public sealed record TagViewModel(
     Guid     Id,
     string   Label,
     string   Color,
-    bool     IsGlobal,
-    DateTime CreatedAt)
-{
-    public string ScopeLabel => IsGlobal ? "Global" : "Persönlich";
-}
+    DateTime CreatedAt);
 
 public sealed class CreateTagViewModel
 {
@@ -55,7 +47,6 @@ public static class TaxonomyMappings
         Id:        Guid.Parse(dto.Id),
         Label:     dto.Label,
         Color:     dto.Color,
-        IsGlobal:  dto.IsGlobal,
         CreatedAt: dto.CreatedAt);
 
     public static List<CategoryViewModel> ToViewModels(this IEnumerable<CategoryDto> dtos) =>
@@ -71,7 +62,6 @@ public static class TaxonomyMappings
         Id:        Guid.Parse(dto.Id),
         Label:     dto.Label,
         Color:     dto.Color,
-        IsGlobal:  dto.IsGlobal,
         CreatedAt: dto.CreatedAt);
 
     public static List<TagViewModel> ToViewModels(this IEnumerable<TagDto> dtos) =>

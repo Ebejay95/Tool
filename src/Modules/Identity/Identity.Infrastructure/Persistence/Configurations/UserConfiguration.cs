@@ -80,6 +80,12 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasDefaultValue(false);
 
+        // ── Rolle
+        builder.Property(u => u.Role)
+            .HasMaxLength(50)
+            .IsRequired()
+            .HasDefaultValue(Identity.Domain.Users.UserRoles.User);
+
         // Ignore domain events (not persisted)
         builder.Ignore(u => u.DomainEvents);
     }

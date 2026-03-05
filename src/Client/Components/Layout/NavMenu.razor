@@ -13,35 +13,44 @@
             Variant="@DrawerVariant.Responsive"
             Width="280px">
         <MudNavMenu>
-                <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">
-                    Dashboard
-                </MudNavLink>
+                @if (_currentRole == "master")
+                {
+                    <MudNavLink Href="/master/users" Icon="@Icons.Material.Filled.ManageAccounts" IconColor="Color.Warning">
+                        Nutzerverwaltung
+                    </MudNavLink>
+                }
+                else
+                {
+                    <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">
+                        Dashboard
+                    </MudNavLink>
 
-                <MudNavLink Href="/todos" Icon="@Icons.Material.Filled.Assignment">
-                    Aufgaben
-                </MudNavLink>
+                    <MudNavLink Href="/todos" Icon="@Icons.Material.Filled.Assignment">
+                        Aufgaben
+                    </MudNavLink>
 
-                <MudNavLink Href="/measures" Icon="@Icons.Material.Filled.Security">
-                    Maßnahmen
-                </MudNavLink>
+                    <MudNavLink Href="/measures" Icon="@Icons.Material.Filled.Security">
+                        Maßnahmen
+                    </MudNavLink>
 
-                <MudNavLink Href="/taxonomy" Icon="@Icons.Material.Filled.Label">
-                    Taxonomie
-                </MudNavLink>
+                    <MudNavLink Href="/taxonomy" Icon="@Icons.Material.Filled.Label">
+                        Taxonomie
+                    </MudNavLink>
 
-                <MudNavLink Href="/import-export" Icon="@Icons.Material.Filled.ImportExport">
-                    Import / Export
-                </MudNavLink>
+                    <MudNavLink Href="/import-export" Icon="@Icons.Material.Filled.ImportExport">
+                        Import / Export
+                    </MudNavLink>
 
-                <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.AccountCircle">
-                    Profil
-                </MudNavLink>
+                    <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.AccountCircle">
+                        Profil
+                    </MudNavLink>
 
-                <MudDivider Class="my-4" />
+                    <MudDivider Class="my-4" />
 
-                <MudNavLink Href="/dev/notifications" Icon="@Icons.Material.Filled.BugReport">
-                    Notification Dev
-                </MudNavLink>
+                    <MudNavLink Href="/dev/notifications" Icon="@Icons.Material.Filled.BugReport">
+                        Notification Dev
+                    </MudNavLink>
+                }
 
                 <MudDivider Class="my-4" />
 
@@ -58,7 +67,7 @@
     </MudDrawer>
 }
 
-<MudAppBar Elevation="1">
+<MudAppBar Elevation="1" Style="@(_currentRole == "master" ? "background-color: #b71c1c !important;" : _currentRole == "super-admin" ? "background-color: #1b5e20 !important;" : "")">
     @if (_isAuthenticated)
     {
         <MudIconButton Icon="@Icons.Material.Filled.Menu"
@@ -117,6 +126,7 @@
     private bool drawerOpen = false;
     private bool _isAuthenticated = false;
     private Identity.Application.DTOs.UserInfo? _currentUser;
+    private string? _currentRole;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,10 +146,12 @@
         if (_isAuthenticated)
         {
             _currentUser = await AuthService.GetCurrentUserAsync();
+            _currentRole = await AuthService.GetCurrentRoleAsync();
         }
         else
         {
             _currentUser = null;
+            _currentRole = null;
         }
     }
 
@@ -158,6 +170,7 @@
         await AuthService.LogoutAsync();
         _isAuthenticated = false;
         _currentUser = null;
+        _currentRole = null;
 
         Snackbar.Add("Erfolgreich abgemeldet", Severity.Success);
         Navigation.NavigateTo("/");

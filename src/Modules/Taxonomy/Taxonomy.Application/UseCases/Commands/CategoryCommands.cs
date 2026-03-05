@@ -6,20 +6,17 @@ using Taxonomy.Domain.Categories;
 
 namespace Taxonomy.Application.UseCases.Commands;
 
-// ── Create ───────────────────────────────────────────────────────────────────
-
-public sealed record CreateCategoryCommand(UserId CurrentUserId, CreateCategoryDto Data) : Command<CategoryDto>;
-
+public sealed record CreateCategoryCommand(CreateCategoryDto Data) : Command<CategoryDto>;
 public sealed class CreateCategoryHandler(ICategoryRepository repository, ITaxonomyUnitOfWork unitOfWork)
     : IRequestHandler<CreateCategoryCommand, Result<CategoryDto>>
 {
     public async Task<Result<CategoryDto>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var existing = await repository.GetByLabelAndUserIdAsync(request.Data.Label, request.CurrentUserId, cancellationToken);
+        var existing = await repository.GetByLabelAsync(request.Data.Label, cancellationToken);
         if (existing is not null)
             return Result.Failure<CategoryDto>(CategoryErrors.LabelAlreadyExists);
 
-        var result = Category.Create(request.CurrentUserId, request.Data.Label, request.Data.Color);
+        var result = Category.Create(request.Data.Label, request.Data.Color);
         if (result.IsFailure)
             return Result.Failure<CategoryDto>(result.Error);
 
@@ -30,24 +27,15 @@ public sealed class CreateCategoryHandler(ICategoryRepository repository, ITaxon
     }
 }
 
-// ── Update ───────────────────────────────────────────────────────────────────
-
-public sealed record UpdateCategoryCommand(UserId CurrentUserId, CategoryId CategoryId, UpdateCategoryDto Data) : Command<CategoryDto>;
-
+public sealed record UpdateCategoryCommand(CategoryId CategoryId, UpdateCategoryDto Data) : Command<CategoryDto>;
 public sealed class UpdateCategoryHandler(ICategoryRepository repository, ITaxonomyUnitOfWork unitOfWork)
     : IRequestHandler<UpdateCategoryCommand, Result<CategoryDto>>
 {
     public async Task<Result<CategoryDto>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await repository.GetByIdAccessibleByUserAsync(request.CategoryId, request.CurrentUserId, cancellationToken);
+        var category = await repository.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category is null)
             return Result.Failure<CategoryDto>(CategoryErrors.NotFound);
-
-        if (category.IsGlobal)
-            return Result.Failure<CategoryDto>(CategoryErrors.GlobalReadOnly);
-
-        if (!category.IsOwnedBy(request.CurrentUserId))
-            return Result.Failure<CategoryDto>(CategoryErrors.AccessDenied);
 
         var updateResult = category.Update(request.Data.Label, request.Data.Color);
         if (updateResult.IsFailure)
@@ -60,24 +48,15 @@ public sealed class UpdateCategoryHandler(ICategoryRepository repository, ITaxon
     }
 }
 
-// ── Delete ───────────────────────────────────────────────────────────────────
-
-public sealed record DeleteCategoryCommand(UserId CurrentUserId, CategoryId CategoryId) : Command;
-
+public sealed record DeleteCategoryCommand(CategoryId CategoryId) : Command;
 public sealed class DeleteCategoryHandler(ICategoryRepository repository, ITaxonomyUnitOfWork unitOfWork)
     : IRequestHandler<DeleteCategoryCommand, Result>
 {
     public async Task<Result> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await repository.GetByIdAccessibleByUserAsync(request.CategoryId, request.CurrentUserId, cancellationToken);
+        var category = await repository.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category is null)
             return Result.Failure(CategoryErrors.NotFound);
-
-        if (category.IsGlobal)
-            return Result.Failure(CategoryErrors.GlobalReadOnly);
-
-        if (!category.IsOwnedBy(request.CurrentUserId))
-            return Result.Failure(CategoryErrors.AccessDenied);
 
         category.MarkForDeletion();
         repository.Remove(category);

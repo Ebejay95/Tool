@@ -84,6 +84,13 @@ namespace Identity.Infrastructure.Migrations
                     b.Property<DateTime?>("PasswordResetTokenExpiry")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("user");
+
                     b.Property<string>("TwoFactorPendingSecret")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");

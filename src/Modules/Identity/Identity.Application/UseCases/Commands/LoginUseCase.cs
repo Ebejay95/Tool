@@ -41,6 +41,15 @@ public sealed class LoginHandler : IRequestHandler<LoginCommand, Result<LoginRes
         if (!passwordValid)
             return Result.Failure<LoginResponseDto>(UserErrors.InvalidCredentials);
 
+        // ── Master-Rolle: Direkter Login ohne E-Mail-Verifizierung und 2FA ───
+        if (user.Role == UserRoles.Master)
+        {
+            user.RecordLogin();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            var masterToken = _tokenService.GenerateToken(user);
+            return Result.Success(LoginHandler.BuildCompleteResult(user, masterToken));
+        }
+
         // ── Schritt 1: E-Mail-Verifizierung prüfen ───────────────────────────
         if (!user.IsEmailVerified)
         {

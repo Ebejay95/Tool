@@ -19,15 +19,7 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 value => CategoryId.From(value))
             .ValueGeneratedNever();
 
-        builder.Property(c => c.UserId)
-            .HasConversion(
-                userId => userId != null ? (Guid?)userId.Value : null,
-                value  => value  != null ? UserId.From(value.Value) : null)
-            .IsRequired(false);
-
-        builder.HasIndex(c => c.UserId);
-        // Label muss je User einmalig sein (null = global, daher Unique über beide Felder)
-        builder.HasIndex(c => new { c.Label, c.UserId }).IsUnique();
+        builder.HasIndex(c => c.Label).IsUnique();
 
         builder.Property(c => c.Label).HasMaxLength(100).IsRequired();
         builder.Property(c => c.Color).HasMaxLength(20).IsRequired();

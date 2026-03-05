@@ -1,0 +1,140 @@
+@page "/master/users"
+@inject IAuthService AuthService
+@inject UserManagementApiService UserMgmtService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Nutzerverwaltung</PageTitle>
+
+@if (_loading)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else if (!_isMaster)
+{
+    <MudText Color="Color.Error">Kein Zugriff.</MudText>
+}
+else
+{
+    <MudText Typo="Typo.h5" GutterBottom="true">Nutzerverwaltung</MudText>
+    <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+        Hier kannst du Rollen vergeben. Die master-Rolle kann nicht geändert werden.
+    </MudText>
+
+    <MudTable Items="@_users" Dense="true" Hover="true" Striped="true" Loading="@_tableLoading">
+        <HeaderContent>
+            <MudTh>E-Mail</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Aktiv</MudTh>
+            <MudTh>Registriert</MudTh>
+            <MudTh>Rolle</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="E-Mail">@context.Email</MudTd>
+            <MudTd DataLabel="Name">@context.FullName</MudTd>
+            <MudTd DataLabel="Aktiv">
+                @if (context.IsActive)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Size="Size.Small" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Cancel" Color="Color.Error" Size="Size.Small" />
+                }
+            </MudTd>
+            <MudTd DataLabel="Registriert">@context.CreatedAt.ToString("dd.MM.yyyy")</MudTd>
+            <MudTd DataLabel="Rolle">
+                @if (context.Role == "master")
+                {
+                    <MudChip T="string" Color="Color.Warning" Size="Size.Small" Variant="Variant.Filled">master</MudChip>
+                }
+                else
+                {
+                    <MudSelect T="string"
+                               Value="@context.Role"
+                               ValueChanged="@(r => OnRoleChanged(context, r))"
+                               Dense="true"
+                               Variant="Variant.Outlined"
+                               Style="min-width: 140px;"
+                               Disabled="@_saving.Contains(context.Id)">
+                        @foreach (var role in _assignableRoles)
+                        {
+                            <MudSelectItem T="string" Value="@role">@role</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudTd>
+        </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Keine Nutzer gefunden.</MudText>
+        </NoRecordsContent>
+    </MudTable>
+}
+
+@code {
+    private bool _loading = true;
+    private bool _isMaster = false;
+    private bool _tableLoading = false;
+    private List<UserManagementItemDto> _users = [];
+    private HashSet<string> _saving = [];
+
+    private static readonly string[] _assignableRoles = ["user", "admin", "super-admin"];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var role = await AuthService.GetCurrentRoleAsync();
+        _isMaster = role == "master";
+        _loading = false;
+
+        // Nur weiterleiten wenn Auth bereits geladen ist (role != null).
+        // Bei null ist die Auth noch nicht initialisiert – MainLayout's OnAfterRenderAsync
+        // ruft EnforceMasterRouteGuardAsync() auf und übernimmt den Redirect.
+        if (role != null && !_isMaster)
+        {
+            Navigation.NavigateTo("/dashboard");
+            return;
+        }
+
+        await LoadUsersAsync();
+    }
+
+    private async Task LoadUsersAsync()
+    {
+        _tableLoading = true;
+        var result = await UserMgmtService.GetAllUsersAsync();
+        _tableLoading = false;
+
+        if (result.IsFailure)
+        {
+            Snackbar.Add($"Fehler: {result.Error.Description}", Severity.Error);
+            return;
+        }
+
+        _users = result.Value.ToList();
+    }
+
+    private async Task OnRoleChanged(UserManagementItemDto user, string newRole)
+    {
+        if (newRole == user.Role) return;
+
+        _saving.Add(user.Id);
+        StateHasChanged();
+
+        var result = await UserMgmtService.UpdateUserRoleAsync(user.Id, newRole);
+
+        _saving.Remove(user.Id);
+
+        if (result.IsFailure)
+        {
+            Snackbar.Add($"Fehler: {result.Error.Description}", Severity.Error);
+        }
+        else
+        {
+            Snackbar.Add($"Rolle für {user.Email} auf '{newRole}' gesetzt.", Severity.Success);
+            // Liste neu laden um aktuelle DB-Daten zu zeigen
+            await LoadUsersAsync();
+        }
+
+        StateHasChanged();
+    }
+}

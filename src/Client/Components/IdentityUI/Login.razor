@@ -114,7 +114,9 @@
             {
                 case LoginStage.Complete:
                     Snackbar.Add("Erfolgreich angemeldet!", Severity.Success);
-                    Navigation.NavigateTo("/dashboard", forceLoad: true);
+                    var loginRole = await AuthService.GetCurrentRoleAsync();
+                    var loginTarget = loginRole == "master" ? "/master/users" : "/dashboard";
+                    Navigation.NavigateTo(loginTarget, forceLoad: true);
                     break;
 
                 case LoginStage.RequiresEmailVerification:

@@ -9,7 +9,6 @@ internal static class MeasureMapper
         m.Id.Value.ToString(),
         m.UserId.Value.ToString(),
         m.IsoId,
-        m.Category,
         m.Name,
         m.CostEur,
         m.EffortHours,
@@ -33,7 +32,6 @@ internal static class MeasureMapper
     internal static MeasureSummaryDto ToSummaryDto(Measure m) => new(
         m.Id.Value.ToString(),
         m.IsoId,
-        m.Category,
         m.Name,
         m.CostEur,
         m.ImpactRisk,

@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ClaimTypes = System.Security.Claims.ClaimTypes;
 
 namespace Identity.Infrastructure.Services;
 
@@ -47,7 +48,10 @@ public sealed class JwtTokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iat,
                 new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(),
-                ClaimValueTypes.Integer64)
+                ClaimValueTypes.Integer64),
+            // "role" (Kurzname) statt ClaimTypes.Role (voller URI), damit der WASM-Client
+            // den Wert direkt per payload["role"] lesen kann. JWT Bearer mappt "role" → ClaimTypes.Role.
+            new Claim("role", user.Role)
         };
 
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

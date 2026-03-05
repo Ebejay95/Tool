@@ -19,9 +19,7 @@ public sealed class CategoriesController(IMediator mediator, ICurrentUser curren
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var query  = new GetAccessibleCategoriesQuery(currentUser.UserId);
-        var result = await mediator.Send(query, cancellationToken);
-
+        var result = await mediator.Send(new GetAllCategoriesQuery(), cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
     }
 
@@ -30,8 +28,7 @@ public sealed class CategoriesController(IMediator mediator, ICurrentUser curren
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var query  = new GetCategoryByIdQuery(currentUser.UserId, CategoryId.From(id));
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await mediator.Send(new GetCategoryByIdQuery(CategoryId.From(id)), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code == "General.NotFound" ? NotFound() : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
@@ -44,8 +41,7 @@ public sealed class CategoriesController(IMediator mediator, ICurrentUser curren
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new CreateCategoryCommand(currentUser.UserId, dto);
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new CreateCategoryCommand(dto), cancellationToken);
 
         if (result.IsFailure)
             return BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
@@ -58,8 +54,7 @@ public sealed class CategoriesController(IMediator mediator, ICurrentUser curren
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new UpdateCategoryCommand(currentUser.UserId, CategoryId.From(id), dto);
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new UpdateCategoryCommand(CategoryId.From(id), dto), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code is "Category.NotFound" or "General.NotFound"
@@ -74,14 +69,13 @@ public sealed class CategoriesController(IMediator mediator, ICurrentUser curren
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new DeleteCategoryCommand(currentUser.UserId, CategoryId.From(id));
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new DeleteCategoryCommand(CategoryId.From(id)), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code is "Category.NotFound" or "General.NotFound"
                 ? NotFound()
                 : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
 
-        return Ok(new { Message = "Kategorie erfolgreich gelöscht." });
+        return Ok(new { Message = "Kategorie erfolgreich geloescht." });
     }
 }

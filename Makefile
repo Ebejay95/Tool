@@ -5,7 +5,7 @@
 # db-clean  → DB-Daten komplett löschen (PVC weg)
 # prod      → Docker bauen, pushen, prod deployen
 
-.PHONY: dev clean db-clean prod status logs seq-logs redis-logs mailhog-logs help \
+.PHONY: dev clean db-clean prod status logs seq-logs redis-logs mailhog-logs help seed \
         _db-apply _db-wait _db-forward _migrate \
         _seq-apply _seq-wait _seq-forward \
         _redis-apply _redis-wait _redis-forward \
@@ -71,6 +71,19 @@ db-clean: clean
 	@echo "✅ DB gelöscht – 'make dev' baut sie neu auf"
 
 # ---------------------------------------------------------------------------
+# seed: Master-User in die lokale DB seeden (idempotent)
+# ---------------------------------------------------------------------------
+seed:
+	@echo "🌱 Seede Master-User in lokale DB..."
+	@cd $(PROJECT) && \
+		ASPNETCORE_ENVIRONMENT=Development \
+		ConnectionStrings__DefaultConnection=$(DB_CONN) \
+		MASTER_EMAIL="master@master.de" \
+		MASTER_PASSWORD="Masterlavista" \
+		dotnet run -- --seed
+	@echo "✅ Seed abgeschlossen"
+
+# ---------------------------------------------------------------------------
 # prod: Image bauen, pushen, prod-Namespace deployen
 # ---------------------------------------------------------------------------
 prod:
@@ -107,6 +120,7 @@ help:
 	@echo "  dev        🚀 DB + Seq + Redis + MailHog starten + migrieren + Hot-Reload"
 	@echo "  clean      🛑 Dev-Prozesse stoppen  (DB/Seq/Redis/MailHog bleiben persistent)"
 	@echo "  db-clean   🗑️  DB-Daten löschen     (PVC weg, nächstes 'dev' baut neu)"
+	@echo "  seed       🌱 Master-User in lokale DB seeden (idempotent)"
 	@echo "  prod       🚀 Docker bauen + pushen + prod deployen"
 	@echo "  status     📊 K8s Pod-Status (local)"
 	@echo "  logs       📜 Postgres-Logs folgen"

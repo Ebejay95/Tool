@@ -62,4 +62,4 @@ spec:
               name: master-user
               key: password
         - name: MASTER_ROLE
-          value: "super-admin"
+          value: "master"

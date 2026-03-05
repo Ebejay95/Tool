@@ -40,6 +40,13 @@ public sealed class UserRepository : IUserRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<User>> GetAllForManagementAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Users
+            .OrderBy(u => u.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
     public void Add(User entity)
     {
         _context.Users.Add(entity);

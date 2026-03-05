@@ -47,7 +47,9 @@
 
         if (_isAuthenticated)
         {
-            Navigation.NavigateTo("/dashboard");
+            var role = await AuthService.GetCurrentRoleAsync();
+            var target = role == "master" ? "/master/users" : "/dashboard";
+            Navigation.NavigateTo(target);
         }
     }
 }

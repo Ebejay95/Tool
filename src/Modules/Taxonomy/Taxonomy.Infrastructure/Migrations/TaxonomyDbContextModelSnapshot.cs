@@ -80,14 +80,9 @@ namespace Taxonomy.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("Label", "UserId")
+                    b.HasIndex("Label")
                         .IsUnique();
 
                     b.ToTable("Categories", "taxonomy");
@@ -114,14 +109,9 @@ namespace Taxonomy.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("Label", "UserId")
+                    b.HasIndex("Label")
                         .IsUnique();
 
                     b.ToTable("Tags", "taxonomy");

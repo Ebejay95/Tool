@@ -19,9 +19,7 @@ public sealed class TagsController(IMediator mediator, ICurrentUser currentUser)
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var query  = new GetAccessibleTagsQuery(currentUser.UserId);
-        var result = await mediator.Send(query, cancellationToken);
-
+        var result = await mediator.Send(new GetAllTagsQuery(), cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
     }
 
@@ -30,8 +28,7 @@ public sealed class TagsController(IMediator mediator, ICurrentUser currentUser)
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var query  = new GetTagByIdQuery(currentUser.UserId, TagId.From(id));
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await mediator.Send(new GetTagByIdQuery(TagId.From(id)), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code == "General.NotFound" ? NotFound() : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
@@ -44,8 +41,7 @@ public sealed class TagsController(IMediator mediator, ICurrentUser currentUser)
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new CreateTagCommand(currentUser.UserId, dto);
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new CreateTagCommand(dto), cancellationToken);
 
         if (result.IsFailure)
             return BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
@@ -58,8 +54,7 @@ public sealed class TagsController(IMediator mediator, ICurrentUser currentUser)
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new UpdateTagCommand(currentUser.UserId, TagId.From(id), dto);
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new UpdateTagCommand(TagId.From(id), dto), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code is "Tag.NotFound" or "General.NotFound"
@@ -74,14 +69,13 @@ public sealed class TagsController(IMediator mediator, ICurrentUser currentUser)
     {
         if (currentUser.UserId is null) return Unauthorized();
 
-        var command = new DeleteTagCommand(currentUser.UserId, TagId.From(id));
-        var result  = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(new DeleteTagCommand(TagId.From(id)), cancellationToken);
 
         if (result.IsFailure)
             return result.Error.Code is "Tag.NotFound" or "General.NotFound"
                 ? NotFound()
                 : BadRequest(new { Error = result.Error.Code, Message = result.Error.Description });
 
-        return Ok(new { Message = "Tag erfolgreich gelöscht." });
+        return Ok(new { Message = "Tag erfolgreich geloescht." });
     }
 }
